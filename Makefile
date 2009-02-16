@@ -113,12 +113,11 @@ search-todo:
 search-todos: search-todo
 
 sizeof:
-	du -skD `which parrot`
-	du -skD `which python`
-	du -skD `which ruby`
-	du -skD `which perl`
-	du -skD `which svm`
+	[ -f `which parrot` ] && du -skD `which parrot`
+	[ -f `which python` ] && du -skD `which python`
+	[ -f `which ruby` ] && du -skD `which ruby`
+	[ -f `which perl` ] && du -skD `which perl`
+	[ -f `which svm` ] && du -skD `which svm`
 
 update-version-number:
-	cd script/ && $(PHP) update-version.php
-
+	sh script/update-version VERSION
