@@ -1,0 +1,6 @@
+"a".compare_to("a") -> 0
+"a".compare_to("b") -> -1
+"b".compare_to("a") -> 1
+"aa".compare_to("aa") -> 0
+"aa".compare_to("bb") -> -1
+"bb".compare_to("aa") -> 1

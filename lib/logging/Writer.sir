@@ -1,0 +1,25 @@
+%% define @CLASS logging.Writer
+%% define :INT system.Int
+%% define :NULL system.Null
+%% define :OBJECT system.Object
+%% define :STRING system.String
+
+
+block:new,"{{@CLASS}}.write" "{{@CLASS}}" "{{:STRING}}"
+   stack:print
+
+block:new,"MAIN"
+    class:new__ss "{{@CLASS}}" "{{:OBJECT}}"
+
+    class:new_field__sss "{{@CLASS}}" "name" "{{:STRING}}"
+    class:new_field__sss "{{@CLASS}}" "value" "{{:INT}}"
+
+    class:new_method__ssss "{{@CLASS}}" "write" "{{:NULL}}" "{{@CLASS}}.write" "Writer" "{{@CLASS}}" "Message" "{{:STRING}}"
+
+
+    o:new__s "{{@CLASS}}"
+    o:call,"write,{{@CLASS}},{{:STRING}}" $0 "ouetaaa"
+
+%% undefine @CLASS
+
+

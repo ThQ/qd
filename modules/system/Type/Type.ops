@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="type" char="t">
+   <include src="svm/Class.h" />
+
+   <opcode name="check" char="c">
+      <parameters count="2">
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Class* cls = (svm::Class*)argv[0]->cls;
+         SVM_PICK(cls);
+         if (cls->name == ((svm::String*)argv[1])->value)
+         {
+            this->current_block->heap.append(svm::True);
+         }
+         else
+         {
+            this->current_block->heap.append(svm::False);
+         }
+         SVM_DROP(cls);
+      </body>
+   </opcode>
+
+   <opcode name="print" char="p">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body><![CDATA[
+         svm::Class* cls = (svm::Class*)argv[0]->cls;
+         SVM_ASSERT_NOT_NULL(cls);
+         SVM_PICK(cls);
+         printf("%s\n", cls->name.c_str());
+         SVM_DROP(cls);
+      ]]></body>
+   </opcode>
+
+   <opcode name="print_s" char="q">
+      <parameters count="0" />
+      <body><![CDATA[
+         svm::Object* arg = this->current_block->heap.get(0);
+         SVM_ASSERT_NOT_NULL(arg);
+         svm::Class* cls = (svm::Class*)arg->cls;
+         SVM_DROP(arg);
+         SVM_PICK(cls);
+         SVM_ASSERT_NOT_NULL(cls);
+         printf("%s\n", cls->name.c_str());
+         SVM_DROP(cls);
+      ]]></body>
+   </opcode>
+</namespace>

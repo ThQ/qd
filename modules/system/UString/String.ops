@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="s" char="s">
+   <include src="svm/String.h" />
+
+   <opcode name="find" char="f">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         this->current_block->heap.append(svm::String::find(argv[0], argv[1], svm::Int::build((long int)0)));
+      </body>
+   </opcode>
+
+   <opcode name="equals" char="=">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         this->current_block->heap.append(svm::String::equals(argv[0], argv[1]));
+      </body>
+   </opcode>
+
+   <opcode name="join" char="+">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Object* obj = svm::String::join(argv[0], argv[1]);
+         this->current_block->heap.append(obj);
+      </body>
+   </opcode>
+
+   <opcode name="vjoin" char="j">
+      <parameters minimum-count="1" />
+      <body><![CDATA[
+         svm::Object* obj = svm::String::build();
+         for (ULong j = 0 ; j < opc->argc ; ++j)
+         {
+            if (this->check_arguments(1, argv[j], svm::string_type))
+            {
+               svm::String::append(obj, argv[j]);
+            }
+            else
+            {
+               break;
+            }
+         }
+         this->current_block->heap.append(obj);
+      ]]></body>
+   </opcode>
+
+   <opcode name="print" char="p">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::String::print(argv[0]);
+         printf("\n");
+      </body>
+   </opcode>
+</namespace>

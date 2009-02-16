@@ -1,0 +1,15 @@
+block:new,"MAIN"
+    %% define DUDE pouet
+    %% ifdef DUDEA
+            s:print__s "A_IF"
+        %% ifdef DUDE
+            s:print__s "B_IF"
+        %% else
+            s:print__s "B_ELSE"
+        %% endif
+    %% else
+    s:print__s "A_ELSE"
+    %% endif
+    s:print__s "{{    DUDE  }}"
+    @@ FUCKYOU
+    s:print__s "zou"

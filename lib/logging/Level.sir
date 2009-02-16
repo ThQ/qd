@@ -1,0 +1,5 @@
+
+block:new,"MAIN"
+    class:new__ss "logging.Level" "system.Object"
+    class:declare_field__sss "logging.Level" "system.String" "name"
+    class:declare_field__sss "logging.Level" "system.Int" "value"

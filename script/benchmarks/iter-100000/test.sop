@@ -1,0 +1,9 @@
+ @+:"loop"
+ i} 100000 $0
+ <U
+ iP
+ iA
+ ll
+ @+:"MAIN"
+ gs 0
+ >2 "loop"

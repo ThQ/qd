@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="m" char="m">
+   <include src="svm/Int.h" />
+   <include src="svm/Map.h" />
+   <include src="types.h" />
+
+   <opcode name="new" char="_">
+      <parameters count="0" />
+      <body>
+         svm::Object* m = svm::Map::build();
+         this->current_block->heap.append(m);
+      </body>
+   </opcode>
+
+   <opcode name="get_item" char="&lt;">
+      <parameters count="2">
+         parameter index="0" type="svm::map_type" />
+      </parameters>
+      <body>
+         // TODO: Woho, we must use a dynamic Equals here, to find the key
+         int value_pos = svm::Map::find_key((svm::Map*)argv[0], argv[1]);
+         if (value_pos != -1)
+         {
+            this->current_block->heap.append(((svm::Map*)argv[0])->items[value_pos]);
+         }
+         else
+         {
+            // TODO : Must be throwing an exception here !
+            FATAL("Must be throwing a system.BadKeyException here.");
+            abort();
+         }
+      </body>
+   </opcode>
+
+   <opcode name="set_item" char="=">
+      <parameters count="3">
+         <parameter index="0" type="svm::map_type" />
+      </parameters>
+      <body>
+         svm::Map::set_item(argv[0], argv[1], argv[2]);
+      </body>
+   </opcode>
+
+</namespace>
+

@@ -1,0 +1,9 @@
+<< logging/Writer.sir
+<< b.sir
+<< c.sir
+block:new,"MAIN"
+s:print__s "a.sir"
+block:new,"FUCK"
+s:print__s "fuck ya"
+block:new,"FUCK YA"
+s:print__s "dude"

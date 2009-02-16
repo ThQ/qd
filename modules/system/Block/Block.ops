@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="block" char="@">
+   <include src="svm/Block.h" />
+   <include src="types.h" />
+
+   <opcode name="new" char="+">
+      <body>
+         FATAL("Block opcodes should not be interpreted normally.");
+         abort();
+      </body>
+   </opcode>
+</namespace>
+

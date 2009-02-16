@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="list" char="L">
+   <include src="svm/Int.h" />
+   <include src="svm/List.h" />
+   <include src="svm/ListUtil.h" />
+   <include src="types.h" />
+
+   <opcode name="new" char="_">
+      <parameters count="0" />
+      <body>
+         svm::Object* l = svm::List::build();
+         this->current_block->heap.append(l);
+      </body>
+   </opcode>
+
+   <opcode name="flatten_L" char="f">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         this->current_block->heap.append(svm::List::flatten(argv[0]));
+      </body>
+   </opcode>
+
+   <opcode name="insert_Lio" char="i">
+      <parameters count="3">
+         <parameter index="0" type="svm::list_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::List::insert(argv[0], ((svm::Int*)argv[1])->value, argv[2]);
+      </body>
+   </opcode>
+
+   <opcode name="length_L" char="l">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::List* l = (svm::List*)argv[0];
+         this->current_block->heap.append(svm::Int::build((long)l->length));
+      </body>
+   </opcode>
+
+   <opcode name="push_Lo" char="+">
+      <parameters count="2">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::List::push(argv[0], argv[1]);
+      </body>
+   </opcode>
+
+   <opcode name="vpush" char="~">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body><![CDATA[
+         for (ULong i = 1 ; i < opc->argc ; ++i)
+         {
+            svm::List::push(argv[0], argv[i]);
+         }
+      ]]></body>
+   </opcode>
+
+   <opcode name="pop_Li" char="P">
+      <parameters count="2">
+         <parameter index="0" type="svm::list_type" />
+         <parameter index="1" tyoe="svm::int_type" />
+      </parameters>
+      <body>
+         svm::List::pop(argv[0], (UInt)((svm::Int*)argv[1])->value);
+      </body>
+   </opcode>
+
+   <opcode name="pop_1_L" char="p">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::List::pop(argv[0]);
+      </body>
+   </opcode>
+
+  <opcode name="print_L" char="a">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::ListUtil::print((svm::List*)argv[0]);
+      </body>
+   </opcode>
+
+   <opcode name="print_line_L" char="b">
+      <parameters count="1">
+         <parameter index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::ListUtil::print((svm::List*)argv[0]);
+         printf("\n");
+      </body>
+   </opcode>
+
+   <opcode name="push_list_LL" char="z">
+      <parameters count="2">
+         <parameter index="0" type="svm::list_type" />
+         <parameter index="1" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::List::push_list(argv[0], argv[1]);
+      </body>
+   </opcode>
+
+   <opcode name="reverse_L" char="r">
+      <parameters count="1">
+         <parameters index="0" type="svm::list_type" />
+      </parameters>
+      <body>
+         svm::Object* res = svm::List::reverse(argv[0]);
+         this->current_block->heap.append(res);
+      </body>
+   </opcode>
+
+   <opcode name="slice_Liii" char="s">
+      <parameters count="4">
+         <parameter index="0" type="svm::list_type" />
+         <parameter index="1" type="svm::int_type" />
+         <parameter index="2" type="svm::int_type" />
+         <parameter index="3" type="svm::int_type" />
+      </parameters>
+      <body>
+         List* base = (List*)argv[0];
+         UInt start = (UInt)((Int*)argv[1])->value;
+         UInt end = (UInt)((Int*)argv[2])->value;
+         UInt step = (UInt)((Int*)argv[3])->value;
+
+         if (start > base->length)
+         {
+            SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(this, start, base->length);
+         }
+         else if (end > base->length)
+         {
+            SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(this, end, base->length);
+         }
+         else
+         {
+            Object* slice = svm::List::slice(argv[0], start, end, step);
+            this->current_block->heap.append(slice);
+         }
+      </body>
+   </opcode>
+</namespace>
+

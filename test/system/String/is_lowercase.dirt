@@ -1,0 +1,20 @@
+"".is_lowercase() -> T
+"a".is_lowercase() -> T
+"A".is_lowercase() -> F
+"z".is_lowercase() -> T
+"Z".is_lowercase() -> F
+"@".is_lowercase() -> T
+"[".is_lowercase() -> T
+"`".is_lowercase() -> T
+"{".is_lowercase() -> T
+"0".is_lowercase() -> T
+"9".is_lowercase() -> T
+"abcdefghijklmnopqrstuvwxyz".is_lowercase() -> T
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".is_lowercase() -> F
+"aBc".is_lowercase() -> F
+"AbC".is_lowercase() -> F
+"a a a".is_lowercase() -> T
+"A A A".is_lowercase() -> F
+" a ".is_lowercase() -> T
+" A ".is_lowercase() -> F
+

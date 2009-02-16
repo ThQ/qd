@@ -1,0 +1,250 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="i" char="i">
+   <include src="svm/Float.h" />
+   <include src="svm/Int.h" />
+   <include src="types.h" />
+
+   <opcode name="add__i" char="y">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         Object* i1 = heap.get(0);
+         SVM_PICK(i1);
+         heap.pop();
+         long i = (long)(((svm::Int*)i1)->value + ((svm::Int*)argv[0])->value);
+         heap.append(svm::Int::build(i));
+         SVM_DROP(i1);
+      </body>
+   </opcode>
+
+   <opcode name="add__ii" char="i">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         long int f = (long int)(((svm::Int*)argv[0])->value + ((svm::Int*)argv[1])->value);
+         heap.append(svm::Int::build(f));
+      </body>
+   </opcode>
+
+   <opcode name="add__if" char="f">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::float_type" />
+      </parameters>
+      <body>
+         long double d = (long double)(((svm::Int*)argv[0])->value + ((svm::Float*)argv[1])->value);
+         heap.append(svm::Float::build(d));
+      </body>
+   </opcode>
+
+   <opcode name="copy_to_string" char="c">
+      <parameters count="0" />
+      <body>
+         svm::Object* i = heap.get(0);
+         SVM_PICK(i);
+         heap.pop();
+         heap.append(svm::Int::cast_to_string(i));
+         SVM_DROP(i);
+      </body>
+   </opcode>
+
+   <opcode name="copy_to_string__i" char="w">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::Object* i = heap.get(0);
+         SVM_PICK(i);
+         heap.pop();
+         heap.append(svm::Int::cast_to_string(i, argv[0]));
+         SVM_DROP(i);
+      </body>
+   </opcode>
+   <opcode name="copy_to_string__ii" char="C">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" comment="Integer to convert" />
+         <parameter index="1" type="svm::int_type" comment="Base" />
+      </parameters>
+      <body><![CDATA[
+         heap.append(svm::Int::cast_to_string(argv[0], argv[1]));
+      ]]></body>
+   </opcode>
+
+   <opcode name="equals__ii" char="E">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         Short i = svm::Int::compare_to(argv[0], argv[1]);
+         svm::Object* b = i == 0 ? svm::True : svm::False;
+         heap.append(b);
+      </body>
+   </opcode>
+
+   <opcode name="increment__i" char="a">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         long l = (long)((svm::Int*)argv[0])->value;
+         heap.append(svm::Int::build(l + 1));
+      </body>
+   </opcode>
+
+   <opcode name="list_to__iii" char="l">
+      <parameters count="3">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+         <parameter index="2" type="svm::int_type" />
+      </parameters>
+      <body>
+         if (((Int*)argv[2])->value == 0)
+         {
+            //TODO: Throw a more appropriate exception
+            svm::Object* e = svm::Exception::build();
+            e->set_class(svm::exception_type);
+            this->throw_exception(e);
+         }
+         else
+         {
+            svm::Object* list = svm::IntUtil::list_to_iii(argv[0], argv[1], argv[2]);
+            heap.append(list);
+         }
+      </body>
+   </opcode>
+
+   <opcode name="increment" char="A">
+      <parameters count="0" />
+      <body>
+         svm::Int* base = (svm::Int*)heap.get(0);
+         long l = (long)((base->value) + 1);
+         heap.replace(1, svm::Int::build(l));
+      </body>
+   </opcode>
+
+   <opcode name="greater_or_equal__ii" char="}">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         long l1 = ((svm::Int*)argv[0])->value;
+         long l2 = ((svm::Int*)argv[1])->value;
+         heap.append(l1 >= l2 ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="modulus__i" char="%">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::Object* i1 = heap.get(0);
+         SVM_PICK(i1);
+         heap.pop();
+         heap.append(svm::Int::modulus(i1, argv[0]));
+         SVM_DROP(i1);
+      </body>
+   </opcode>
+
+   <opcode name="print" char="P">
+      <parameters count="0" />
+      <body>
+      svm::Int* i = (svm::Int*)heap.get(0);
+      printf("%ld\n", i->value);
+      </body>
+   </opcode>
+
+   <opcode name="print__i" char="p">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         printf("%ld", ((svm::Int*)argv[0])->value);
+      </body>
+   </opcode>
+
+   <opcode name="push_0" char="0">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)0));
+      </body>
+   </opcode>
+   <opcode name="push_1" char="1">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)1));
+      </body>
+   </opcode>
+   <opcode name="push_2" char="2">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)2));
+      </body>
+   </opcode>
+   <opcode name="push_3" char="3">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)3));
+      </body>
+   </opcode>
+   <opcode name="push_4" char="4">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)4));
+      </body>
+   </opcode>
+   <opcode name="push_5" char="5">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)5));
+      </body>
+   </opcode>
+   <opcode name="push_6" char="6">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)6));
+      </body>
+   </opcode>
+   <opcode name="push_7" char="7">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)7));
+      </body>
+   </opcode>
+   <opcode name="push_8" char="8">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)8));
+      </body>
+   </opcode>
+   <opcode name="push_9" char="9">
+      <parameters count="0" />
+      <body>
+         heap.append(svm::Int::build((long int)9));
+      </body>
+   </opcode>
+
+   <opcode name="substract" char="-">
+      <parameters count="0" />
+      <body>
+         svm::Object* i1 = heap.get(0);
+         SVM_PICK(i1);
+         heap.pop();
+
+         svm::Object* i2 = heap.get(0);
+         SVM_PICK(i2);
+         heap.pop();
+
+         heap.append(svm::Int::substract(i1, i2));
+         SVM_DROP(i2);
+         SVM_DROP(i1);
+      </body>
+   </opcode>
+</namespace>
+

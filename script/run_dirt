@@ -1,0 +1,7 @@
+#!/bin/bash
+here_dir=`cd ${0%/*} && pwd`
+dirt_file=$1
+tmp_file=/tmp/${1##*/}.sop
+python ${here_dir}/../translaters/dirt.py ${here_dir}/../build/opcodes.ini $dirt_file $tmp_file && \
+   cd ${here_dir}/../build && ./svm $tmp_file
+

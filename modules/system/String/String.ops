@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="s" char="s">
+   <include src="svm/String.h" />
+
+   <opcode name="append__s" char="n">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Object* s = heap.get(0);
+         SVM_PICK(s);
+         heap.pop();
+         svm::Object* new_s = svm::String::join(s, argv[0]);
+         heap.append(new_s);
+         SVM_DROP(s);
+      </body>
+   </opcode>
+
+   <opcode name="append_char__si" char="c">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::Object* obj = svm::String::append(argv[0], (char)((svm::Int*)argv[0])->value);
+         heap.append(obj);
+      </body>
+   </opcode>
+
+   <opcode name="find__ss" char="f">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         heap.append(svm::String::find(argv[0], argv[1], svm::Int::build((long int)0)));
+      </body>
+   </opcode>
+
+   <opcode name="each__sB" char="e">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+     </parameters>
+     <body><![CDATA[
+      String* base = ((String*)argv[0]);
+      SVM_PICK(argv[0]);
+      Block* cblock = this->get_block(((String*)argv[1])->value);
+      SVM_PICK(cblock);
+      if (cblock != NULL)
+      {
+         size_t len = base->value.length();
+         for (size_t i = 0 ; i < len ; ++i)
+         {
+            svm::Object* c = svm::String::build((char)base->value.at(i));
+            cblock->heap.clear();
+            cblock->heap.append(c);
+            this->run_block(cblock, false);
+         }
+      }
+      SVM_DROP(cblock);
+      SVM_DROP(argv[0]);
+     ]]></body>
+   </opcode>
+
+   <opcode name="equals__ss" char="=">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         heap.append(svm::String::equals(argv[0], argv[1]));
+      </body>
+   </opcode>
+
+   <opcode name="equals" char="E">
+      <body>
+         Object* s1 = heap.get(0);
+         SVM_PICK(s1);
+         Object* s2 = heap.get(1);
+         SVM_PICK(s2);
+         heap.replace(2, svm::String::equals(s1, s2));
+         SVM_DROP(s2);
+         SVM_DROP(s1);
+      </body>
+   </opcode>
+
+   <opcode name="join__ss" char="+">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Object* obj = svm::String::join(argv[0], argv[1]);
+         heap.append(obj);
+      </body>
+   </opcode>
+
+   <opcode name="length" char="L">
+      <parameters count="0" />
+      <body>
+         Object* s = heap.get(0);
+         SVM_PICK(s);
+         heap.pop();
+         heap.append(svm::String::get_length(s));
+         SVM_DROP(s);
+      </body>
+   </opcode>
+
+   <opcode name="lower_case" char="l">
+      <parameters count="0" />
+      <body>
+         svm::Object* base = heap.get(0);
+         heap.replace_at(0, svm::String::lower(base));
+      </body>
+   </opcode>
+
+   <opcode name="ord" char="o">
+      <parameters count="0" />
+      <body>
+         svm::Object* obj = NULL;
+         svm::String* base = (svm::String*)heap.get(0);
+         if (base->value.length() >= 1)
+         {
+            obj = svm::Int::build((long)(char)base->value[0]);
+         }
+         else
+         {
+            // THROW ERROR
+            obj = NULL;
+         }
+         ASSERT_NOT_NULL(obj);
+         heap.replace_at(0, obj);
+      </body>
+   </opcode>
+
+   <opcode name="pad__sis" char="w">
+      <parameters count="3">
+         <parameter index="0" type="svm::string_type" comment="Base string" />
+         <parameter index="1" type="svm::int_type" comment="New length" />
+         <parameter index="2" type="svm::string_type" comment="Pad string" />
+      </parameters>
+      <body>
+         heap.append(svm::String::pad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
+      </body>
+   </opcode>
+
+   <opcode name="prepend__s" char="Q">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Object* s = heap.get(0);
+         SVM_PICK(s);
+         heap.pop();
+         svm::Object* new_s = svm::String::join(argv[0], s);
+         heap.append(new_s);
+         SVM_DROP(s);
+      </body>
+   </opcode>
+
+   <opcode name="print" char="p">
+      <parameters count="0" />
+      <body>
+         svm::String::print(heap.get(0));
+      </body>
+   </opcode>
+
+   <opcode name="print__s" char="r">
+      <parameters count="0">
+         <parameter index="0" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::String::print(argv[0]);
+      </body>
+   </opcode>
+
+   <opcode name="print_line" char="P">
+      <parameters count="0" />
+      <body>
+         svm::String::print_line(heap.get(0));
+      </body>
+   </opcode>
+
+   <opcode name="print_line__s" char="R">
+      <parameters count="0" />
+      <body>
+         svm::String::print_line(argv[0]);
+      </body>
+   </opcode>
+
+
+
+   <opcode name="lpad__sis" char="W">
+      <parameters count="3">
+         <parameter index="0" type="svm::string_type" comment="Base string" />
+         <parameter index="1" type="svm::int_type" comment="New length" />
+         <parameter index="2" type="svm::string_type" comment="Pad string" />
+      </parameters>
+      <body>
+         heap.append(svm::String::lpad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
+      </body>
+   </opcode>
+
+   <opcode name="swap_case" char="S">
+      <parameters count="0" />
+      <body>
+         svm::Object* base = heap.get(0);
+         heap.replace_at(0, svm::String::swap_case(base));
+      </body>
+   </opcode>
+
+   <opcode name="upper_case" char="U">
+      <parameters count="0" />
+      <body>
+         svm::Object* base = this->current_block->heap.get(0);
+         heap.replace_at(0, svm::String::upper(base));
+      </body>
+   </opcode>
+
+   <opcode name="vjoin" char="j">
+      <parameters minimum-count="1" />
+      <body><![CDATA[
+         svm::Object* obj = svm::String::build();
+         for (ULong j = 0 ; j < opc->argc ; ++j)
+         {
+            if (this->check_arguments(1, argv[j], svm::string_type))
+            {
+               svm::String::append(obj, argv[j]);
+            }
+            else
+            {
+               break;
+            }
+         }
+         this->current_block->heap.append(obj);
+      ]]></body>
+   </opcode>
+</namespace>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="class" char="c">
+   <include src="svm/Class.h" />
+   <include src="svm/String.h" />
+   <include src="types.h" />
+
+   <opcode name="new__ss" char="+">
+      <parameters minimum-count="2">
+         <parameter index="0" type="svm::string_type" comment="Class name" />
+         <parameter index="1" type="svm::string_type" comment="Parent class name" />
+      </parameters>
+      <body>
+         svm::String* class_name = (svm::String*)argv[0];
+         svm::String* parent_class_name = (svm::String*)argv[1];
+         this->classes.declare_class(class_name->value.c_str(), ((std::string)parent_class_name->value).c_str());
+      </body>
+   </opcode>
+
+   <opcode name="new_method__ssss" char="m">
+      <parameters count="4">
+         <parameter index="0" type="svm::string_type" comment="Class name" />
+         <parameter index="1" type="svm::string_type" comment="Method name" />
+         <parameter index="2" type="svm::string_type" comment="Return type name" />
+         <parameter index="3" type="svm::string_type" comment="Block name" />
+      </parameters>
+      <body><![CDATA[
+         svm::Class* cls = this->classes.get(((svm::String*)argv[0])->value);
+         SVM_ASSERT_CLASS(cls);
+         SVM_PICK(cls);
+
+         svm::Object* return_type = this->classes.get(((svm::String*)argv[2])->value);
+         SVM_ASSERT_CLASS(return_type);
+         SVM_PICK(return_type);
+
+         svm::Block* block = this->get_block(((svm::String*)argv[3])->value);
+         SVM_ASSERT_NOT_NULL(block);
+
+         svm::UserFunction* func = new svm::UserFunction();
+         SVM_PICK(func);
+         func->name = ((svm::String*)argv[1])->value;
+         func->set_return_type(return_type);
+         func->set_block(block);
+
+         if (opc->argc > 4 && opc->argc % 2 == 0)
+         {
+            svm::Object** func_args = new svm::Object*[opc->argc - 4];
+            for (unsigned long i = 4, j = 0 ; i < opc->argc ; i += 2, ++j)
+            {
+               SVM_ASSERT_STRING(argv[i]);
+               SVM_ASSERT_NOT_NULL(argv[i + 1]);
+
+               svm::Object* arg_cls = (svm::Object*)this->classes.get(((svm::String*)argv[i + 1])->value);
+
+               SVM_ASSERT_CLASS(arg_cls);
+               SVM_PICK_SAFE(arg_cls);
+               func_args[j] = svm::Variable::build(arg_cls, ((svm::String*)argv[i])->value);
+               SVM_PICK(func_args[j]);
+               SVM_DROP_SAFE(arg_cls);
+
+               SVM_ASSERT_VARIABLE(func_args[j]);
+            }
+            func->set_arguments((opc->argc - 4) / 2, func_args);
+         }
+         SVM_ASSERT_FUNCTION(func);
+         this->classes.declare_method(cls, func);
+         SVM_DROP(cls);
+         SVM_DROP(return_type);
+         SVM_DROP(func);
+      ]]></body>
+   </opcode>
+
+   <opcode name="list_methods__s" char="l">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" comment="Class name" />
+      </parameters>
+      <body>
+         #ifdef _DEBUG_
+         block->heap.pop(2);
+         long class_index = this->classes.find(((svm::String*)argv[0])->value);
+         if (class_index != -1)
+         {
+            this->classes.items[class_index]->functions.list();
+         }
+         else
+         {
+            WARNING("Class not found.\n");
+         }
+         #endif
+      </body>
+   </opcode>
+
+   <opcode name="new_field__sss" char=">">
+      <parameters count="3">
+         <parameter index="0" type="svm::string_type" comment="Class name" />
+         <parameter index="1" type="svm::string_type" comment="Field name" />
+         <parameter index="2" type="svm::string_type" comment="Field type" />
+      </parameters>
+      <body>
+         long class_index = this->classes.find(((svm::String*)argv[0])->value);
+         if (class_index != -1)
+         {
+            long type_index = this->classes.find(((svm::String*)argv[2])->value);
+            if (type_index != -1)
+            {
+               svm::Variable* var = new svm::Variable();
+               var->name = ((svm::String*)argv[1])->value;
+               var->set_object_type((svm::Object*)this->classes.items[type_index]->cls);
+               this->classes.items[class_index]->fields.append(var);
+            }
+            else
+            {
+               WARNING("Type not found.\n");
+            }
+         }
+         else
+         {
+            WARNING("Class not found.\n");
+         }
+      </body>
+   </opcode>
+
+</namespace>
+

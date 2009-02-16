@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="jump" char=">">
+   <include src="svm/Bool.h" />
+   <include src="svm/String.h" />
+
+   <opcode name="if_bs" char="i">
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         if (argv[0] == svm::True)
+         {
+            svm::Block* block = this->get_block(((svm::String*)argv[1])->value);
+            this->import_swap(block);
+            this->run_block(block, true);
+         }
+      </body>
+   </opcode>
+
+   <opcode name="if_else_bss" char="e">
+      <parameters count="3">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::string_type" />
+         <parameter index="2" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Block* block;
+         if (argv[0] == svm::True)
+         {
+            block = this->get_block(((svm::String*)argv[1])->value);
+            this->import_swap(block);
+            this->run_block(block, true);
+         }
+         else
+         {
+            block = this->get_block(((svm::String*)argv[2])->value);
+            this->import_swap(block);
+            this->run_block(block, true);
+         }
+      </body>
+   </opcode>
+
+   <opcode name="switch" char="s">
+      <parameters minimum-count="3" />
+      <body><![CDATA[
+         ASSERT(opc->argc % 2 != 0, "Argument count must be impair.\n");
+         for (UInt j = 1 ; j < opc->argc ; j += 2)
+         {
+            if (this->check_arguments(1, argv[j + 1], svm::string_type))
+            {
+               if (argv[j] == argv[0])
+               {
+                  svm::Block* block = this->get_block(((svm::String*)argv[j + 1])->value);
+                  this->import_swap(block);
+                  this->run_block(block, true);
+                  break;
+               }
+            }
+         }
+      ]]></body>
+   </opcode>
+
+   <opcode name="to__s" char="2">
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Block* block = this->get_block(((svm::String*)argv[0])->value);
+         this->import_swap(block);
+         this->run_block(block, true);
+      </body>
+   </opcode>
+
+   <opcode name="unless__bs" char="u">
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         if (argv[0] == svm::False)
+         {
+            svm::Block* block = this->get_block(((svm::String*)argv[1])->value);
+            this->import_swap(block);
+            this->run_block(block, true);
+         }
+      </body>
+   </opcode>
+
+   <opcode name="return" char="&lt;">
+      <parameters count="0" />
+      <body>
+         i = block->count();
+      </body>
+   </opcode>
+</namespace>
+

@@ -1,0 +1,190 @@
+#!/usr/bin/python
+import getopt
+import os
+import os.path
+import sys
+
+class Assembler:
+    def assemble(self, files):
+        sir_main = ""
+        sir_blocks = ""
+        for file in files:
+            h = open(file, "r")
+            if h:
+                content = h.read()
+                h.close()
+                scontent = self.split_sir_content(content)
+                sir_main += scontent[0]
+                sir_blocks += scontent[1]
+        sir_main = 'block:new,"MAIN"' + "\n" + sir_main
+        return sir_main + sir_blocks
+
+    def split_sir_content(self, content):
+        contents = ["", ""]
+        lines = content.splitlines()
+        in_main = False
+        for line in lines:
+            line = line.strip()
+            if line != "" and line[0:2] != "<<" and line[0:2] != "%%":
+                if line[0:16] == 'block:new,"MAIN"':
+                    in_main = True
+                else:
+                    if line[0:9] == 'block:new':
+                        in_main = False
+                    if in_main:
+                        contents[0] += line + "\n"
+                    else:
+                        contents[1] += line + "\n"
+        return contents
+
+
+class IncludeFileNotFoundError (Exception):
+    def __init__(self, file_name, include_name, include_path):
+        Exception.__init__(self, "File [" + include_name + "] included in [" + file_name + "] cannot be found in include path [" + ":".join(include_path.folders) + "].")
+
+
+class IncludePath:
+    def __init__(self):
+        self.folders = []
+
+    def append(self, dir_path):
+        self.folders.append(dir_path)
+
+    def find_file_path(self, file_name):
+        path = ""
+        for dir in self.folders:
+            tmp_path = os.path.join(dir, file_name)
+            if os.path.isfile(tmp_path):
+                path = tmp_path
+                break
+        return path
+
+class File:
+    def __init__(self):
+        self.include_path = None
+        self.parent = None
+        self.path = ""
+        self.children = []
+
+    def add_child_by_name(self, name):
+        self.add_child_by_path(self.include_path.find_file_path(name))
+
+    def add_child_by_path(self, path):
+        file = File()
+        file.include_path = self.include_path
+        file.parent = self
+        file.path = path
+
+        if file.has_been_included_from(file.path):
+            raise RecursiveInclusionError(file.path)
+        else:
+            if file.path == "":
+                raise IncludeFileNotFoundError(self.path, name, self.include_path)
+            else:
+                self.children.append(file)
+
+    def has_been_included_from(self, file_path):
+        result = False
+        if self.parent != None and (self.parent.path == file_path or self.parent.has_been_included_from(file_path)):
+            result = True
+        return result
+
+    def has_included_file_path(self, file_path):
+        result = False
+        for child in children:
+            if child.has_included_file_path(self, file_path):
+                result = True
+                break
+        return result
+
+    def process_dependencies(self):
+        deps = self.get_direct_dependencies()
+        for include_name in deps:
+            self.add_child_by_name(include_name)
+
+        for child in self.children:
+            child.process_dependencies()
+
+    def get_direct_dependencies(self):
+        deps = []
+        f = open(self.path, "r")
+        if f != None:
+            c = f.read()
+            f.close()
+            lines = c.split("\n")
+            for line in lines:
+                line = line.strip()
+                if line[0:2] == "<<":
+                    deps.append(line[2:].strip())
+                else:
+                    break
+        return deps
+
+    def get_ordered_dependency_list(self):
+        result = []
+        for child in self.children:
+            deps = child.get_ordered_dependency_list()
+            for dep in deps:
+                if dep not in result:
+                  result.append(dep)
+        result.append(self.path)
+        return result
+
+
+class FileNotInIncludePathError (Exception):
+    def __init__(self, file_name, include_path):
+        Exception.__init__(self, "File named [" + file_name + "] cannot be found in include path [" + ":".join(include_path.folders) + "].")
+
+
+class RecursiveInclusionError (Exception):
+    def __init__(self, file_path):
+        Exception.__init__(self, "File [" + file_path + "] is included in one of its own includes. (Recursive inclusion)")
+
+
+class Tree:
+    def __init__(self):
+        self.file = None
+        self.include_path = None
+
+    def get_ordered_dependency_list(self):
+        return self.file.get_ordered_dependency_list()
+
+    def make_from_file_name(self, file_name):
+        self.file = File()
+        self.file.path = self.include_path.find_file_path(file_name)
+        self.file.include_path = self.include_path
+        if self.file.path == "":
+            raise FileNotInIncludePathError(file_name, self.include_path)
+        else:
+            self.file.process_dependencies()
+        return self.file
+
+include_path = IncludePath()
+include_path.append(os.getcwd())
+output_to = ""
+#include_path.append("/home/thomas/dev/c++/sws/data")
+
+opt_short = "i:o:"
+opt_long = ["include=", "output="]
+
+opts, args = getopt.getopt(sys.argv[1:], opt_short, opt_long)
+for opt_name, opt_value in opts:
+    if opt_name == "--include" or opt_name == "-i":
+        include_path.append(opt_value)
+    elif opt_name == "--output" or opt_name == "-o":
+        output_to = opt_value
+
+tree = Tree()
+tree.include_path = include_path
+tree.make_from_file_name("a.sir")
+deps = tree.get_ordered_dependency_list()
+
+assembler = Assembler()
+sir_code = assembler.assemble(deps)
+if output_to == "":
+    print sir_code,
+else:
+    h = open(output_to, "w+")
+    if h:
+        h.write(sir_code)
+        h.close()

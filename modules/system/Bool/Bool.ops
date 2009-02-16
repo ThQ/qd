@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="b" char="b">
+   <include src="svm/Bool.h" />
+   <include src="types.h" />
+
+   <opcode name="and" char="A">
+      <comment>
+         <description>Boolean and on stack.</description>
+         <appends>svm::True if heap[0] and heap[1] are svm::True.</appends>
+      </comment>
+      <parameters count="0" />
+      <body><![CDATA[
+         svm::Object* b1 = heap.get(0);
+         svm::Object* b2 = heap.get(1);
+         heap.replace(2, b1 == svm::True && b2 == svm::True ? svm::True : svm::False);
+      ]]></body>
+   </opcode>
+
+   <opcode name="and_bb" char="&amp;">
+      <comment>
+         <description>Boolean and.</description>
+         <appends>svm::True if the two operands are svm::True.</appends>
+      </comment>
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::bool_type" />
+      </parameters>
+      <body><![CDATA[
+         heap.append(argv[0] == svm::True && argv[1] == svm::True ? svm::True : svm::False);
+      ]]></body>
+   </opcode>
+
+   <opcode name="equals" char="E">
+      <comment>
+         <description>Boolean equality comparison on stack.</description>
+         <appends>svm::True if heap[0] and heap[1] are equal.</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         svm::Object* b1 = heap.get(0);
+         svm::Object* b2 = heap.get(1);
+         heap.replace(2, b1 == b2 ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="equals_bb" char="e">
+      <comment>
+         <description>Boolean equality comparison.</description>
+         <appends>svm::True if args[0] and args[1] are equal.</appends>
+      </comment>
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::bool_type" />
+      </parameters>
+      <body>
+         heap.append(argv[0] == argv[1] ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="not" char="N">
+      <comment>
+         <description>Boolean not on stack.</description>
+         <appends>svm::True if heap[0] is svm::False.</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         heap.replace(1, heap.get(0) == svm::True ? svm::False : svm::True);
+      </body>
+   </opcode>
+
+   <opcode name="not_b" char="!">
+      <comment>
+         <description>Boolean not</description>
+         <appends>svm::True if args[0] is svm::False.</appends>
+      </comment>
+      <parameters count="1">
+         <parameter index="0" type="svm::bool_type" />
+      </parameters>
+      <body>
+         heap.append(argv[0] == svm::True ? svm::False : svm::True);
+      </body>
+   </opcode>
+
+   <opcode name="or" char="0">
+      <comment>
+         <description>Boolean or on stack</description>
+         <appends>svm::True if heap(0) or heap(1) is svm::True.</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         svm::Object* b1 = heap.get(0);
+         svm::Object* b2 = heap.get(1);
+         heap.replace(2, b1 == svm::True || b2 == svm::True ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="or_bb" char="|">
+      <comment>
+         <description>Boolean or</description>
+         <appends>svm::True if arg1 or arg2 is svm::True.</appends>
+      </comment>
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::bool_type" />
+      </parameters>
+      <body>
+         heap.append(argv[0] == svm::True || argv[1] == svm::True ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="print" char="q">
+      <parameters count="0" />
+      <body>
+         svm::Bool::print(heap.get(0));
+      </body>
+   </opcode>
+
+   <opcode name="print_b" char="p">
+      <parameters count="1">
+         <parameter index="0" type="svm::bool_type" />
+      </parameters>
+      <body>
+         svm::Bool::print(argv[0]);
+      </body>
+   </opcode>
+
+   <opcode name="print_line" char="Q">
+      <parameters count="0" />
+      <body>
+         svm::Bool::print_line(heap.get(0));
+      </body>
+   </opcode>
+
+   <opcode name="print_line_b" char="P">
+      <parameters count="1">
+         <parameter index="0" type="svm::bool_type" />
+      </parameters>
+      <body>
+         svm::Bool::print_line(argv[0]);
+      </body>
+   </opcode>
+
+   <opcode name="push_false" char="F">
+      <comment>
+         <description>Push svm::False onto the stack.</description>
+         <appends>svm::False</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         heap.append(svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="push_true" char="T">
+      <comment>
+         <description>Push svm::True onto the stack.</description>
+         <appends>svm::True</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         heap.append(svm::True);
+      </body>
+   </opcode>
+
+   <opcode name="vand" char="a">
+      <comment>
+         <description>Variable boolean and.</description>
+         <appends>svm::True if all operands are svm::True</appends>
+      </comment>
+      <parameters minimum-count="1" />
+      <body><![CDATA[
+         bool is_true = true;
+         for (ULong j = 0 ; i < opc->argc ; ++j)
+         {
+            if (argv[j] == svm::False)
+            {
+               is_true = false;
+            }
+         }
+
+         this->current_block->heap.append(is_true ? svm::True : svm::False);
+         this->current_block->heap.append(svm::False);
+      ]]></body>
+   </opcode>
+
+   <opcode name="vor" char="o">
+      <comment>
+         <description>Variable boolean or.</description>
+         <returns>svm::True if at least one operand is svm::True</returns>
+      </comment>
+      <parameters minimum-count="1" />
+      <body><![CDATA[
+         bool is_true = false;
+         for (ULong j = 0 ; j < opc->argc ; ++j)
+         {
+            if (argv[j] == svm::True)
+            {
+               is_true = true;
+               break;
+            }
+         }
+         heap.append(is_true ? svm::True : svm::False);
+      ]]></body>
+   </opcode>
+
+   <opcode name="xor" char="X">
+      <comment>
+         <description>Boolean xor on stack.</description>
+         <appends>svm::True if heap[0] and heap[1] are different.</appends>
+      </comment>
+      <parameters count="0" />
+      <body>
+         heap.append(heap.get(0) != heap.get(1) ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+   <opcode name="xor_bb" char="x">
+      <comment>
+         <description>Boolean xor.</description>
+         <appends>svm::True if argv[0] and argv[1] are different.</appends>
+      </comment>
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::bool_type" />
+      </parameters>
+      <body>
+         heap.append(argv[0] != argv[1] ? svm::True : svm::False);
+      </body>
+   </opcode>
+
+</namespace>
+

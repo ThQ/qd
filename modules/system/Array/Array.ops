@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="a" char="a">
+   <include src="svm/Int.h" />
+   <include src="svm/Array.h" />
+   <include src="types.h" />
+
+   <opcode name="new" char="_">
+      <parameters count="2">
+         <parameter index="0" type="svm::class_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::Object* arr = svm::Array::build(argv[0], argv[1]);
+         this->current_block->heap.append(arr);
+      </body>
+   </opcode>
+
+   <opcode name="get_item" char="{">
+      <parameters count="3">
+         <parameter index="0" type="svm::array_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         svm::Object* obj = ((svm::Array*)argv[0])->items[((svm::Int*)argv[1])->value];
+         this->current_block->heap.append(obj);
+      </body>
+   </opcode>
+
+   <opcode name="set_item" char="}">
+      <parameters count="3">
+         <parameter index="0" type="svm::array_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         // @TODO: Check for index out of range
+         if (argv[3] != ((svm::Array*)argv[0])->type)
+         {
+            svm::Object* e = svm::Exception::build();
+            e->set_class(svm::bad_type_exception_type);
+            this->throw_exception(e);
+         }
+         else
+         {
+            ((svm::Array*)argv[0])->items[((svm::Int*)argv[1])->value] = argv[2];
+         }
+      </body>
+   </opcode>
+
+</namespace>
+

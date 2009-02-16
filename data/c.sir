@@ -1,0 +1,4 @@
+block:new,"MAIN"
+s:print__s "c.sir"
+block:new,"IN C.SIR"
+s:print__s "in c.sir"

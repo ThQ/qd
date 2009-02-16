@@ -1,0 +1,3 @@
+<< c.sir
+block:new,"MAIN"
+s:print__s "b.sir"

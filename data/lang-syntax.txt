@@ -1,0 +1,93 @@
+
+Formater = :AbstractType()
+    nop
+
+
+Entry = :Type()
+    level :LogLevel
+    message :String
+
+
+Handler = :Type()
+    formater = :Formater()
+    writer = :Writer()
+
+    $make = :Maker(formater :Formater, writer :Writer)
+        $formater = formater
+        $writer = writer
+
+
+HandlerList = :List<Handler>
+    $append(formater :Formater, writer :Writer)
+        handler = :Handler(formater, writer)
+
+
+Level = :Type()
+    
+    _name :String = ""
+
+    make = :Maker()
+        nop
+
+    make = :Maker(name :String)
+        $_name = name
+
+
+Writer = :AbstractType()
+    nop
+
+
+BaseLogger = :AbstractType()
+    _entries :List<Entry>
+    _handlers :HandlerList
+    _levels  :List<Level>
+
+    $entries = :Getter()
+        <<< $_entries
+
+    $clear = :Function()
+        $clear_entries()
+        $clear_levels()
+
+    $clear_entries = :Function()
+        $_entries.clear()
+
+    $clear_levels = :Function():
+        $_levels.clear()
+
+    $find = :Function (entry :Entry)
+        result = -1 
+        i = 0
+        while not $_entries.ended?
+            if $_entries @ i == entry:
+                <<< i
+            ++ i
+            
+        <<< result
+
+    $log = :Function (level :Level, message :String)
+        if level in $_levels
+             $_entries += :Entry(message, level)
+        else
+             raise :BadLevelException(level)
+  
+
+Logger = :Type(BaseLogger)
+    $alert_level = :Level("alert")
+    $inform_level = :Level("information")
+    $warn_level = :Level("warning")
+
+    $alert = :Function(message :String)
+        $log($alert_level, message)
+
+    $inform = :Function(message :String)
+        $log($inform_level, message)
+
+    $warn = :Function(message :String)
+        $log($warn_level, message
+
+
+
+    
+  
+

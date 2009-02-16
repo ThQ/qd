@@ -1,0 +1,26 @@
+#!/bin/bash
+here_dir=`pwd`
+tmp_dir=/tmp
+sir_file=$1
+sirpp_file=${tmp_dir}/${1##*/}.sirpp
+sop_file=${tmp_dir}/${1##*/}.sop
+sir=${here_dir}/../translaters/sir.py
+sirpp=${here_dir}/../translaters/sir_pp.py
+
+python ${sirpp} ${sir_file} > ${sirpp_file}
+if [ -f "${sirpp_file}" ] ; then
+   python ${sir} ${here_dir}/../build/opcodes.ini $sirpp_file > $sop_file
+   if [ -f "${sop_file}" ] ; then
+      cd ${here_dir}/../build
+      pwd
+      ./svm $sop_file
+   else
+      echo "${sir} failed to translate ${sirpp_file} to ${sop_file}."
+      exit 1
+   fi
+else
+   echo "${sirpp} failed to preprocess ${sir_file} to ${sirpp_file}"
+   exit 1
+fi
+
+

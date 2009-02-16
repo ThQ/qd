@@ -1,0 +1,7 @@
+"".reverse() -> ""
+"a".reverse() -> "a"
+"abc".reverse() -> "cba"
+" abc ".reverse() -> " cba "
+"aa".reverse() -> "aa"
+"aaa".reverse() -> "aaa"
+

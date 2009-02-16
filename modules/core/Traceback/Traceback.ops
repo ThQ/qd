@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="traceback" char="T">
+   <include src="svm/Class.h" />
+   <include src="types.h" />
+
+   <opcode name="check" char="c">
+      <parameters minimum-count="2">
+         <parameter index="1" type="svm::string_type" />
+      </parameters>
+      <body>
+         svm::Class* cls = (svm::Class*)argv[0]->cls;
+         SVM_PICK(cls);
+         if (cls->name == ((svm::String*)argv[1])->value)
+         {
+            this->current_block->heap.append(svm::True);
+         }
+         else
+         {
+            this->current_block->heap.append(svm::False);
+         }
+         SVM_DROP(cls);
+      </body>
+   </opcode>
+</namespace>

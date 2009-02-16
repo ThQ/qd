@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="exception" char="e">
+   <include src="svm/Class.h" />
+   <include src="types.h" />
+
+   <opcode name="set_handler" char="h">
+      <parameters minimum-count="2">
+         <parameter index="0" type="svm::string_type" comment="Block name" />
+      </parameters>
+      <body>
+         svm::Block* handler = this->get_block(((svm::String*)argv[0])->value);
+         SVM_ASSERT_NOT_NULL(handler);
+         SVM_PICK(handler);
+         this->current_block->set_exception_handler(handler);
+         SVM_DROP(handler);
+      </body>
+   </opcode>
+
+   <opcode name="throw" char=">">
+      <parameters count="4">
+         <parameter index="1" type="svm::exception_type" comment="Exception to be thrown" />
+      </parameters>
+      <body>
+         SVM_ASSERT_EXCEPTION(argv[0]);
+         this->current_block->throw_exception(argv[0]);
+      </body>
+   </opcode>
+</namespace>

@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="return" char="&lt;">
+   <include src="svm/Bool.h" />
+
+   <opcode name="if" char="i">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         SVM_ASSERT_BOOL(argv[0]);
+         if (argv[0] == svm::True)
+         {
+            opc->next_opcode = NULL;
+         }
+      </body>
+   </opcode>
+
+   <opcode name="s_if" char="I">
+      <parameters count="0" />
+      <body>
+         svm::Object* b = this->current_block->heap.get(0);
+         SVM_ASSERT_BOOL(b);
+         if (b == svm::True)
+         {
+            opc->next_opcode = NULL;
+         }
+         this->current_block->heap.pop();
+      </body>
+   </opcode>
+
+   <opcode name="return" char="&lt;">
+      <parameters count="0" />
+      <body>
+         opc->next_opcode = NULL;
+      </body>
+   </opcode>
+
+   <opcode name="unless" char="u">
+      <parameters count="1">
+         <parameter index="0" type="svm::bool_type" />
+      </parameters>
+      <body>
+         SVM_ASSERT_BOOL(argv[0]);
+         if (argv[0] != svm::True)
+         {
+            opc->next_opcode = NULL;
+         }
+      </body>
+   </opcode>
+
+   <opcode name="s_unless" char="U">
+      <parameters count="0" />
+      <body>
+         svm::Object* b = this->current_block->heap.get(0);
+         SVM_ASSERT_BOOL(b);
+         if (b == svm::False)
+         {
+            opc->next_opcode = NULL;
+         }
+         this->current_block->heap.pop();
+      </body>
+   </opcode>
+</namespace>
+

@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="function" char="f">
+   <include src="svm/Class.h" />
+   <include src="types.h" />
+
+   <opcode name="call" char="!">
+      <body><![CDATA[
+         svm::Object* result_obj = this->call((std::string)opc->content, opc->argc, opc->argv);
+         if (result_obj != svm::Null)
+         {
+            this->current_block->heap.append(result_obj);
+         }
+      ]]></body>
+   </opcode>
+</namespace>
+

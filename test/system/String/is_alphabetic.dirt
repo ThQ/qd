@@ -1,0 +1,22 @@
+"".is_alphabetic() -> F
+"a".is_alphabetic() -> T
+"A".is_alphabetic() -> T
+"z".is_alphabetic() -> T   
+"Z".is_alphabetic() -> T
+"az".is_alphabetic() -> T
+"AZ".is_alphabetic() -> T
+"0".is_alphabetic() -> F
+"abcdefghijklmnopqrstuvwxyz".is_alphabetic() -> T
+"abcdefghijklmnopqrstuvwxyz0".is_alphabetic() -> F
+"0abcdefghijklmnopqrstuvwxyz".is_alphabetic() -> F
+" abcdefghijklmnopqrstuvwxyz".is_alphabetic() -> F
+"abcdefghijklmnopqrstuvwxyz ".is_alphabetic() -> F
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ".is_alphabetic() -> T
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ0".is_alphabetic() -> F
+" ".is_alphabetic() -> F
+"@".is_alphabetic() -> F
+"[".is_alphabetic() -> F
+"`".is_alphabetic() -> F
+"{".is_alphabetic() -> F
+
+

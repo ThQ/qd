@@ -1,0 +1,16 @@
+0.compare_to(0) -> 0
+1.compare_to(1) -> 0
+11.compare_to(11) -> 0
+9.compare_to(9) -> 0
+99.compare_to(99) -> 0
+11.compare_to(11) -> 0
+
+0.compare_to(1) -> -1
+0.compare_to(11) -> -1
+1.compare_to(2) -> -1
+11.compare_to(22) -> -1
+
+1.compare_to(0) -> 1
+10.compare_to(0) -> 1
+2.compare_to(1) -> 1
+22.compare_to(11) -> 1

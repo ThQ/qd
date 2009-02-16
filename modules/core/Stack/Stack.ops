@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<namespace name="stack" char="S">
+   <include src="svm/Int.h" />
+   <include src="types.h" />
+
+   <opcode name="duplicate" char="d">
+      <parameters count="0" />
+      <body>
+         svm::Object* obj = heap.get(0);
+         heap.append(obj);
+      </body>
+   </opcode>
+
+   <opcode name="push" char="+">
+      <parameters minimum-count="1" />
+      <body>
+         heap.append(opc->argc, argv);
+      </body>
+   </opcode>
+
+   <opcode name="pop" char="-">
+      <parameters count="0" />
+      <body>
+         heap.pop(1);
+      </body>
+   </opcode>
+
+   <opcode name="pop2" char="\">
+      <parameters count="0" />
+      <body>
+         heap.pop(2);
+      </body>
+   </opcode>
+
+   <opcode name="print" char="p">
+      <parameters count="0" />
+      <body><![CDATA[
+         for(ULong i = 0 ; i < heap.item_count ; ++ i)
+         {
+            Object* obj = heap.items[i];
+            printf("#%lu - %s (@%lu)", (heap.item_count - i - 1), ((svm::Class*)obj->cls)->name.c_str(), (ULong)obj);
+            if (obj->cls == svm::string_type)
+            {
+               printf(": \"%s\"", ((svm::String*)obj)->value.c_str());
+            }
+            else if (obj->cls == svm::int_type)
+            {
+               printf(": %ld", ((svm::Int*)obj)->value);
+            }
+
+            printf("\n");
+         }
+      ]]></body>
+   </opcode>
+   <opcode name="reverse_i" char="r">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         heap.reverse(((svm::Int*)opc->argv[0])->value);
+      </body>
+   </opcode>
+
+   <opcode name="swap" char="s">
+      <parameters count="0" />
+      <body>
+         heap.swap();
+      </body>
+   </opcode>
+</namespace>
+
