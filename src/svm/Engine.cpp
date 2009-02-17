@@ -369,12 +369,10 @@ namespace svm
          this->stack.append(block);
       }
 
-      svm::OpCode* opc = block->first_opcode;
-      while (opc != NULL)
+      svm::OpCode* opc;
+      for (ULong i = 0 ; i < block->count() ; ++i)
       {
-      //for (ULong i = 0 ; i < block->count() ; ++i)
-      //{
-         //svm::OpCode* opc = block->get(i);
+         opc = block->get(i);
          ASSERT_NOT_NULL(opc);
          svm::Object** args;
          Engine::make_empty_object_array(args, opc->argc);
@@ -475,7 +473,7 @@ namespace svm
             SVM_DROP(args[j]);
          }
 
-         opc = opc->next_opcode;
+         //opc = opc->next_opcode;
          // TODO: Problem here ! Damn'it ! Reference counting is great !
          //delete args;
       }

@@ -1,4 +1,5 @@
 #include <getopt.h>
+#include <stdlib.h>
 
 #include "svm/EngineStarter.h"
 

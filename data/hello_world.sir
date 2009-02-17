@@ -1,0 +1,2 @@
+block:new,"MAIN":
+s:print__s "HELLO"

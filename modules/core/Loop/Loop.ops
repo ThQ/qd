@@ -3,6 +3,7 @@
 <namespace name="loop" char="~">
    <include src="svm/Bool.h" />
 
+   <!--
    <opcode name="if_i" char="i">
       <parameters count="1">
          <parameter index="0" type="svm::int_type" />
@@ -60,6 +61,6 @@
          }
          this->current_block->heap.pop();
       </body>
-   </opcode>
+   </opcode>-->
 </namespace>
 

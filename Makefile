@@ -35,6 +35,10 @@ src/svm/UserObject.cpp \
 src/svm/UString.cpp \
 src/svm/Variable.cpp
 
+# SOFTWARES
+PYTHON=python
+SH=/bin/bash
+
 srcdir=.
 DATA_DIR=${srcdir}/data
 BUILD_DIR=${srcdir}/build
@@ -48,7 +52,7 @@ bin_PROGRAMS=svm
 svm_SOURCES=src/main.cpp $(base_SOURCES)
 svm_CXXFLAGS=-I$(BUILD_DIR)/include -I$(srcdir)/include -Wall
 svm_LDADD=-licui18n -licuuc -licudata
-svm_CXX=time ccache ${CXX} ${svm_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -o ${BUILD_DIR}/svm
+svm_CXX=time ccache colorgcc -x c++ ${svm_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -o ${BUILD_DIR}/svm
 
 
 test_CXX=time ccache -s ${CXX} -g -O0 ${base_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -L/usr/local/lib -lgtest -Wall
@@ -72,7 +76,6 @@ internal: update-version-number prepare-modules manual-compilation
 introspection: update-version-number prepare-modules manual-compilation
 	${svm_CXX} -pg -O0 -D __INTROSPECTION__=1
 
-
 introspection-test:
 	time ./cci  ${svm_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -Wall
 
@@ -94,7 +97,7 @@ prepare-modules:
 		--list=$(MODULES_DIR)/modules \
 		--opcodes-ini=$(BUILD_DIR)/opcodes.ini \
 		--modules-setup=$(BUILD_DIR)/src/Engine.cpp
-	cd script/ && bash install-modules.sh
+	$(SH) $(script_dir)/install-modules.sh
 
 release: update-version-number prepare-modules manual-compilation
 	${svm_CXX} -O2 -D __RELEASE__=1
@@ -120,4 +123,4 @@ sizeof:
 	[ -f `which svm` ] && du -skD `which svm`
 
 update-version-number:
-	sh script/update-version VERSION
+	$(SH) $(script_dir)/update-version $(srcdir)/VERSION

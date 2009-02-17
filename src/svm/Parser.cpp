@@ -222,27 +222,15 @@ namespace svm
          else
          {
             SVM_ASSERT_NOT_NULL(block);
-            opc->append_opcode(opc);
-            /*if (previous_opcode == NULL)
-            {
-               block->first_opcode = opc;
-            }
-            else
-            {
-               previous_opcode->next_opcode = opc;
-            }
-            previous_opcode = opc;
-            //block->append(opc);
-            ++block->opcode_count;
-            */
+            block->append(opc);
          }
 
          last_at = at + 1;
       }
-      if (block->first_opcode != NULL)
+      /*if (block->first_opcode != NULL)
       {
          block->last_opcode = previous_opcode;
-      }
+      }*/
 
       INTERNAL("/ Parser::parse_lines\n");
       return block_count;
