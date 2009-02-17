@@ -339,6 +339,7 @@ namespace svm
       );
       ASSERT(this->heap.count() >= block->argc, "There must be enough in the heap to run this block.\n");
 
+      // If block have arguments, with HeapObject's replaced by their real values
       if (block->argc > 0)
       {
          for (long i = (long)block->argc - 1 ; i >= 0 ; -- i)
@@ -347,6 +348,7 @@ namespace svm
             svm::Object* obj = this->heap.pick_last_and_pop();
 
             svm::Class* cls = (svm::Class*)obj->cls;
+            #ifdef _DEBUG_
             if (cls->name != ((svm::String*)block->argv[i])->value)
             {
                WARNING(
@@ -355,6 +357,7 @@ namespace svm
                   cls->name.c_str()
                );
             }
+            #endif
             block->heap.append(obj);
          }
       }
@@ -369,6 +372,7 @@ namespace svm
          this->stack.append(block);
       }
 
+      // Execute each opcode on this block
       svm::OpCode* opc;
       for (ULong i = 0 ; i < block->count() ; ++i)
       {
@@ -377,6 +381,7 @@ namespace svm
          svm::Object** args;
          Engine::make_empty_object_array(args, opc->argc);
 
+         // If opcode have arguments, replace each HeapObject by its real value
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
             ASSERT_NOT_NULL(opc->argv[j]);
@@ -424,7 +429,7 @@ namespace svm
 
          bool opc_handled = false;
          bool opc_namespace_handled = false;
-         ULong i = 0 ; // TODO: Ugly lazy trick, damn' I'm lazy, yeah
+         //ULong i = 0 ; // TODO: Ugly lazy trick, damn' I'm lazy, yeah << What the fuck ?
          switch (opc->type)
          {
             // --------------------------------------
@@ -445,6 +450,10 @@ namespace svm
          }
          #endif
 
+         // EXECPTION HANDLING
+         // If current opcode has an exception, try to find an exception handler
+         // (starting in the current block and going up in the stack) and run it,
+         // otherwise just die printing a stacktrace.
          if (this->current_block->exception != NULL)
          {
             svm::Block* exception_handler = this->find_nearest_exception_handler();
@@ -467,6 +476,7 @@ namespace svm
                break;
             }
          }
+
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
             ASSERT_NOT_NULL(args[j]);

@@ -127,7 +127,18 @@
       </body>
    </opcode>
 
-   <opcode name="greater_or_equal__ii" char="}">
+   <opcode name="is_greater__ii" char=">">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         long l1 = ((svm::Int*)argv[0])->value;
+         long l2 = ((svm::Int*)argv[1])->value;
+         heap.append(l1 > l2 ? svm::True : svm::False);
+      </body>
+   </opcode>
+   <opcode name="is_greater_or_equal__ii" char="}">
       <parameters count="2">
          <parameter index="0" type="svm::int_type" />
          <parameter index="1" type="svm::int_type" />
@@ -137,6 +148,31 @@
          long l2 = ((svm::Int*)argv[1])->value;
          heap.append(l1 >= l2 ? svm::True : svm::False);
       </body>
+   </opcode>
+
+   <opcode name="is_lower__ii" char="&lt;">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body><![CDATA[
+         long l1 = ((svm::Int*)argv[0])->value;
+         long l2 = ((svm::Int*)argv[1])->value;
+         heap.append(l1 < l2 ? svm::True : svm::False);
+         ]]></body>
+   </opcode>
+
+
+   <opcode name="is_lower_or_equal__ii" char="{">
+      <parameters count="2">
+         <parameter index="0" type="svm::int_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body><![CDATA[
+         long l1 = ((svm::Int*)argv[0])->value;
+         long l2 = ((svm::Int*)argv[1])->value;
+         heap.append(l1 <= l2 ? svm::True : svm::False);
+         ]]></body>
    </opcode>
 
    <opcode name="modulus__i" char="%">

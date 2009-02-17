@@ -4,21 +4,31 @@
    <include src="svm/Bool.h" />
    <include src="svm/String.h" />
 
-   <opcode name="if_bs" char="i">
+   <opcode name="if__bi" char="i">
       <parameters count="2">
          <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="1" type="svm::int_type" />
       </parameters>
       <body>
          if (argv[0] == svm::True)
          {
-            svm::Block* block = this->get_block(((svm::String*)argv[1])->value);
-            this->import_swap(block);
-            this->run_block(block, true);
+            i = ((svm::Int*)argv[1])->value;
          }
       </body>
    </opcode>
 
+   <opcode name="if_not__bi" char="!">
+      <parameters count="2">
+         <parameter index="0" type="svm::bool_type" />
+         <parameter index="1" type="svm::int_type" />
+      </parameters>
+      <body>
+         if (argv[0] != svm::True)
+         {
+            i = ((svm::Int*)argv[1])->value;
+         }
+      </body>
+   </opcode>
    <opcode name="if_else_bss" char="e">
       <parameters count="3">
          <parameter index="0" type="svm::bool_type" />
@@ -62,28 +72,27 @@
       ]]></body>
    </opcode>
 
-   <opcode name="to__s" char="2">
+   <opcode name="to__i" char="2">
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" />
+         <parameter index="0" type="svm::int_type" />
       </parameters>
       <body>
-         svm::Block* block = this->get_block(((svm::String*)argv[0])->value);
-         this->import_swap(block);
-         this->run_block(block, true);
+         i = ((svm::Int*)argv[0])->value;
+         //svm::Block* block = this->get_block(((svm::String*)argv[0])->value);
+         //this->import_swap(block);
+         //this->run_block(block, true);
       </body>
    </opcode>
 
-   <opcode name="unless__bs" char="u">
+   <opcode name="unless__bi" char="u">
       <parameters count="2">
          <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="1" type="svm::int_type" />
       </parameters>
       <body>
          if (argv[0] == svm::False)
          {
-            svm::Block* block = this->get_block(((svm::String*)argv[1])->value);
-            this->import_swap(block);
-            this->run_block(block, true);
+            i = ((svm::Int*)argv[1])->value;
          }
       </body>
    </opcode>

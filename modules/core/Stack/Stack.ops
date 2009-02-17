@@ -48,6 +48,17 @@
             {
                printf(": %ld", ((svm::Int*)obj)->value);
             }
+            else if (obj->cls == svm::bool_type)
+            {
+               if (obj == svm::True)
+               {
+                  printf(": True");
+               }
+               else
+               {
+                  printf(": False");
+               }
+            }
 
             printf("\n");
          }
