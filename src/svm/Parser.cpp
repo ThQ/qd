@@ -195,6 +195,8 @@ namespace svm
          );
 
          ASSERT_NOT_NULL(opc);
+
+         // Current opcode marks a block start
          if (opc->type == OPC_NS_BLOCK && opc->method == OPC_BLOCK_NEW)
          {
             INTERNAL("<block:%s> found.\n", opc->content.c_str())
@@ -219,6 +221,7 @@ namespace svm
 
             delete opc;
          }
+         // Current opcode is a real opcode, adding to current block
          else
          {
             SVM_ASSERT_NOT_NULL(block);

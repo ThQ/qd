@@ -1,2 +1,2 @@
-block:new,"MAIN":
-s:print__s "HELLO"
+block:new,"MAIN"
+s:print_line__s "HELLO"
