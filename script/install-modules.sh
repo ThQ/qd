@@ -50,22 +50,22 @@ for module in ${modules_list[*]} ; do
          mkdir -p "${dBuildModuleInclude}/${module_rel_dir}"
          m4 "module.h" > ${dBuildModuleInclude}/${module_rel_id}.h
 
-         echo "#include \"modules/${module_rel_id}.h\"" > $fModulesInclude
+         echo "#include \"modules/${module_rel_id}.h\"" >> $fModulesInclude
 
          echo "INTERNAL(\"<module:${module}> : setup... \\n\");" \
             "modules::${module//./::}::initialize(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
-            > $fModulesInitialize
+            >> $fModulesInitialize
 
          echo "INTERNAL(\"<module:${module}> : declaring methods... \\n\");" \
             "modules::${module//./::}::declare_methods(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
-            > $fModulesDeclareMethods
+            >> $fModulesDeclareMethods
 
          echo "INTERNAL(\"<module:${module}> : tearing down... \\n\");" \
             "modules::${module//./::}::tear_down(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
-            > $fModulesTearDown
+            >> $fModulesTearDown
 
          : > $fModulesPrepared
       fi
