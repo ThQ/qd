@@ -66,9 +66,12 @@ namespace svm
       {
          printf(" [svm::object_type@%lu] ", (long unsigned)svm::object_type);
       }
+      #endif
+
+      #ifdef _DEBUG_
       if (o->references < 0)
       {
-         WARNING("<svm::Object(@%lu)> has a negative reference count.\n", (long unsigned)o);
+         WARNING("Object::drop | <svm::Object(@%lu)> has a negative reference count.\n", (long unsigned)o);
       }
       #endif
 

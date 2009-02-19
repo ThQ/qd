@@ -376,14 +376,18 @@ namespace svm
       svm::OpCode* opc;
       for (ULong i = 0 ; i < block->count() ; ++i)
       {
+         //INTERNAL("BLOCK LOOP\n");
          opc = block->get(i);
          ASSERT_NOT_NULL(opc);
          svm::Object** args;
+         //INTERNAL("Make empty object array\n");
          Engine::make_empty_object_array(args, opc->argc);
 
          // If opcode have arguments, replace each HeapObject by its real value
+         //INTERNAL("Passing through arguments\n");
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
+            //INTERNAL("arg %lu\n", j);
             ASSERT_NOT_NULL(opc->argv[j]);
             if (opc->argv[j]->cls == svm::heap_object_type)
             {
@@ -397,7 +401,9 @@ namespace svm
             ASSERT_NOT_NULL(args[j]);
             SVM_PICK(args[j]);
          }
+         //INTERNAL("// Passing through arguments\n");
 
+         //INTERNAL("Print info about opcode\n");
          #ifdef _SHOW_INTERNAL_
          if (opc->argc == 0)
          {
@@ -405,7 +411,9 @@ namespace svm
          }
          else
          {
+            //INTERNAL("opcode has arguments\n");
             INTERNAL("Running <opcode:%c%c> (", opc->type, opc->method);
+            //INTERNAL("looping through opcode args\n");
             for (ULong k = 0 ; k < opc->argc ; ++k)
             {
                svm::Object* o = args[k];
@@ -430,12 +438,14 @@ namespace svm
          }
          #endif
 
+         //INTERNAL("Some block assertions\n");
          SVM_ASSERT_NOT_NULL(this->current_block);
          SVM_ASSERT_NOT_NULL(block);
 
          bool opc_handled = false;
          bool opc_namespace_handled = false;
-         //ULong i = 0 ; // TODO: Ugly lazy trick, damn' I'm lazy, yeah << What the fuck ?
+         //ULong i = 0 ; // TODO: Ugly lazy trick, damn' I'm lazy, yeah < What the fuck ?
+         //INTERNAL("SWITCH OPC->TYPE\n");
          switch (opc->type)
          {
             // --------------------------------------
@@ -488,7 +498,7 @@ namespace svm
             ASSERT_NOT_NULL(args[j]);
             SVM_DROP(args[j]);
          }
-
+         delete[] args;
          //opc = opc->next_opcode;
          // TODO: Problem here ! Damn'it ! Reference counting is great !
          //delete args;

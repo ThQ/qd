@@ -66,7 +66,7 @@
 
 #ifdef _SHOW_WARNING_
    #ifdef USE_COLORS
-      #define WARNING(args ...)  printf(";; \033[41;1;37mWARNG\033[00m  [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define WARNING(args ...)  printf(";; \033[41;1;37mWARNG\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
    #else
       #define WARNING(args ...)  printf(";; WARNG [%s:%d] ", __FILE__, __LINE__);printf(args);
    #endif

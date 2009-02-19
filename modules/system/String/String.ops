@@ -37,7 +37,7 @@
          heap.append(svm::String::find(argv[0], argv[1], svm::Int::build((long int)0)));
       </body>
    </opcode>
-
+   <!--
    <opcode name="each__sB" char="e">
       <parameters count="2">
          <parameter index="0" type="svm::string_type" />
@@ -62,6 +62,18 @@
       SVM_DROP(cblock);
       SVM_DROP(argv[0]);
      ]]></body>
+   </opcode>
+   -->
+   stack:print
+
+   <opcode name="get_item_at__si" char="C">
+      <parameters count="2">
+         <parameter index="0" type="svm::string_type" />
+         <parameter index="1" type="svm::integer_type" />
+      </parameters>
+      <body>
+         heap.append(svm::String::get_character(argv[0], argv[1]));
+      </body>
    </opcode>
 
    <opcode name="equals__ss" char="=">

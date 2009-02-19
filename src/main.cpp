@@ -11,7 +11,7 @@ main (int argc, char **argv)
    {
       static struct option long_options[] =
       {
-         {"initialize",     no_argument,       0, 'i'}
+         {"initialize", no_argument, 0, 'i'}
       };
       int option_index = 0;
       c = getopt_long (argc, argv, "", long_options, &option_index);
@@ -43,4 +43,3 @@ main (int argc, char **argv)
       starter.tear_down();
    }
 }
-

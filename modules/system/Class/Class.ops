@@ -80,7 +80,7 @@
          long class_index = this->classes.find(((svm::String*)argv[0])->value);
          if (class_index != -1)
          {
-            this->classes.items[class_index]->functions.list();
+         //this->classes.items[class_index]->functions.list();
          }
          else
          {

@@ -12,6 +12,7 @@
 #include "svm/String.h"
 #include "types.h"
 
+
 #ifdef __ALLOW_SVM_ASSERTIONS__
    #define SVM_ASSERT_INT(i) if(!svm::Int::check(i)){FATAL("Bad type given, expected system.Int\n\n");abort();}
 #else

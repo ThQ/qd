@@ -78,9 +78,7 @@
       </parameters>
       <body>
          i = ((svm::Int*)argv[0])->value;
-         //svm::Block* block = this->get_block(((svm::String*)argv[0])->value);
-         //this->import_swap(block);
-         //this->run_block(block, true);
+         ASSERT(i &lt; block->opcode_count, "You're jumping off the block, don't forget the rope.");
       </body>
    </opcode>
 

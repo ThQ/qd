@@ -91,8 +91,10 @@
          <parameter index="0" type="svm::int_type" />
       </parameters>
       <body>
+         SVM_PICK(argv[0]);
          long l = (long)((svm::Int*)argv[0])->value;
          heap.append(svm::Int::build(l + 1));
+         SVM_DROP(argv[0]);
       </body>
    </opcode>
 
@@ -122,8 +124,17 @@
       <parameters count="0" />
       <body>
          svm::Int* base = (svm::Int*)heap.get(0);
-         long l = (long)((base->value) + 1);
-         heap.replace(1, svm::Int::build(l));
+         //INTERNAL("---\n");
+         //INTERNAL("1. Base @%ld | ref %d \n", (ULong)base, ((svm::Object*)base)->references);
+         long l = (long)(base->value + 1);
+         //INTERNAL("2. Base @%ld | ref %d \n", (ULong)base, ((svm::Object*)base)->references);
+         // Why picking then dropping ? Otherwise it crashes, but why ?
+         svm::Object* new_i = svm::Int::build(l);
+         SVM_PICK(new_i);
+         //INTERNAL("3. Base @%ld ; ref %d | NEwi @%ld ; ref %d\n", (ULong)(svm::Object*)base, ((svm::Object*)base)->references, (ULong)new_i, new_i->references);
+         heap.replace(1, new_i);
+         //INTERNAL("4. > ref %d\n", new_i->references);
+         SVM_DROP(new_i);
       </body>
    </opcode>
 

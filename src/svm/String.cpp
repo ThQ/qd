@@ -663,7 +663,7 @@ namespace svm
       tmp[1] = 0;
 
       Object* s = svm::String::build(tmp);
-      delete tmp;
+      delete[] tmp;
       return s;
    }
 
