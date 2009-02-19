@@ -29,7 +29,7 @@ namespace svm
    void
    Heap::append(Object* obj)
    {
-      ASSERT(obj->cls != svm::heap_object_type, "<heap:%ld> : Cannot store object of type <system.HeapObject>.", (long int)this);
+      ASSERT(obj->cls != svm::heap_object_type, "<heap:%ld> : Cannot store object of type <system.HeapObject>.", (long)this);
 
       if (this->rooms == this->item_count)
       {
@@ -38,8 +38,8 @@ namespace svm
 
       ++ this->item_count;
       ++ this->last_position;
+      SVM_PICK(obj);
       this->items[this->last_position] = obj;
-      SVM_PICK(this->items[this->last_position]);
    }
 
    void
@@ -54,10 +54,21 @@ namespace svm
    void
    Heap::change_length(ULong length)
    {
-      for (ULong i = 0 ; i < length ; ++ i)
+      if (length > this->item_count)
       {
-         SVM_DROP(this->items[i]);
+         for (ULong i = length ; i < this->item_count ; ++ i)
+         {
+            SVM_DROP(this->items[i]);
+         }
       }
+      else
+      {
+         for (ULong i = this->item_count ; i < length ; ++i)
+         {
+            this->items[i] = NULL;
+         }
+      }
+
       this->last_position = length - 1;
       this->item_count = length;
    }
@@ -134,8 +145,8 @@ namespace svm
    {
       ULong pos = this->last_position - at;
       SVM_PICK(by);
-      svm::Object* old = this->items[pos];
-      SVM_DROP(old);
+      CHECK(by != this->items[pos], "You should not try to replace an object by itself.\n");
+      SVM_DROP(this->items[pos]);
       this->items[pos] = by;
    }
 
