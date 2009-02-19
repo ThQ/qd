@@ -399,29 +399,35 @@ namespace svm
          }
 
          #ifdef _SHOW_INTERNAL_
-         INTERNAL("<opcode:%c%c> Running with %d arguments : ", opc->type, opc->method, opc->argc);
-         for (ULong k = 0 ; k < opc->argc ; ++k)
+         if (opc->argc == 0)
          {
-            svm::Object* o = args[k];
-            SVM_PICK(o);
-            if (k != 0)
-            {
-               printf(", ");
-            }
-            printf("%lu:", k);
-            if (o->cls != NULL)
-            {
-               printf("%s", ((svm::Class*)o->cls)->name.c_str());
-            }
-            else
-            {
-               printf("<UnknownClass>");
-            }
-            printf(" @%lu", (ULong)o);
-
-            SVM_DROP(o);
+            INTERNAL("Running <opcode:%c%c> \n", opc->type, opc->method);
          }
-         printf("\n");
+         else
+         {
+            INTERNAL("Running <opcode:%c%c> (", opc->type, opc->method);
+            for (ULong k = 0 ; k < opc->argc ; ++k)
+            {
+               svm::Object* o = args[k];
+               SVM_PICK(o);
+               if (k != 0)
+               {
+                  printf(", ");
+               }
+               printf("%lu/%d @%lu ::", (k+1), opc->argc, (ULong)o);
+               if (o->cls != NULL)
+               {
+                  printf("%s", ((svm::Class*)o->cls)->name.c_str());
+               }
+               else
+               {
+                  printf("<UnknownClass>");
+               }
+
+               SVM_DROP(o);
+            }
+            printf(")\n");
+         }
          #endif
 
          SVM_ASSERT_NOT_NULL(this->current_block);
