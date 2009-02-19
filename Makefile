@@ -65,16 +65,16 @@ clean-build:
 	rm -rf $(BUILD_DIR)/*
 
 debug: update-version-number prepare-modules manual-compilation
-	${svm_CXX} -pg -O0 -D__DEBUG__=1
+	${svm_CXX} -pg -O0 -D__DEBUG__=1 -DUSE_COLORS=1
 
 #install: update-version-number prepare-modules release
 #	cp --force $(BUILD_DIR)/svm $(bindir)
 
 internal: update-version-number prepare-modules manual-compilation
-	${svm_CXX} -pg -O0 -D __INTERNAL__=1
+	${svm_CXX} -pg -O0 -D __INTERNAL__=1 -DUSE_COLORS=1
 
 introspection: update-version-number prepare-modules manual-compilation
-	${svm_CXX} -pg -O0 -D __INTROSPECTION__=1
+	${svm_CXX} -pg -O0 -D __INTROSPECTION__=1 -DUSE_COLORS=1
 
 introspection-test:
 	time ./cci  ${svm_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -Wall
