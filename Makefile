@@ -74,7 +74,7 @@ internal: update-version-number prepare-modules manual-compilation
 	${svm_CXX} -pg -O0 -D __INTERNAL__=1 -DUSE_COLORS=1
 
 introspection: update-version-number prepare-modules manual-compilation
-	${svm_CXX} -pg -O0 -D __INTROSPECTION__=1 -DUSE_COLORS=1
+	$(SH) rc.compile
 
 introspection-test:
 	time ./cci  ${svm_SOURCES} ${svm_CXXFLAGS} ${svm_LDADD} -Wall
