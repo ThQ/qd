@@ -8,7 +8,7 @@ class CommandHandler:
    def get_output(self):
       return self.output
 
-   def initialize(self, at, args):
+   def initialize(self, at, block_opcode_pos, args):
       return False
 
    def put_command(self, at, command, args):
@@ -19,12 +19,14 @@ class CommandHandler:
 
 
 class AtHandler (CommandHandler):
-   def initialize(self, at, args):
+   def initialize(self, at, block_opcode_pos, args):
+      # Why -1 exactly ??
+      self.pp.define_variable(at, ("@@" + args.strip()), str(block_opcode_pos - 1))
       return False
 
 
 class DefineHandler (CommandHandler):
-   def initialize(self, at, args):
+   def initialize(self, at, block_opcode_pos, args):
       space_pos = args.find(" ")
       name = ""
       value = ""
@@ -44,7 +46,7 @@ class DefineHandler (CommandHandler):
 
 
 class UndefineHandler (CommandHandler):
-   def initialize(self, at, args):
+   def initialize(self, at, block_opcode_pos, args):
       space_pos = args.find(" ")
       name = ""
       value = ""
@@ -69,7 +71,7 @@ class IfDefHandler (CommandHandler):
       self.variable_name = ""
       self.ifs = 0
 
-   def initialize(self, at, args):
+   def initialize(self, at, block_opcode_pos, args):
       self.variable_name = args
       if self.variable_name in self.pp.variables:
          self.log = True
@@ -145,7 +147,11 @@ class SirPreprocessor:
       output = ""
       lines = content.splitlines()
       lineno = 1
+      block_opcode_pos = 0
       for line in lines:
+         if line.startswith("block:new"):
+            block_opcode_pos = -1
+
          line = line.strip()
          if line.startswith("@@"):
             line = "%% at " + line[2:]
@@ -172,7 +178,7 @@ class SirPreprocessor:
                elif todo == 0:
                   self.handler = self.get_handler(command)
                   if self.handler != None:
-                     if self.handler.initialize(lineno, args):
+                     if self.handler.initialize(lineno, block_opcode_pos, args):
                         self.handlers.append(self.handler)
                      else:
                         self.handler = None
@@ -181,7 +187,7 @@ class SirPreprocessor:
             else:
                self.handler = self.get_handler(command)
                if self.handler != None:
-                  if self.handler.initialize(lineno, args):
+                  if self.handler.initialize(lineno, block_opcode_pos, args):
                      self.handlers.append(self.handler)
                   else:
                      self.handler = None
@@ -196,6 +202,7 @@ class SirPreprocessor:
             else:
                new_line += line + "\n"
             output += self.replace_variables(new_line)
+            block_opcode_pos += 1
 
          lineno += 1
 
