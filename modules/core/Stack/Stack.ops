@@ -36,31 +36,33 @@
    <opcode name="print" char="p">
       <parameters count="0" />
       <body><![CDATA[
+         printf("Stack\n");
          for(ULong i = 0 ; i < heap.item_count ; ++ i)
          {
             Object* obj = heap.items[i];
-            printf("#%lu - %s (@%lu)", (heap.item_count - i - 1), ((svm::Class*)obj->cls)->name.c_str(), (ULong)obj);
+            printf("    > $%lu @%lu\n", (heap.item_count - i - 1), (ULong)obj);
+            printf("      type: %s\n", ((svm::Class*)obj->cls)->name.c_str());
+            printf("      references: %d\n", obj->references);
+            // [references=%d]", (heap.item_count - i - 1), ((svm::Class*)obj->cls)->name.c_str(), (ULong)obj, obj->references);
             if (obj->cls == svm::string_type)
             {
-               printf(": \"%s\"", ((svm::String*)obj)->value.c_str());
+               printf("      value: \"%s\"\n", ((svm::String*)obj)->value.c_str());
             }
             else if (obj->cls == svm::int_type)
             {
-               printf(": %ld", ((svm::Int*)obj)->value);
+               printf("      value: %ld\n", ((svm::Int*)obj)->value);
             }
             else if (obj->cls == svm::bool_type)
             {
                if (obj == svm::True)
                {
-                  printf(": True");
+                  printf("      value: True\n");
                }
                else
                {
-                  printf(": False");
+                  printf("      value: False\n");
                }
             }
-
-            printf("\n");
          }
       ]]></body>
    </opcode>
