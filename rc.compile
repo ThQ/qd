@@ -1,0 +1,43 @@
+#!/bin/bash
+
+source ./rc.conf
+
+# $0 : Source files
+# $1 : Output
+# $2 : Temporary directory
+function compile_project() {
+   local_CXX="$1"
+   local_sources=$2
+   local_output="$3"
+   local_dTmp="$4"
+
+   had_changed="no"
+   cd "$local_dTmp"
+   for file in ${local_sources[*]} ; do
+      if [ ! -d "$dTmp${file%/*}" ] ; then
+         mkdir -p "$dTmp${file%/*}"
+      fi
+      file_to_compile="$local_dTmp${file}.o"
+      file_src_mtime=`stat --format="%y" $file`
+      file_dst_mtime=`stat --format="%y" $file_to_compile`
+      if [ "$file_src_mtime" != "$file_dst_mtime" ] ; then
+         echo " CC $file"
+         $local_CXX -c $file -o "$file_to_compile"
+         touch $file_to_compile --date="$file_src_mtime"
+         had_changed="yes"
+      fi
+   done
+
+   if [ "$had_changed" == "yes" ] || [ ! -f "$local_output" ] ; then
+      objects=""
+      for file in ${local_sources} ; do
+         objects="$objects$local_dTmp${file}.o "
+      done
+      echo " LD $objects"
+      $local_CXX -o $local_output $objects
+   fi
+}
+
+
+
+compile_project "$svm_introspection_CXX" "${svm_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
