@@ -201,10 +201,13 @@ class SirPreprocessor:
                new_line += self.handler.put_string(lineno, line)
             else:
                new_line += line + "\n"
-            output += self.replace_variables(new_line)
             block_opcode_pos += 1
 
          lineno += 1
+
+         output += new_line
+
+      output = self.replace_variables(output)
 
       return output
 
