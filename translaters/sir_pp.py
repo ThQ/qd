@@ -202,10 +202,10 @@ class SirPreprocessor:
             else:
                new_line += line + "\n"
             block_opcode_pos += 1
+            output += new_line
 
          lineno += 1
 
-         output += new_line
 
       output = self.replace_variables(output)
 
@@ -233,7 +233,9 @@ class SirPreprocessor:
          else:
             break;
          last_at = var_end + tag_end_len
+
       result += content[last_at:]
+
       return result
 
    def undefine_variable(self, at, name):
