@@ -27,7 +27,7 @@ def initialize(opcodes_ini_file):
       res_comment = res_whitespaces + "#[^\n\r]*"
       res_opcode = "^(?:" + res_indent + ")?"
       res_opcode += "(" + res_namespace + ")"
-      res_opcode += ":"
+      res_opcode += "\s*:\s*"
       res_opcode += "(" + res_method + ")"
       res_opcode += "(?:,(" + res_content + "))?"
       res_opcode += "(" + res_parameters + ")?"
