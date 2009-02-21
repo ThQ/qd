@@ -8,7 +8,7 @@ sir=${here_dir}/../translaters/sir.py
 sirpp=${here_dir}/../translaters/sir_pp.py
 
 python ${sirpp} ${sir_file} > ${sirpp_file}
-if [ -f "${sirpp_file}" ] ; then
+if [ $? == 0 ] && [-f "${sirpp_file}" ] ; then
    python ${sir} ${here_dir}/../build/opcodes.ini $sirpp_file > $sop_file
    if [ -f "${sop_file}" ] ; then
       cd ${here_dir}/../build

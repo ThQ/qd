@@ -226,7 +226,7 @@ class SirPreprocessor:
                   result += self.variables[var_name]
                else:
                   print self.variables
-                  self.warn("?", "Unknown variable [" + var_name + "].")
+                  self.error("?", "Unknown variable [" + var_name + "].")
          else:
             break;
          last_at = var_end + tag_end_len
@@ -239,6 +239,10 @@ class SirPreprocessor:
 
    def warn(self, lineno, msg):
       sys.stderr.write("[SirPP] Warning @" + str(lineno) + ": " + msg + "\n")
+
+   def error(self, lineno, msg):
+      sys.stderr.write("[SirPP] Error @" + str(lineno) + ": " + msg + "\n")
+      exit(1)
 
 if __name__ == "__main__":
    if len(sys.argv) >= 2:
