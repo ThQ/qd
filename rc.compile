@@ -13,13 +13,16 @@ function compile_project() {
 
    had_changed="no"
    cd "$local_dTmp"
+
    for file in ${local_sources[*]} ; do
       if [ ! -d "$dTmp${file%/*}" ] ; then
          mkdir -p "$dTmp${file%/*}"
       fi
       file_to_compile="$local_dTmp${file}.o"
       file_src_mtime=`stat --format="%y" $file`
-      file_dst_mtime=`stat --format="%y" $file_to_compile`
+      file_dst_mtime=0
+      [ -f "$file_to_compile" ] && file_dst_mtime=`stat --format="%y" $file_to_compile`
+
       if [ "$file_src_mtime" != "$file_dst_mtime" ] ; then
          echo " CC $file"
          $local_CXX -c $file -o "$file_to_compile"

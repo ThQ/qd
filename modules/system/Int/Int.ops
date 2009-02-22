@@ -203,7 +203,7 @@
       <parameters count="0" />
       <body>
       svm::Int* i = (svm::Int*)heap.get(0);
-      printf("%ld\n", i->value);
+      printf("%ld", i->value);
       </body>
    </opcode>
 
@@ -213,6 +213,15 @@
       </parameters>
       <body>
          printf("%ld", ((svm::Int*)argv[0])->value);
+      </body>
+   </opcode>
+
+   <opcode name="print_line__i" char="*">
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" />
+      </parameters>
+      <body>
+         printf("%ld\n", ((svm::Int*)argv[0])->value);
       </body>
    </opcode>
 

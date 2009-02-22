@@ -655,8 +655,14 @@ namespace svm
    Object*
    String::get_character(Object* self, Object* pos)
    {
-      // String* self
-      // Int* pos
+      SVM_ASSERT_STRING(self);
+      SVM_ASSERT_INT(pos);
+      ASSERT(
+            (ULong)((Int*)pos)->value < ((String*)self)->value.length(),
+            "%s(...) : %lu is outside of range [0:%lu]",
+            __FUNCTION__, (ULong)((Int*)pos)->value,
+            (ULong)((String*)self)->value.length()
+      );
 
       char* tmp = new char[2];
       tmp[0] = ((String*)self)->value[((Int*)pos)->value];
@@ -670,6 +676,7 @@ namespace svm
    Object*
    String::get_length(Object* s)
    {
+      SVM_ASSERT_STRING(s);
       return svm::Int::build((long)((svm::String*)s)->value.length());
    }
 
