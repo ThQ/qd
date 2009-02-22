@@ -34,6 +34,14 @@
       </ul>
       {% endif %}
 
+      {% if opcode.examples %}
+      <h2>Examples</h2>
+      {% for ex in opcode.examples %}
+      <h3>Example #{{forloop.counter}}</h3>
+      <code>{{ex|linebreaks}}</code>
+      {% endfor %}
+      {% endif %}
+
       {% if opcode.body %}
       <h2>Source</h2>
       <code>

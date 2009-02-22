@@ -8,7 +8,14 @@
       <ul>
       {% for opcode in opcodes %}
       <li>
-         <h2><a href="{{ opcode.u }}">{{namespace_name}}:{{ opcode.name }}</a></h2>
+         <code>
+            <a href="{{ opcode.u }}">{{namespace_name}}:{{ opcode.name }}</a>
+            {% if opcode.parameters %}
+               {% for param in opcode.parameters %}
+               &lt;{{param.name}} <small>{{param.type}}&gt</small>
+               {% endfor %}
+            {% endif %}
+         </code>
          {% if opcode.description %}
          <p>{{opcode.description}}</p>
          {% endif %}

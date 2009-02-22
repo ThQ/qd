@@ -63,6 +63,7 @@ for file in files.files:
             opcode["name"] = opc.name
             opcode["u"] = u(opfile.namespace.full_name + "." + opc.name)
             opcode["description"] = opc.description
+            opcode["parameters"] = opc.parameters
             vars["opcodes"].append(opcode)
 
             gen_opcode_doc_to(opfile.namespace, opc, os.path.join(D_OUTPUT, opfile.namespace.full_name + "." + opc.name + ".html"))

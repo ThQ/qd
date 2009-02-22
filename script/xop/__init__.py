@@ -144,6 +144,8 @@ class File:
             opcode.description = str(n.childNodes[0].nodeValue)
          if n.localName == "parameters":
             opcode.parameters = self.parse_opcode_parameters_node(n)
+         if n.localName == "example":
+            opcode.examples.append(str(n.childNodes[0].nodeValue))
 
       self.opcodes.append(opcode)
 
@@ -173,12 +175,14 @@ class Namespace:
    char = ""
 
 class OpCode:
-   body = ""
-   name = ""
-   char = ""
-   description = ""
-   long_description = ""
-   parameters = []
+   def __init__(self):
+      self.body = ""
+      self.name = ""
+      self.char = ""
+      self.description = ""
+      self.long_description = ""
+      self.parameters = []
+      self.examples = []
 
 
 class OpCodeParameter:

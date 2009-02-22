@@ -42,6 +42,8 @@ SH=/bin/bash
 srcdir=.
 DATA_DIR=${srcdir}/data
 BUILD_DIR=${srcdir}/build
+DOC_DIR=${BUILD_DIR}/doc
+OPCODES_DOC_DIR=${DOC_DIR}/opcodes
 MODULES_DIR=${srcdir}/modules
 DEST_DIR=${BUILD_DIR}/svm
 TEST_CXX_DIR=${srcdir}/test/c++
@@ -69,6 +71,10 @@ debug: update-version-number prepare-modules manual-compilation
 
 #install: update-version-number prepare-modules release
 #	cp --force $(BUILD_DIR)/svm $(bindir)
+
+doc-opcodes:
+	rm $(OPCODES_DOC_DIR)/*
+	cd $(script_dir) ; DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
 
 internal: update-version-number prepare-modules manual-compilation
 	${svm_CXX} -pg -O0 -D __INTERNAL__=1 -DUSE_COLORS=1
