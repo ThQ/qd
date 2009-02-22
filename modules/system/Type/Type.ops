@@ -3,50 +3,66 @@
 <namespace name="type" full-name="system.type" char="t">
    <include src="svm/Class.h" />
 
-   <opcode name="check" char="c">
+   <opcode name="check__os" char="c">
+      <description>Returns true if an object's class matches a class name.</description>
       <parameters count="2">
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="1" type="svm::object_type" name="object" />
+         <parameter index="1" type="svm::string_type" name="type_name" />
       </parameters>
       <body>
          svm::Class* cls = (svm::Class*)argv[0]->cls;
          SVM_PICK(cls);
          if (cls->name == ((svm::String*)argv[1])->value)
          {
-            this->current_block->heap.append(svm::True);
+            heap.append(svm::True);
          }
          else
          {
-            this->current_block->heap.append(svm::False);
+            heap.append(svm::False);
          }
          SVM_DROP(cls);
       </body>
+      <stack after="are_of_same_type @svm::bool_type" />
+      <example>
+         s:push__s "W00T!"
+         type:check__os $0 "system.String"
+         b:print_line # Prints True
+      </example>
    </opcode>
 
-   <opcode name="print" char="p">
+   <opcode name="print" char="q">
+      <description>Prints the class name of the last element of the stack.</description>
+      <parameters count="0" />
+      <body><![CDATA[
+         svm::Object* arg = heap.get(0);
+         SVM_ASSERT_NOT_NULL(arg);
+         svm::Class* cls = (svm::Class*)arg->cls;
+         SVM_ASSERT_NOT_NULL(cls);
+         SVM_PICK(cls);
+         printf("%s", cls->name.c_str());
+         SVM_DROP(cls);
+      ]]></body>
+      <example>
+         s:push__s "Yup"
+         type:print # Prints system.String without CR/LF
+      </example>
+   </opcode>
+
+   <opcode name="print__o" char="p">
+      <description>Prints an object's class name.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="0" type="svm::object_type" name="object" />
       </parameters>
       <body><![CDATA[
          svm::Class* cls = (svm::Class*)argv[0]->cls;
          SVM_ASSERT_NOT_NULL(cls);
          SVM_PICK(cls);
-         printf("%s\n", cls->name.c_str());
+         printf("%s", cls->name.c_str());
          SVM_DROP(cls);
       ]]></body>
+      <example>
+         type:print_s "Yup" # Prints system.String without CR/LF
+      </example>
    </opcode>
 
-   <opcode name="print_s" char="q">
-      <parameters count="0" />
-      <body><![CDATA[
-         svm::Object* arg = this->current_block->heap.get(0);
-         SVM_ASSERT_NOT_NULL(arg);
-         svm::Class* cls = (svm::Class*)arg->cls;
-         SVM_DROP(arg);
-         SVM_PICK(cls);
-         SVM_ASSERT_NOT_NULL(cls);
-         printf("%s\n", cls->name.c_str());
-         SVM_DROP(cls);
-      ]]></body>
-   </opcode>
 </namespace>
