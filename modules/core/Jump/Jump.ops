@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="jump" char=">">
+<namespace name="jump" full-name="core.jump" char=">">
    <include src="svm/Bool.h" />
    <include src="svm/String.h" />
 
    <opcode name="if__bi" char="i">
+      <description>Jumps to opcode at position opcode_pos if condition is true.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::bool_type" name="condition" />
+         <parameter index="1" type="svm::int_type" name="opcode_pos" />
       </parameters>
       <body>
          if (argv[0] == svm::True)
@@ -17,23 +18,12 @@
       </body>
    </opcode>
 
-   <opcode name="if_not__bi" char="!">
-      <parameters count="2">
-         <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::int_type" />
-      </parameters>
-      <body>
-         if (argv[0] != svm::True)
-         {
-            i = ((svm::Int*)argv[1])->value;
-         }
-      </body>
-   </opcode>
    <opcode name="if_else_bss" char="e">
+      <description>Jumps to opcode at position if_opcode_pos if condition is true, otherwise jumps at else_opcode_pos.</description>
       <parameters count="3">
-         <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::string_type" />
-         <parameter index="2" type="svm::string_type" />
+         <parameter index="0" type="svm::bool_type" name="condition" />
+         <parameter index="1" type="svm::string_type" name="if_opcode_pos" />
+         <parameter index="2" type="svm::string_type" name="else_opcode_pos" />
       </parameters>
       <body>
          svm::Block* block;
@@ -52,6 +42,7 @@
       </body>
    </opcode>
 
+   <!-- Completely useless ?
    <opcode name="switch" char="s">
       <parameters minimum-count="3" />
       <body><![CDATA[
@@ -71,10 +62,12 @@
          }
       ]]></body>
    </opcode>
+   -->
 
    <opcode name="to__i" char="2">
+      <description>Jumps to opcode at opcode_pos.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="opcode_pos" description="The position to which jump."/>
       </parameters>
       <body>
          i = ((svm::Int*)argv[0])->value;
@@ -83,9 +76,10 @@
    </opcode>
 
    <opcode name="unless__bi" char="u">
+      <description>Jumps to opcode at opcode_pos if condition is false.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::bool_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::bool_type" name="condition" />
+         <parameter index="1" type="svm::int_type" name="opcode_pos" />
       </parameters>
       <body>
          if (argv[0] == svm::False)
@@ -96,6 +90,7 @@
    </opcode>
 
    <opcode name="return" char="&lt;">
+      <description>Returns from the current block.</description>
       <parameters count="0" />
       <body>
          i = block->count();

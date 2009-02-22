@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="type" char="t">
+<namespace name="type" full-name="system.type" char="t">
    <include src="svm/Class.h" />
 
    <opcode name="check" char="c">

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="traceback" char="T">
+<namespace name="traceback" full-name="core.traceback" char="T">
    <include src="svm/Class.h" />
    <include src="types.h" />
 

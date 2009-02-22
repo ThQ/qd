@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="stack" char="S">
+<namespace name="stack" full-name="core.stack" char="S">
    <include src="svm/Int.h" />
    <include src="types.h" />
 
    <opcode name="duplicate" char="d">
+      <description>Puts a reference of the last element in the stack ontop the stack.</description>
       <parameters count="0" />
       <body>
          svm::Object* obj = heap.get(0);
@@ -12,7 +13,8 @@
       </body>
    </opcode>
 
-   <opcode name="push" char="+">
+   <opcode name="push_" char="+">
+      <description>Pushes n elements ontop the stack.</description>
       <parameters minimum-count="1" />
       <body>
          heap.append(opc->argc, argv);
@@ -20,6 +22,7 @@
    </opcode>
 
    <opcode name="pop" char="-">
+      <description>Pops one element off the stack.</description>
       <parameters count="0" />
       <body>
          heap.pop(1);
@@ -27,6 +30,7 @@
    </opcode>
 
    <opcode name="pop2" char="\">
+      <description>Pops two elements off the stack.</description>
       <parameters count="0" />
       <body>
          heap.pop(2);
@@ -34,6 +38,7 @@
    </opcode>
 
    <opcode name="print" char="p">
+      <description>Prints the stack content.</description>
       <parameters count="0" />
       <body><![CDATA[
          printf("Stack\n");
@@ -66,7 +71,9 @@
          }
       ]]></body>
    </opcode>
+
    <opcode name="reverse_i" char="r">
+      <description>Reverses the last n elements of the stack.</description>
       <parameters count="1">
          <parameter index="0" type="svm::int_type" />
       </parameters>
@@ -76,6 +83,7 @@
    </opcode>
 
    <opcode name="swap" char="s">
+      <description>Swaps the last two elements of the stack.</description>
       <parameters count="0" />
       <body>
          heap.swap();

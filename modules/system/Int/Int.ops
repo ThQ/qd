@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="i" char="i">
+<namespace name="i" full-name="system.int" char="i">
    <include src="svm/Float.h" />
    <include src="svm/Int.h" />
    <include src="types.h" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="a" char="a">
+<namespace name="array" full-name="system.array" char="a">
    <include src="svm/Int.h" />
    <include src="svm/Array.h" />
    <include src="types.h" />

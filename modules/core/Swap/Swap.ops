@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="swap" char="X">
+<namespace name="swap" full-name="core.swap" char="X">
    <include src="svm/Int.h" />
 
    <opcode name="pop" char="-">

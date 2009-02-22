@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="global" char="g">
+<namespace name="global" full-name="core.global" char="g">
    <include src="svm/Int.h" />
 
    <opcode name="send" char="s">

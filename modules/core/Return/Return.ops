@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="return" char="&lt;">
+<namespace name="return" full-name="core.return" char="&lt;">
    <include src="svm/Bool.h" />
 
    <opcode name="if" char="i">

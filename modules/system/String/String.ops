@@ -6,7 +6,7 @@
    <opcode name="append__s" char="n">
       <description>Appends a string to the last element of the stack</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" />
+         <parameter index="0" type="svm::string_type" name="string_to_append" />
       </parameters>
       <body>
          svm::Object* s = heap.get(0);
@@ -22,8 +22,8 @@
    <opcode name="append_char__si" char="c">
       <description>Appends a char to a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::string_type" name="base_string" />
+         <parameter index="1" type="svm::int_type" name="char_to_append" />
       </parameters>
       <body>
          svm::Object* obj = svm::String::append(argv[0], (char)((svm::Int*)argv[0])->value);
@@ -35,8 +35,8 @@
    <opcode name="find__ss" char="f">
       <description>Looks for a substring in a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="0" type="svm::string_type" name="base_string" />
+         <parameter index="1" type="svm::string_type" name="string_to_find" />
       </parameters>
       <body>
          heap.append(svm::String::find(argv[0], argv[1], svm::Int::build((long int)0)));
@@ -75,8 +75,8 @@
    <opcode name="get_item_at__si" char="C">
       <description>Gets a character from a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::integer_type" />
+         <parameter index="0" type="svm::string_type" name="base_string" />
+         <parameter index="1" type="svm::integer_type" name="position" />
       </parameters>
       <body>
          heap.append(svm::String::get_character(argv[0], argv[1]));
@@ -87,8 +87,8 @@
    <opcode name="equals__ss" char="=">
       <description>Compares two strings.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="0" type="svm::string_type" name="string1"  />
+         <parameter index="1" type="svm::string_type" name="string2" />
       </parameters>
       <body>
          heap.append(svm::String::equals(argv[0], argv[1]));
@@ -98,6 +98,7 @@
 
    <opcode name="equals" char="E">
       <description>Compares two strings.</description>
+      <parameters count="0" />
       <body>
          Object* s1 = heap.get(0);
          SVM_PICK(s1);
@@ -113,8 +114,8 @@
    <opcode name="join__ss" char="+">
       <description>Joins two strings.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="0" type="svm::string_type" name="string1" />
+         <parameter index="1" type="svm::string_type" name="string2" />
       </parameters>
       <body>
          svm::Object* obj = svm::String::join(argv[0], argv[1]);
@@ -182,7 +183,7 @@
    <opcode name="prepend__s" char="Q">
       <description>Prepends a string with another string.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" />
+         <parameter index="0" type="svm::string_type" name="string_to_prepend" />
       </parameters>
       <body>
          svm::Object* s = heap.get(0);
@@ -192,6 +193,7 @@
          heap.append(new_s);
          SVM_DROP(s);
       </body>
+      <stack before="base_string @svm::String" after="base_string @svm::String|new_string @svm::String" />
    </opcode>
 
    <opcode name="print" char="p">
@@ -251,6 +253,11 @@
          heap.replace_at(0, svm::String::swap_case(base));
       </body>
       <stack before="base_string @svm::String" after="swaped_case_string @svm::String" />
+      <example>
+         s:push__s "AAbbCCdd"
+         s:swap_case
+         s:print_line # Prints aaBBccDD
+      </example>
    </opcode>
 
    <opcode name="upper_case" char="U">
