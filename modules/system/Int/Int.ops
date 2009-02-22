@@ -6,30 +6,35 @@
    <include src="types.h" />
 
    <opcode name="add__i" char="y">
+      <description>Add an integer to the last element of the stack.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int_to_add" />
       </parameters>
       <body>
          Object* i1 = heap.get(0);
          SVM_PICK(i1);
-         heap.pop();
          long i = (long)(((svm::Int*)i1)->value + ((svm::Int*)argv[0])->value);
-         heap.append(svm::Int::build(i));
+         heap.replace(1, svm::Int::build(i));
          SVM_DROP(i1);
       </body>
+      <stack before="old_int @svm::Int" after="new_int @svm::Int" />
    </opcode>
 
    <opcode name="add__ii" char="i">
+      <description>Add two integers.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body>
          long int f = (long int)(((svm::Int*)argv[0])->value + ((svm::Int*)argv[1])->value);
          heap.append(svm::Int::build(f));
       </body>
+      <stack after="new_int @svm::Int" />
    </opcode>
 
+   <!--
+   USELESS ?
    <opcode name="add__if" char="f">
       <parameters count="2">
          <parameter index="0" type="svm::int_type" />
@@ -40,16 +45,18 @@
          heap.append(svm::Float::build(d));
       </body>
    </opcode>
+   -->
 
    <opcode name="copy_to_string" char="c">
+      <description>Copy an integer to a string the decimal way.</description>
       <parameters count="0" />
       <body>
          svm::Object* i = heap.get(0);
          SVM_PICK(i);
-         heap.pop();
-         heap.append(svm::Int::cast_to_string(i));
+         heap.replace(1, svm::Int::cast_to_string(i));
          SVM_DROP(i);
       </body>
+      <stack before="int @svm::Int" after="str @svm::Int" />
    </opcode>
 
    <opcode name="copy_to_string__i" char="w">
@@ -64,6 +71,7 @@
          SVM_DROP(i);
       </body>
    </opcode>
+
    <opcode name="copy_to_string__ii" char="C">
       <parameters count="2">
          <parameter index="0" type="svm::int_type" comment="Integer to convert" />
@@ -75,27 +83,28 @@
    </opcode>
 
    <opcode name="equals__ii" char="E">
+      <description>Puts true on the stack if two integers are equal.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body>
          Short i = svm::Int::compare_to(argv[0], argv[1]);
-         svm::Object* b = i == 0 ? svm::True : svm::False;
-         heap.append(b);
+         heap.append(i == 0 ? svm::True : svm::False);
       </body>
+      <stack after="are_equal @svm::Bool" />
    </opcode>
 
    <opcode name="increment__i" char="a">
+      <description>Adds 1 to an integer.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="base_int" />
       </parameters>
       <body>
-         SVM_PICK(argv[0]);
          long l = (long)((svm::Int*)argv[0])->value;
          heap.append(svm::Int::build(l + 1));
-         SVM_DROP(argv[0]);
       </body>
+      <stack after="incremented_int @svm::Int" />
    </opcode>
 
    <opcode name="list_to__iii" char="l">
@@ -121,69 +130,74 @@
    </opcode>
 
    <opcode name="increment" char="A">
+      <description>Adds 1 to the last element of the stack.</description>
       <parameters count="0" />
       <body>
          svm::Int* base = (svm::Int*)heap.get(0);
-         //INTERNAL("---\n");
-         //INTERNAL("1. Base @%ld | ref %d \n", (ULong)base, ((svm::Object*)base)->references);
+         SVM_PICK(base);
          long l = (long)(base->value + 1);
-         //INTERNAL("2. Base @%ld | ref %d \n", (ULong)base, ((svm::Object*)base)->references);
-         // Why picking then dropping ? Otherwise it crashes, but why ?
          svm::Object* new_i = svm::Int::build(l);
-         SVM_PICK(new_i);
-         //INTERNAL("3. Base @%ld ; ref %d | NEwi @%ld ; ref %d\n", (ULong)(svm::Object*)base, ((svm::Object*)base)->references, (ULong)new_i, new_i->references);
          heap.replace(1, new_i);
-         //INTERNAL("4. > ref %d\n", new_i->references);
-         SVM_DROP(new_i);
+         SVM_DROP(base);
       </body>
+      <stack before="old_int @svm::Int" after="incremented_int @svm::Int" />
    </opcode>
 
    <opcode name="is_greater__ii" char=">">
+      <description>Puts true on the stack if a first integer is strictly greater than a second one.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body>
          long l1 = ((svm::Int*)argv[0])->value;
          long l2 = ((svm::Int*)argv[1])->value;
          heap.append(l1 > l2 ? svm::True : svm::False);
       </body>
+      <stack after="is_greater @svm::Bool" />
    </opcode>
+
    <opcode name="is_greater_or_equal__ii" char="}">
+      <description>Puts true on the stack if a first integer is greather than or equal to a second one.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body>
          long l1 = ((svm::Int*)argv[0])->value;
          long l2 = ((svm::Int*)argv[1])->value;
          heap.append(l1 >= l2 ? svm::True : svm::False);
       </body>
+      <stack after="is_greater_or_equal @svm::Bool" />
    </opcode>
 
    <opcode name="is_lower__ii" char="&lt;">
+      <description>Puts true on the stack if a first integer is strictly lower than a second one.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body><![CDATA[
          long l1 = ((svm::Int*)argv[0])->value;
          long l2 = ((svm::Int*)argv[1])->value;
          heap.append(l1 < l2 ? svm::True : svm::False);
          ]]></body>
+      <stack after="is_lower @svm::Bool" />
    </opcode>
 
 
    <opcode name="is_lower_or_equal__ii" char="{">
+      <description>Puts true if a first integer is lower than or equal to a second one.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::int_type" />
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="0" type="svm::int_type" name="int1" />
+         <parameter index="1" type="svm::int_type" name="int2" />
       </parameters>
       <body><![CDATA[
          long l1 = ((svm::Int*)argv[0])->value;
          long l2 = ((svm::Int*)argv[1])->value;
          heap.append(l1 <= l2 ? svm::True : svm::False);
          ]]></body>
+      <stack after="is_lower_or_equal @svm::Bool" />
    </opcode>
 
    <opcode name="modulus__i" char="%">
@@ -216,6 +230,14 @@
       </body>
    </opcode>
 
+   <opcode name="print_line" char=",">
+      <parameters count="0" />
+      <body>
+      svm::Int* i = (svm::Int*)heap.get(0);
+      printf("%ld\n", i->value);
+      </body>
+   </opcode>
+
    <opcode name="print_line__i" char="*">
       <parameters count="1">
          <parameter index="0" type="svm::int_type" />
@@ -226,60 +248,70 @@
    </opcode>
 
    <opcode name="push_0" char="0">
+      <description>Push 0 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)0));
       </body>
    </opcode>
    <opcode name="push_1" char="1">
+      <description>Push 1 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)1));
       </body>
    </opcode>
    <opcode name="push_2" char="2">
+      <description>Push 2 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)2));
       </body>
    </opcode>
    <opcode name="push_3" char="3">
+      <description>Push 3 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)3));
       </body>
    </opcode>
    <opcode name="push_4" char="4">
+      <description>Push 4 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)4));
       </body>
    </opcode>
    <opcode name="push_5" char="5">
+      <description>Push 5 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)5));
       </body>
    </opcode>
    <opcode name="push_6" char="6">
+      <description>Push 6 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)6));
       </body>
    </opcode>
    <opcode name="push_7" char="7">
+      <description>Push 7 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)7));
       </body>
    </opcode>
    <opcode name="push_8" char="8">
+      <description>Push 8 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)8));
       </body>
    </opcode>
    <opcode name="push_9" char="9">
+      <description>Push 9 on the stack.</description>
       <parameters count="0" />
       <body>
          heap.append(svm::Int::build((long int)9));
