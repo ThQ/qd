@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+   <head>
+      <title>{{ namespace_full_name }} opcode namespace</title>
+   </head>
+   <body>
+      <h1>{{ namespace_full_name }} <small>({{ opcode_count }})</h1>
+      <ul>
+      {% for opcode in opcodes %}
+      <li>
+         <h2><a href="{{ opcode.u }}">{{namespace_name}}:{{ opcode.name }}</a></h2>
+         {% if opcode.description %}
+         <p>{{opcode.description}}</p>
+         {% endif %}
+      </li>
+
+      {% endfor %}
+      </ul>
+   </body>
+</html>

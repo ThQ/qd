@@ -1,0 +1,46 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+   <head>
+      <title>{{ namespace_name }}:{{ opcode.name }} opcode</title>
+   </head>
+   <body>
+      <a href="{{ u_root }}">SVM</a>
+      &rarr; <a href="{{ u_namespaces }}">Namespaces</a>
+      &rarr; <a href="{{ u_namespace }}">{{namespace_full_name}}</a>
+
+      <h1>{{ namespace_name }}:{{ opcode.name }}</h1>
+
+      {% if opcode.description %}
+      <p>{{ opcode.description }}</p>
+      {% endif %}
+
+      <h2>Description</h2>
+      <code>
+         <strong>{{namespace_name}}:{{opcode.name}}</strong>
+         {% for param in opcode.parameters %}
+         &lt;{{param.name}} <small>{{param.type}}</small>&gt;
+         {% endfor %}
+      </code>
+
+      {% if opcode.parameters %}
+      <h2>Parameters <small>({{opcode_parameters_count}})</small></h2>
+      <ul>
+         {% for param in opcode.parameters %}
+         <li>
+         {{ param.name}} <small>{{ param.type}}</small>
+         <p>{{ param.description }}</p>
+         </li>
+         {% endfor %}
+      </ul>
+      {% endif %}
+
+      {% if opcode.body %}
+      <h2>Source</h2>
+      <code>
+      {{opcode.body|linebreaks}}
+      </code>
+      {% endif %}
+
+      Generated on {% now "Y-m-d" %}
+   </body>
+</html>
