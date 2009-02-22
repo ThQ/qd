@@ -115,6 +115,11 @@ class File:
       self.namespace = Namespace()
       if n_ns.attributes.has_key("name"):
          self.namespace.name = n_ns.attributes["name"].nodeValue
+      if n_ns.attributes.has_key("full-name"):
+         self.namespace.full_name = n_ns.attributes["full-name"].nodeValue
+      else:
+         self.namespace.full_name = self.namespace.name
+
       if n_ns.attributes.has_key("char"):
          self.namespace.char = n_ns.attributes["char"].nodeValue
 
@@ -135,9 +140,26 @@ class File:
       for n in node.childNodes:
          if n.localName == "body":
             opcode.body = str(n.childNodes[0].nodeValue)
+         if n.localName == "description":
+            opcode.description = str(n.childNodes[0].nodeValue)
+         if n.localName == "parameters":
+            opcode.parameters = self.parse_opcode_parameters_node(n)
 
       self.opcodes.append(opcode)
 
+   def parse_opcode_parameters_node(self, node):
+      params = []
+      for n in node.childNodes:
+         if n.localName == "parameter":
+            param = OpCodeParameter()
+            if n.attributes.has_key("type"):
+               param.type = n.attributes["type"].nodeValue
+            if n.attributes.has_key("name"):
+               param.name = n.attributes["name"].nodeValue
+            if n.attributes.has_key("description"):
+               param.description = n.attributes["description"].nodeValue
+            params.append(param)
+      return params
 
    def parse_include_node(self, n):
       if n.attributes.has_key("src"):
@@ -147,15 +169,20 @@ class File:
 
 class Namespace:
    name = ""
+   full_name = ""
    char = ""
 
 class OpCode:
    body = ""
    name = ""
    char = ""
+   description = ""
+   long_description = ""
    parameters = []
 
 
 class OpCodeParameter:
    index = 0
    type = "svm::object_type"
+   name = ""
+   description = ""
