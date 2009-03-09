@@ -5,35 +5,45 @@
    <include src="svm/Array.h" />
    <include src="types.h" />
 
-   <opcode name="new" char="_">
+   <opcode name="new__ai" char="_">
       <parameters count="2">
-         <parameter index="0" type="svm::class_type" name="array_item_type" />
-         <parameter index="1" type="svm::int_type" name="array_length" />
+         <parameter
+            index="0"
+            type="svm::class_type"
+            name="item_type"
+            description="Type of the items to be stored in the array."
+         />
+      <parameter
+         index="1"
+         type="svm::int_type"
+         name="array_length"
+         description="Length of the new array."
+      />
       </parameters>
       <body>
          svm::Object* arr = svm::Array::build(argv[0], argv[1]);
-         this->current_block->heap.append(arr);
+         heap.append(arr);
       </body>
       <stack after="new_array @svm::Array" />
    </opcode>
 
    <opcode name="get_item__ai" char="{">
       <parameters count="3">
-         <parameter index="0" type="svm::array_type" name="base_array" />
-         <parameter index="1" type="svm::int_type" name="item_index" />
+         <parameter index="0" type="svm::array_type" name="base_array" description="The array to get an item from." />
+         <parameter index="1" type="svm::int_type" name="item_index" description="Item index." />
       </parameters>
       <body>
          svm::Object* obj = ((svm::Array*)argv[0])->items[((svm::Int*)argv[1])->value];
-         this->current_block->heap.append(obj);
+         heap.append(obj);
       </body>
       <stack after="item_retrieved" />
    </opcode>
 
    <opcode name="set_item__ai" char="}">
       <parameters count="3">
-         <parameter index="0" type="svm::array_type" name="base_array" />
-         <parameter index="1" type="svm::int_type" name="item_index" />
-         <parameter index="2" name="object" />
+         <parameter index="0" type="svm::array_type" name="base_array" description="The array to set an item to." />
+         <parameter index="1" type="svm::int_type" name="item_index" description="Item index." />
+         <parameter index="2" name="object" description="The item to store in the array." />
       </parameters>
       <body>
          // @TODO: Check for index out of range
