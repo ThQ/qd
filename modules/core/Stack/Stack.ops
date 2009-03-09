@@ -92,6 +92,17 @@
       </body>
    </opcode>
 
+   <opcode name="replace__io" char="Q">
+      <description>Replaces an element of the stack by another.</description>
+      <parameters count="2">
+         <parameter index="0" name="item_index" type="svm::int_type" />
+         <parameter index="1" name="new_item" />
+      </parameters>
+      <body>
+         heap.replace_at(((svm::Int*)argv[0])->value, argv[1]);
+      </body>
+   </opcode>
+
    <opcode name="swap" char="s">
       <description>Swaps the last two elements of the stack.</description>
       <parameters count="0" />
