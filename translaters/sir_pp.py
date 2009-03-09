@@ -149,33 +149,44 @@ class SirPreprocessor:
       lineno = 1
       block_opcode_pos = 0
       for line in lines:
-         if line.startswith("block:new"):
-            block_opcode_pos = -1
-
          line = line.strip()
-         if line.startswith("@@"):
-            line = "%% at " + line[2:]
+         if line != "" and line[0] != "#" :
+            if line.startswith("block:new"):
+               block_opcode_pos = -1
 
-         if line.startswith("%% "):
-            space_pos = line.find(" ", 4)
-            command = ""
-            args = ""
-            if space_pos != -1:
-               command = line[3:space_pos]
-               args = line[space_pos + 1:]
-            else:
-               command = line[3:]
+            line = line.strip()
+            if line.startswith("@@"):
+               line = "%% at " + line[2:]
 
-            if self.handler != None:
-               todo = self.handler.put_command(lineno, command, args)
-               if todo == -1 :
-                  if len(self.handlers) > 0:
-                     self.handlers.pop()
-                  if len(self.handlers) > 0:
-                     self.handler = self.handlers[-1]
-                  else:
-                     self.handler = None
-               elif todo == 0:
+            if line.startswith("%% "):
+               space_pos = line.find(" ", 4)
+               command = ""
+               args = ""
+               if space_pos != -1:
+                  command = line[3:space_pos]
+                  args = line[space_pos + 1:]
+               else:
+                  command = line[3:]
+
+               if self.handler != None:
+                  todo = self.handler.put_command(lineno, command, args)
+                  if todo == -1 :
+                     if len(self.handlers) > 0:
+                        self.handlers.pop()
+                     if len(self.handlers) > 0:
+                        self.handler = self.handlers[-1]
+                     else:
+                        self.handler = None
+                  elif todo == 0:
+                     self.handler = self.get_handler(command)
+                     if self.handler != None:
+                        if self.handler.initialize(lineno, block_opcode_pos, args):
+                           self.handlers.append(self.handler)
+                        else:
+                           self.handler = None
+                     else:
+                        self.warn(lineno, "Unknown command [" + command + "].")
+               else:
                   self.handler = self.get_handler(command)
                   if self.handler != None:
                      if self.handler.initialize(lineno, block_opcode_pos, args):
@@ -184,25 +195,16 @@ class SirPreprocessor:
                         self.handler = None
                   else:
                      self.warn(lineno, "Unknown command [" + command + "].")
+
+
             else:
-               self.handler = self.get_handler(command)
+               new_line = ""
                if self.handler != None:
-                  if self.handler.initialize(lineno, block_opcode_pos, args):
-                     self.handlers.append(self.handler)
-                  else:
-                     self.handler = None
+                  new_line += self.handler.put_string(lineno, line)
                else:
-                  self.warn(lineno, "Unknown command [" + command + "].")
-
-
-         else:
-            new_line = ""
-            if self.handler != None:
-               new_line += self.handler.put_string(lineno, line)
-            else:
-               new_line += line + "\n"
-            block_opcode_pos += 1
-            output += new_line
+                  new_line += line + "\n"
+               block_opcode_pos += 1
+               output += new_line
 
          lineno += 1
 
