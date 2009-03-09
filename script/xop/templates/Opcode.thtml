@@ -34,6 +34,36 @@
       </ul>
       {% endif %}
 
+      <h2>Stack</h2>
+      <table>
+         <thead>
+            <tr>
+               <th>Before</th>
+               <th>After</th>
+            </tr>
+         </thead>
+         <tbody>
+            <tr>
+               <td>
+                  <ul>
+                     <li>...</li>
+                     {% for item in opcode.stack_before %}
+                     <li>{{ item.0 }} <small>{{ item.1 }}</small></li>
+                     {% endfor %}
+                  </ul>
+               </td>
+               <td>
+                  <ul>
+                     <li>...</li>
+                     {% for item in opcode.stack_after %}
+                     <li>{{ item.0 }} <small>{{ item.1 }}</small></li>
+                     {% endfor %}
+                  </ul>
+               </td>
+            </tr>
+         </tbody>
+      </table>
+
       {% if opcode.examples %}
       <h2>Examples</h2>
       {% for ex in opcode.examples %}
