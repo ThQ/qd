@@ -27,7 +27,7 @@
       <ul>
          {% for param in opcode.parameters %}
          <li>
-         {{ param.name}} <small>{{ param.type}}</small>
+         <strong>{{ param.name}}</strong> <small>{{ param.type}}</small>
          <p>{{ param.description }}</p>
          </li>
          {% endfor %}
