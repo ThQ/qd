@@ -4,7 +4,7 @@
    <include src="svm/String.h" />
 
    <opcode name="append__s" char="n">
-      <description>Appends a string to the last element of the stack</description>
+      <description>Appends a string to the string on top of the stack.</description>
       <parameters count="1">
          <parameter index="0" type="svm::string_type" name="string_to_append" />
       </parameters>
@@ -17,6 +17,12 @@
          SVM_DROP(s);
       </body>
       <stack after="concat_string @svm::String" />
+      <example>
+         -- MAIN
+         s:push__s "Look "
+         s:append__s "Ma!"
+         s:print_line # Prints "Look Ma!"
+      </example>
    </opcode>
 
    <opcode name="append_char__si" char="c">
@@ -111,6 +117,26 @@
       <stack before="string1 @svm::String|string2 @svm::String" after="are_those_two_strings_equal @svm::Bool" />
    </opcode>
 
+   <opcode name="join_" char="j">
+      <description>Joins several strings.</description>
+      <parameters minimum-count="1" />
+      <body><![CDATA[
+         svm::Object* obj = svm::String::build();
+         for (ULong j = 0 ; j < opc->argc ; ++j)
+         {
+            if (this->check_arguments(1, argv[j], svm::string_type))
+            {
+               svm::String::append(obj, argv[j]);
+            }
+            else
+            {
+               break;
+            }
+         }
+         this->current_block->heap.append(obj);
+      ]]></body>
+   </opcode>
+
    <opcode name="join__ss" char="+">
       <description>Joins two strings.</description>
       <parameters count="2">
@@ -147,6 +173,19 @@
       <stack before="string @svm::String" after="lower_case_string @svm::String" />
    </opcode>
 
+   <opcode name="lpad__sis" char="W">
+      <description>Left pads a string with another string.</description>
+      <parameters count="3">
+         <parameter index="0" type="svm::string_type" name="base_string" />
+         <parameter index="1" type="svm::int_type" name="new_length" />
+         <parameter index="2" type="svm::string_type" name="pad_string" />
+      </parameters>
+      <body>
+         heap.append(svm::String::lpad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
+      </body>
+      <stack after="joined_string @svm::String" />
+   </opcode>
+
    <opcode name="ord" char="o">
       <description>Gets the ascii code of the first character of a string.</description>
       <parameters count="0" />
@@ -181,7 +220,7 @@
    </opcode>
 
    <opcode name="prepend__s" char="Q">
-      <description>Prepends a string with another string.</description>
+      <description>Prepends a string to the string on top of the stack.</description>
       <parameters count="1">
          <parameter index="0" type="svm::string_type" name="string_to_prepend" />
       </parameters>
@@ -194,6 +233,11 @@
          SVM_DROP(s);
       </body>
       <stack before="base_string @svm::String" after="base_string @svm::String|new_string @svm::String" />
+      <example>
+         s:push__s " Ma!"
+         s:prepend__s "Look"
+         s:print_line # Prints "Look Ma!"
+      </example>
    </opcode>
 
    <opcode name="print" char="p">
@@ -241,19 +285,9 @@
          heap.append(argv[0]);
       </body>
       <stack after="string_pushed @svm::String" />
-   </opcode>
-
-   <opcode name="lpad__sis" char="W">
-      <description>Left pads a string with another string.</description>
-      <parameters count="3">
-         <parameter index="0" type="svm::string_type" name="base_string" />
-         <parameter index="1" type="svm::int_type" name="new_length" />
-         <parameter index="2" type="svm::string_type" name="pad_string" />
-      </parameters>
-      <body>
-         heap.append(svm::String::lpad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
-      </body>
-      <stack after="joined_string @svm::String" />
+      <example>
+         s:push__s "Look ma!" # Pushes "Look ma!" onto the stack
+      </example>
    </opcode>
 
    <opcode name="swap_case" char="S">
@@ -281,23 +315,4 @@
       <stack before="string @svm::String" after="upper_case_string @svm::String" />
    </opcode>
 
-   <opcode name="join_" char="j">
-      <description>Joins several strings.</description>
-      <parameters minimum-count="1" />
-      <body><![CDATA[
-         svm::Object* obj = svm::String::build();
-         for (ULong j = 0 ; j < opc->argc ; ++j)
-         {
-            if (this->check_arguments(1, argv[j], svm::string_type))
-            {
-               svm::String::append(obj, argv[j]);
-            }
-            else
-            {
-               break;
-            }
-         }
-         this->current_block->heap.append(obj);
-      ]]></body>
-   </opcode>
 </namespace>
