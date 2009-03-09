@@ -14,10 +14,20 @@
    </opcode>
 
    <opcode name="push_" char="+">
-      <description>Pushes n elements ontop the stack.</description>
+      <description>Pushes n elements on top of the stack.</description>
       <parameters minimum-count="1" />
       <body>
          heap.append(opc->argc, argv);
+      </body>
+   </opcode>
+
+   <opcode name="push__o" char="#">
+      <description>Push an element on top of the stack.</description>
+      <parameters count="1">
+         <parameter index="0" name="element_to_push" />
+      </parameters>
+      <body>
+         heap.append(argv[0]);
       </body>
    </opcode>
 
