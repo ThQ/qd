@@ -74,7 +74,7 @@ debug: update-version-number prepare-modules manual-compilation
 
 doc-opcodes:
 	rm $(OPCODES_DOC_DIR)/*
-	cd $(script_dir) ; DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
+	cd $(script_dir) ; export DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
 
 internal: update-version-number prepare-modules manual-compilation
 	${svm_CXX} -pg -O0 -D __INTERNAL__=1 -DUSE_COLORS=1
