@@ -140,12 +140,18 @@ class File:
       for n in node.childNodes:
          if n.localName == "body":
             opcode.body = str(n.childNodes[0].nodeValue)
-         if n.localName == "description":
+         elif n.localName == "description":
             opcode.description = str(n.childNodes[0].nodeValue)
-         if n.localName == "parameters":
+         elif n.localName == "parameters":
             opcode.parameters = self.parse_opcode_parameters_node(n)
-         if n.localName == "example":
+         elif n.localName == "example":
             opcode.examples.append(str(n.childNodes[0].nodeValue))
+         elif n.localName == "stack":
+            stack_node = n
+            if stack_node.attributes.has_key("before"):
+               opcode.stack_before = self.parse_stack_representation(stack_node.attributes["before"].nodeValue)
+            if stack_node.attributes.has_key("after"):
+               opcode.stack_after = self.parse_stack_representation(stack_node.attributes["after"].nodeValue)
 
       self.opcodes.append(opcode)
 
@@ -169,6 +175,19 @@ class File:
       else:
          raise Error("pouet")
 
+   def parse_stack_representation(self, rep):
+      result = []
+      items = rep.split("|")
+      for item in items:
+         if item:
+            stack_item = ["", ""]
+            item_details = item.split("@")
+            stack_item[0] = item_details[0]
+            if len(item_details) > 1:
+               stack_item[1] = item_details[1]
+            result.append(stack_item)
+      return result
+
 class Namespace:
    name = ""
    full_name = ""
@@ -183,6 +202,8 @@ class OpCode:
       self.long_description = ""
       self.parameters = []
       self.examples = []
+      self.stack_before = []
+      self.stack_after = []
 
 
 class OpCodeParameter:
