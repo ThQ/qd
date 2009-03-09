@@ -75,6 +75,19 @@
       </body>
    </opcode>
 
+   <opcode name="unless__i" char="U">
+      <description>Jumps to opcode at opcode_pos if boolean on top of the stack is false.</description>
+      <parameters count="1">
+         <parameter index="0" type="svm::int_type" name="opcode_pos" />
+      </parameters>
+      <body>
+         if (heap.get(0) == svm::False)
+         {
+            i = ((svm::Int*)argv[0])->value;
+         }
+      </body>
+   </opcode>
+
    <opcode name="unless__bi" char="u">
       <description>Jumps to opcode at opcode_pos if condition is false.</description>
       <parameters count="2">
