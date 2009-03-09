@@ -232,6 +232,17 @@
       </body>
    </opcode>
 
+   <opcode name="push__s" char="#">
+      <description>Pushes a string on top of the stack.</description>
+      <parameters count="1">
+         <parameter index="0" type="svm::string_type" name="string_to_push" />
+      </parameters>
+      <body>
+         heap.append(argv[0]);
+      </body>
+      <stack after="string_pushed @svm::String" />
+   </opcode>
+
    <opcode name="lpad__sis" char="W">
       <description>Left pads a string with another string.</description>
       <parameters count="3">
