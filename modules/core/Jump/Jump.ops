@@ -85,6 +85,7 @@
          {
             i = ((svm::Int*)argv[0])->value;
          }
+         heap.pop();
       </body>
    </opcode>
 
