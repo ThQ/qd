@@ -133,9 +133,9 @@
       <description>Adds 1 to the last element of the stack.</description>
       <parameters count="0" />
       <body>
-         svm::Int* base = (svm::Int*)heap.get(0);
+         svm::Object* base = heap.get(0);
          SVM_PICK(base);
-         long l = (long)(base->value + 1);
+         long l = (long)(((svm::Int*)base)->value + 1);
          svm::Object* new_i = svm::Int::build(l);
          heap.replace(1, new_i);
          SVM_DROP(base);
