@@ -7,7 +7,7 @@ namespace svm
    Int::Int()
    {
       this->references = 0;
-      this->cls = svm::int_type;
+      this->set_class(svm::int_type);
       this->value = 0;
    }
 

@@ -9,7 +9,7 @@ namespace svm
       this->length = 0;
       this->items = 0;
       this->references = 0;
-      this->cls = svm::list_type;
+      this->set_class(svm::list_type);
    }
 
    Object*

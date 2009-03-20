@@ -10,7 +10,7 @@ namespace svm
       this->keys = 0;
       this->items = 0;
       this->references = 0;
-      this->cls = svm::map_type;
+      this->set_class(svm::map_type);
    }
 
    Object*

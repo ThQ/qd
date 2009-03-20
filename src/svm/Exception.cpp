@@ -9,7 +9,7 @@ namespace svm
    Exception::Exception()
    {
       this->message = String::build("");
-      this->cls = exception_type;
+      this->set_class(exception_type);
       this->references = 0;
    }
 

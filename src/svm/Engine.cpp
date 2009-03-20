@@ -407,12 +407,12 @@ namespace svm
          #ifdef _SHOW_INTERNAL_
          if (opc->argc == 0)
          {
-            INTERNAL("Running <opcode:%c%c> \n", opc->type, opc->method);
+            INTERNAL("Running <opcode:%c%c> [%lu/%lu] \n", opc->type, opc->method, i, block->count());
          }
          else
          {
             //INTERNAL("opcode has arguments\n");
-            INTERNAL("Running <opcode:%c%c> (", opc->type, opc->method);
+            INTERNAL("Running <opcode:%c%c> [%lu/%lu] (", opc->type, opc->method, i, block->count());
             //INTERNAL("looping through opcode args\n");
             for (ULong k = 0 ; k < opc->argc ; ++k)
             {
