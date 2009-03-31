@@ -247,11 +247,11 @@ namespace NS_TYPE
 
       if (((String*)s1)->value.compare(((String*)s2)->value) == 0)
       {
-         result = svm::True;
+         result = NS_TYPE::gTRUE;
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
       ASSERT_NOT_NULL(result);
       return result;
@@ -337,23 +337,23 @@ namespace NS_TYPE
 
       if (l > 0)
       {
-         result = svm::True;
+         result = NS_TYPE::gTRUE;
 
          for(ULong i = 0 ; i < l ; ++i)
          {
             if (s->value[i] < 'A' || (s->value[i] > 'Z' && s->value[i] < 'a') || s->value[i] > 'z')
             {
-               result = svm::False;
+               result = NS_TYPE::gFALSE;
                break;
             }
          }
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
 
-      SVM_ASSERT_NOT_NULL(result);
+      T_OBJECT::assert_not_null(result);
 
       return result;
    }
@@ -369,23 +369,23 @@ namespace NS_TYPE
 
       if (l > 0)
       {
-         result = svm::True;
+         result = NS_TYPE::gTRUE;
 
          for(ULong i = 0 ; i < l ; ++i)
          {
             if (s->value[i] < '0' || s->value[i] > '9')
             {
-               result = svm::False;
+               result = NS_TYPE::gFALSE;
                break;
             }
          }
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
 
-      SVM_ASSERT_NOT_NULL(result);
+      T_OBJECT::assert_not_null(result);
 
       return result;
    }
@@ -411,11 +411,11 @@ namespace NS_TYPE
       T_OBJECT* result;
       if (is_lowercase)
       {
-         result = svm::True;
+         result = NS_TYPE::gTRUE;
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
       return result;
    }
@@ -431,23 +431,23 @@ namespace NS_TYPE
 
       if (l > 0)
       {
-          result = svm::True;
+          result = NS_TYPE::gTRUE;
 
          for (ULong i = 0 ; i < l ; ++i)
          {
             if (s->value[i] > ' ')
             {
-               result = svm::False;
+               result = NS_TYPE::gFALSE;
                break;
             }
          }
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
 
-      SVM_ASSERT_NOT_NULL(result);
+      T_OBJECT::assert_not_null(result);
 
       return result;
    }
@@ -473,11 +473,11 @@ namespace NS_TYPE
       T_OBJECT* result;
       if (is_uppercase)
       {
-         result = svm::True;
+         result = NS_TYPE::gTRUE;
       }
       else
       {
-         result = svm::False;
+         result = NS_TYPE::gFALSE;
       }
       return result;
    }

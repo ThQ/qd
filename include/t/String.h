@@ -52,9 +52,6 @@ namespace NS_TYPE
        * Creates a t::String by using a std::string.
        */
       public: static T_OBJECT* build(std::string s);
-      #ifdef ALLOW_UNICODE
-      public: static T_OBJECT* build(UnicodeString s);
-      #endif
       public: static T_OBJECT* cast_to_string(T_OBJECT* s);
       public: static T_OBJECT* center(T_OBJECT* s_base, T_OBJECT* i_length, T_OBJECT* s_padding);
 
