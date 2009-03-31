@@ -9,19 +9,6 @@ namespace NS_TYPE
       this->set_class(string_type);
    }
 
-   #ifdef ALLOW_UNICODE
-   T_OBJECT*
-   String::append(T_OBJECT* base, UnicodeString s)
-   {
-      String::assert(base);
-
-      T_OBJECT* app = String::build(s);
-      T_OBJECT::pick(app);
-      T_OBJECT* result = String::append(base, app);
-      return result;
-   }
-   #endif
-
    T_OBJECT*
    String::append(T_OBJECT* base, T_OBJECT* s)
    {
@@ -95,27 +82,6 @@ namespace NS_TYPE
       result->value = s;
       return (T_OBJECT*)result;
    }
-
-   #ifdef ALLOW_UNICODE
-   T_OBJECT*
-   String::build(UnicodeString s)
-   {
-      ULong new_size = s.length();
-      char* tmp = new char [new_size + 1];
-
-      // TODO : Find a better way to pass from UChar to char
-      for (ULong i = 0 ; i < new_size ; ++i)
-      {
-         tmp[i] = (char)s.charAt(i);
-      }
-      tmp[new_size] = 0;
-
-      T_OBJECT* result = String::build(tmp);
-      delete tmp;
-
-      return result;
-   }
-   #endif
 
    T_OBJECT*
    String::cast_to_string(T_OBJECT* s)

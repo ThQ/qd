@@ -5,39 +5,9 @@
 #include <stdio.h>
 #include <string.h>
 
-#ifdef ALLOW_UNICODE
-#include <unicode/ucnv.h>
-#include <unicode/unistr.h>
-#endif
-
 #include "t/Bool.h"
 #include "t/Int.h"
 #include "t/Object.h"
-#include "types.h"
-
-#ifdef __ALLOW_SVM_ASSERTIONS__
-   #define SVM_ASSERT_STRING(s) SVM_ASSERT_NOT_NULL(s); \
-   DEPRECATED(); \
-   if(!T_STRING::check(s)) \
-   { \
-      FATAL("Bad type given, expected system.String\n\n"); \
-      abort(); \
-   }
-#else
-   #define SVM_ASSERT_STRING(s) DEPRECATED();
-#endif
-
-
-#ifdef __ALLOW_SVM_CHECKS__
-   #define SVM_CHECK_STRING(s) SVM_CHECK_NOT_NULL(s); \
-   DEPRECATED(); \
-   if(!T_STRING::check(s)) \
-   { \
-      WARNING("Bad type given, expected system.String\n\n"); \
-   }
-#else
-   #define SVM_CHECK_STRING(s) DEPRECATED();
-#endif
 
 namespace NS_TYPE
 {
@@ -48,9 +18,6 @@ namespace NS_TYPE
       public: std::string value;
 
       public: String();
-      #ifdef ALLOW_UNICODE
-      public: static T_OBJECT* append(T_OBJECT* base, UnicodeString s);
-      #endif
       public: static T_OBJECT* append(T_OBJECT* base, T_OBJECT* s);
       public: static T_OBJECT* append(T_OBJECT* base, ULong i);
       public: static T_OBJECT* append(T_OBJECT* base, char c);
