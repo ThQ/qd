@@ -160,7 +160,7 @@ namespace NS_TYPE
       public: static T_OBJECT* swap_case(T_OBJECT* self);
 
       /**
-       * Converts all upper case letters to lower case.
+       * Converts all lower case letters to upper case.
        */
       public: static T_OBJECT* upper(T_OBJECT* s);
    };
