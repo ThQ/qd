@@ -12,6 +12,7 @@ function compile_project() {
    local_dTmp="$4"
 
    had_changed="no"
+   has_errors=""
    cd "$local_dTmp"
 
    for file in ${local_sources[*]} ; do
@@ -26,21 +27,30 @@ function compile_project() {
       if [ "$file_src_mtime" != "$file_dst_mtime" ] ; then
          echo " CC $file"
          $local_CXX -c $file -o "$file_to_compile"
+         if [ "$?" != "0" ] ; then
+            has_errors="y"
+            [ -f "$file_to_compile" ] && rm "$file_to_compile"
+         fi
          touch $file_to_compile --date="$file_src_mtime"
          had_changed="yes"
       fi
    done
 
-   if [ "$had_changed" == "yes" ] || [ ! -f "$local_output" ] ; then
-      objects=""
-      for file in ${local_sources} ; do
-         objects="$objects$local_dTmp${file}.o "
-      done
-      echo " LD $objects"
-      $local_CXX -o $local_output $objects
+   if [ "$has_errors" == "" ] ; then
+      if [ "$had_changed" == "yes" ] || [ ! -f "$local_output" ] ; then
+         objects=""
+         for file in ${local_sources} ; do
+            objects="$objects$local_dTmp${file}.o "
+         done
+         echo " LD $objects"
+         $local_CXX -o $local_output $objects
+      fi
    fi
 }
 
 
-
-compile_project "$svm_introspection_CXX" "${svm_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
+if [ "$1" == "t" ] ; then
+   compile_project "$svm_t_CXX" "${t_SOURCES[*]}" "$svm_t_OUTPUT" "$dTmp"
+else
+   compile_project "$svm_introspection_CXX" "${svm_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
+fi
