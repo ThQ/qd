@@ -10,6 +10,7 @@ namespace NS_UTIL
       ULong arg = 0;
       t::String* result = t::String::build();
 
+      // Traversing characters for a sequence like %[b|i|s%]
       for (ULong i = 0 ; i < len ; ++i)
       {
          if (s->value[i] == '%' && i + 1 <= len)
