@@ -3,7 +3,7 @@
 namespace NS_UTIL
 {
    void
-   ClassUtil::declare_field(t::Object* cls, t::Object* type, std::string name)
+   Class::declare_field(t::Object* cls, t::Object* type, std::string name)
    {
       t::Object* field = t::Variable::build(type, name);
       t::Object::pick(field);

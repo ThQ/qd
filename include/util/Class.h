@@ -1,5 +1,5 @@
-#ifndef UTIL_CLASS_UTIL
-#define UTIL_CLASS_UTIL NS_UTIL::Class
+#ifndef UTIL_CLASS
+#define UTIL_CLASS NS_UTIL::Class
 
 #include "t/Class.h"
 #include "t/Variable.h"
