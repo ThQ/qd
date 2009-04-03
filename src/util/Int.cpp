@@ -3,7 +3,7 @@
 namespace NS_UTIL
 {
    t::Object*
-   IntUtil::list_to_iii(t::Object* src, t::Object* dest, t::Object* step)
+   Int::list_to_iii(t::Object* src, t::Object* dest, t::Object* step)
    {
       Long lsrc= ((t::Int*)src)->value;
       Long ldest = ((t::Int*)dest)->value;
