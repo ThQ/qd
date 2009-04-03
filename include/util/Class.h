@@ -1,14 +1,14 @@
-#ifndef SVM_CLASS_UTIL_H
-#define SVM_CLASS_UTIL_H
+#ifndef UTIL_CLASS_UTIL
+#define UTIL_CLASS_UTIL NS_UTIL::Class
 
-#include "svm/Class.h"
-#include "svm/Variable.h"
+#include "t/Class.h"
+#include "t/Variable.h"
 
-namespace svm
+namespace NS_UTIL
 {
-   class ClassUtil
+   class Class
    {
-      public: static void declare_field(Object* cls, Object* type, std::string name);
+      public: static void declare_field(t::Object* cls, t::Object* type, std::string name);
    };
 }
 

@@ -1,13 +1,13 @@
-#include "svm/ClassUtil.h"
+#include "t/ClassUtil.h"
 
-namespace svm
+namespace NS_UTIL
 {
    void
-   ClassUtil::declare_field(Object* cls, Object* type, std::string name)
+   ClassUtil::declare_field(t::Object* cls, t::Object* type, std::string name)
    {
-      svm::Object* field = svm::Variable::build(type, name);
-      SVM_PICK(field);
-      svm::Class* c = (svm::Class*)cls;
+      t::Object* field = t::Variable::build(type, name);
+      t::Object::pick(field);
+      t::Class* c = (t::Class*)cls;
 
       ++ c->field_count;
 
