@@ -1,15 +1,15 @@
-#ifndef SVM_INT_UTIL_H
-#define SVM_INT_UTIL_H
+#ifndef UTIL_INT
+#define UTIL_INT NS_UTIL::Int
 
-#include "debug.h"
-#include "svm/Int.h"
-#include "svm/List.h"
+#include "t/Int.h"
+#include "t/List.h"
 
-namespace svm
+namespace NS_UTIL
 {
-   class IntUtil
+   class Int
    {
-      public: static Object* list_to_iii(Object* src, Object* dest, Object* step);
+      // @TODO : WTH is that function name ??
+      public: static t::Object* list_to_iii(t::Object* src, t::Object* dest, t::Object* step);
    };
 }
 
