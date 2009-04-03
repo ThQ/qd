@@ -34,12 +34,15 @@
 
 #define SVM_METHOD(name) t::Object* name(svm::Engine* engine, int argc, t::Object** argv)
 #define SVM_CLASS_METHOD(name) t::Object* name(svm::Engine* engine, t::Object* self, int argc, t::Object** argv)
+
 #define SVM_THROW_CLASS_NOT_FOUND_EXCEPTION(eng, cls) \
+   DEPRECATED(); \
    t::Object* e = t::Exception::build(); \
    e->set_class(t::tCLASS_NOT_FOUND_EXCEPTION); \
    eng->throw_exception(e);
 
 #define SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(engine, index, count) \
+   DEPRECATED(); \
    t::Object* e = t::Exception::build(); \
    e->set_class(t::tINDEX_OUT_OF_RANGE_EXCEPTION); \
    engine->throw_exception(e);
