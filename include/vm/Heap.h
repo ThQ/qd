@@ -1,5 +1,5 @@
-#ifndef VM_HEAP_H
-#define VM_HEAP_H
+#ifndef VM_HEAP
+#define VM_HEAP NS_VM::Heap
 
 #include "t/HeapObject.h"
 #include "t/Int.h"
