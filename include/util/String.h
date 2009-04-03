@@ -1,16 +1,16 @@
-#ifndef SVM_STRING_UTIL_H
-#define SVM_STRING_UTIL_H
+#ifndef UTIL_STRING
+#define UTIL_STRING NS_UTIL::String
 
-#include "svm/Bool.h"
-#include "svm/Float.h"
-#include "svm/Int.h"
-#include "svm/String.h"
+#include "t/Bool.h"
+#include "t/Float.h"
+#include "t/Int.h"
+#include "t/String.h"
 
-namespace svm
+namespace NS_UTIL
 {
-   class StringUtil
+   class String
    {
-      public: static Object* format(Object* format_str, ULong argc, Object** argv);
+      public: static t::Object* format(t::Object* format_str, ULong argc, t::Object** argv);
    };
 }
 

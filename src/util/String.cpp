@@ -1,15 +1,14 @@
-#include "svm/StringUtil.h"
+#include "util/String.h"
 
-namespace svm
+namespace NS_UTIL
 {
-   Object*
-   StringUtil::format(Object* format_str, ULong argc, Object** argv)
+   t::Object*
+   StringUtil::format(t::Object* format_str, ULong argc, t::Object** argv)
    {
-      String* s = (String*)format_str;
+      t::String* s = (t::String*)format_str;
       ULong len = s->value.length();
       ULong arg = 0;
-      String* result = new String();
-      result->value.assign("");
+      t::String* result = t::String::build();
 
       for (ULong i = 0 ; i < len ; ++i)
       {
@@ -19,12 +18,12 @@ namespace svm
             {
                case 'b': // Boolean (svm::Bool)
                {
-                  if (argv[arg]->cls == svm::bool_type)
+                  if (argv[arg]->cls == t::tBOOL)
                   {
-                     Object* strobj = Bool::cast_to_string(argv[arg]);
-                     SVM_PICK(strobj);
-                     result->value.append(((String*)strobj)->value);
-                     SVM_DROP(strobj);
+                     t::Object* strobj = t::Bool::cast_to_string(argv[arg]);
+                     t::Object::pick(strobj);
+                     result->value.append(((t::String*)strobj)->value);
+                     t::Object::drop(strobj);
                   }
                   else
                   {
@@ -34,11 +33,11 @@ namespace svm
                }
                case 'i': // Integer (svm::Integer)
                {
-                  if (argv[arg]->cls == svm::int_type)
+                  if (argv[arg]->cls == t::tINT)
                   {
-                     Object* strobj = Int::cast_to_string(argv[arg]);
-                     SVM_PICK(strobj);
-                     result->value.append(((String*)strobj)->value);
+                     t::Object* strobj = t::Int::cast_to_string(argv[arg]);
+                     t::Object::pick(strobj);
+                     result->value.append(((t::String*)strobj)->value);
                   }
                   else
                   {
@@ -48,9 +47,9 @@ namespace svm
                }
                case 's': // String (svm::String)
                {
-                  if (argv[arg]->cls == svm::string_type)
+                  if (argv[arg]->cls == t::tSTRING)
                   {
-                     result->value.append(((String*)argv[arg])->value);
+                     result->value.append(((t::String*)argv[arg])->value);
                   }
                   break;
                }
@@ -62,7 +61,6 @@ namespace svm
             }
          }
       }
-
 
       return result;
    }
