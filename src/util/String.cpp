@@ -3,7 +3,7 @@
 namespace NS_UTIL
 {
    t::Object*
-   StringUtil::format(t::Object* format_str, ULong argc, t::Object** argv)
+   String::format(t::Object* format_str, ULong argc, t::Object** argv)
    {
       t::String* s = (t::String*)format_str;
       ULong len = s->value.length();
