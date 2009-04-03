@@ -2,7 +2,7 @@
 #define CONFIG_H
 
 #ifndef NS_ROOT
-#define NS_ROOT nodia
+#define NS_ROOT qd
 #endif
 
 #ifndef NS_TYPE
@@ -11,6 +11,10 @@
 
 #ifndef NS_VM
 #define NS_VM vm
+#endif
+
+#ifndef NS_UTIL
+#define NS_UTIL util
 #endif
 
 // # NODIA_ALLOW_UNICODE
