@@ -1,16 +1,16 @@
-#ifndef SVM_LIST_UTIL_H
-#define SVM_LIST_UTIL_H
+#ifndef UTIL_LIST
+#define UTIL_LIST NS_UTIL::List
 
-#include "svm/Bool.h"
-#include "svm/Int.h"
-#include "svm/List.h"
-#include "svm/String.h"
+#include "t/Bool.h"
+#include "t/Int.h"
+#include "t/List.h"
+#include "t/String.h"
 
-namespace svm
+namespace NS_UTIL
 {
-   class ListUtil
+   class List
    {
-      public: static void print(List* list);
+      public: static void print(t::List* list);
    };
 }
 

@@ -1,9 +1,9 @@
-#include "svm/ListUtil.h"
+#include "util/List.h"
 
-namespace svm
+namespace NS_UTIL
 {
    void
-   ListUtil::print(List* list)
+   List::print(t::List* list)
    {
       printf("[");
       for (UInt i = 0 ; i < list->length ; ++i)
@@ -13,28 +13,28 @@ namespace svm
             printf(", ");
          }
 
-         Object* obj = list->items[i];
-         if (obj->cls == svm::bool_type)
+         t::Object* obj = list->items[i];
+         if (obj->cls == t::tBOOL)
          {
-               svm::Bool::print(obj);
+               t::Bool::print(obj);
          }
-         else if(obj->cls == svm::int_type)
+         else if(obj->cls == t::tINT)
          {
-               svm::Int::print(obj);
+               t::Int::print(obj);
          }
-         else if(obj->cls == svm::string_type)
+         else if(obj->cls == t::tSTRING)
          {
                printf("\"");
-               svm::String::print(obj);
+               t::String::print(obj);
                printf("\"");
          }
-         else if(obj->cls == svm::list_type)
+         else if(obj->cls == t::tLIST)
          {
-            svm::ListUtil::print((svm::List*)obj);
+            util::List::print((t::List*)obj);
          }
          else
          {
-            svm::Object::print(obj);
+            t::Object::print(obj);
          }
       }
       printf("]");
