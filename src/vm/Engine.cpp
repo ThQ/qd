@@ -20,10 +20,11 @@ namespace NS_VM
    }
 
    void
-   Engine::append_block(svm::Block* block)
+   Engine::append_block(t::Block* block)
    {
       ++ this->block_count;
-      this->blocks = (svm::Block**)REALLOC(this->blocks, sizeof(svm::Block*) * this->block_count);
+      // @TODO: Stop intensive REALLOC
+      this->blocks = (t::Block**)REALLOC(this->blocks, sizeof(t::Block*) * this->block_count);
       this->blocks[this->block_count - 1] = block;
       T_OBJECT::pick(block);
    }
@@ -31,14 +32,14 @@ namespace NS_VM
    t::Object*
    Engine::build_traceback()
    {
-      t::Object* traceback = svm::List::build();
-      SVM_ASSERT_LIST(traceback);
-      SVM_PICK(traceback);
+      t::Object* traceback = t::List::build();
+      t::List::assert(traceback);
+      t::Object::pick(traceback);
       for (ULong i = this->stack.count() - 1 ; i > 0 ; --i)
       {
          t::Object* entry = svm::Map::build();
-         SVM_ASSERT_MAP(entry);
-         SVM_PICK(entry);
+         t::Map::assert(entry);
+         t::Object::pick(entry);
          std::string s_key;
          s_key.assign("function");
          t::Map::set_item(entry, s_key, this->stack.blocks[i]->name);
@@ -52,8 +53,9 @@ namespace NS_VM
    {
       for (UInt i = 0 ; i < argc ; ++ i)
       {
-         T_OBJECT::drop_safe(argv[i]);
+         t::Object::drop_safe(argv[i]);
       }
+      // @TODO: Free / delete / something ?
       argv = 0;
       argc = 0;
    }
@@ -66,7 +68,7 @@ namespace NS_VM
    }
 
    t::Object*
-   Engine::call(std::string method_name, UInt argc, svm::Object**& argv)
+   Engine::call(std::string method_name, UInt argc, t::Object**& argv)
    {
       t::Object* result = NULL;
       t::CoreFunction* f = (t::CoreFunction*)this->functions.get((std::string)method_name);
@@ -75,14 +77,14 @@ namespace NS_VM
       {
          if (check_arguments(f, argc, argv))
          {
-            svm::MethodPointer ptr = (svm::MethodPointer)f->function_pointer;
+            NS_VM::MethodPointer ptr = (NS_VM::MethodPointer)f->function_pointer;
             result = ptr(argc, argv);
          }
       }
 
       if (result == NULL)
       {
-         result = svm::Null;
+         result = t::gNULL;
       }
 
       T_OBJECT::assert_not_null(result);
@@ -113,7 +115,7 @@ namespace NS_VM
       t::Object* result = NULL;
 
       t::Function* f = this->classes.get_method(((t::Class*)argv[0]->cls), method_name);
-      SVM_PICK(f);
+      t::Object::pick(f);
 
       if (f != NULL)
       {
@@ -122,7 +124,7 @@ namespace NS_VM
             // TODO: Check the result object type
             if (f->is_user == true)
             {
-               SVM_ASSERT_NOT_NULL(((t::UserFunction*)f)->block);
+               t::Object::assert_not_null(((t::UserFunction*)f)->block);
                this->heap.append(argc, argv);
                this->run_block(((t::UserFunction*)f)->block);
                if (this->heap.item_count >= 1)
@@ -137,7 +139,7 @@ namespace NS_VM
             }
             else
             {
-               t::ClassMethodPointer ptr = (t::ClassMethodPointer)((t::CoreFunction*)f)->function_pointer;
+               NS_VM::ClassMethodPointer ptr = (NS_VM::ClassMethodPointer)((t::CoreFunction*)f)->function_pointer;
                result = ptr(this, argv[0], argc, argv);
             }
          }
@@ -169,8 +171,6 @@ namespace NS_VM
    bool
    Engine::check_arguments(int argc, ...)
    {
-      t::Object::assert_not_null(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
-
       bool result = true;
       va_list l;
       va_start(l, argc);
@@ -189,7 +189,7 @@ namespace NS_VM
 
             t::Object* msg = t::String::build(s_msg);
             t::Exception* e = new t::Exception();
-            e->set_class(t::tBAD_ARGUMENTbad_argument_type_exception_type);
+            e->set_class(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
             t::Exception::set_message(e, msg);
             this->throw_exception((t::Object*)e);
 
@@ -202,14 +202,13 @@ namespace NS_VM
    }
 
    bool
-   Engine::check_arguments(svm::Function* f, UInt argc, svm::Object**& argv)
+   Engine::check_arguments(t::Function* f, UInt argc, t::Object**& argv)
    {
       bool result = true;
       if (argc != f->arguments_count)
       {
+         // TODO: Throw an exception instead !
          WARNING("Bad argument count, got <%d> instead of <%d>\n", argc, f->arguments_count);
-         // TODO: Throw an exception !
-         //svm::throw_bad_argument_count(argc, f->arguments_count);
       }
       else
       {
@@ -217,20 +216,21 @@ namespace NS_VM
          for (ULong i = 0; i < f->arguments_count ; ++ i)
          {
             //DEBUG("Testing arg #%d/%d(%d)\n", i, argc, f->arguments_count);
-            svm::Variable* expected_type = ((svm::Variable*)f->arguments[i]);
-            SVM_PICK(expected_type);
-            svm::Object* given_type = argv[i]->cls;
-            SVM_PICK(given_type);
+            t::Variable* expected_type = ((t::Variable*)f->arguments[i]);
+            t::Object::pick(expected_type);
+            t::Object* given_type = argv[i]->cls;
+            t::Object::pick(given_type);
 
-            result = svm::Class::is_child_of(argv[i]->cls, ((svm::Variable*)f->arguments[i])->object_type);
+            t::Variable* func_var_arg = ((t::Variable*)f->arguments[i])->object_type;
+            result = t::Class::is_child_of(argv[i]->cls, func_var_arg);
             if (result != true)
             {
                WARNING(
                   "Bad argument type: <%s@%lu is not child of type <%s@%lu>.\n",
-                  ((svm::Class*)argv[i]->cls)->name.c_str(),
+                  ((t::Class*)argv[i]->cls)->name.c_str(),
                   (ULong)argv[i]->cls,
-                  ((svm::Class*)((svm::Variable*)f->arguments[i])->object_type)->name.c_str(),
-                  (ULong)((svm::Variable*)f->arguments[i])->object_type
+                  ((t::Class*)((t::Variable*)f->arguments[i])->object_type)->name.c_str(),
+                  (ULong)((t::Variable*)f->arguments[i])->object_type
                );
 
                // TODO: Throw an exception or what ?
@@ -238,8 +238,8 @@ namespace NS_VM
                break;
             }
 
-            SVM_DROP(expected_type);
-            SVM_DROP(given_type);
+            t::Object::drop(expected_type);
+            t::Object::drop(given_type);
          }
       }
 
@@ -249,18 +249,13 @@ namespace NS_VM
    void
    Engine::exit()
    {
-
+      // @TODO: Make it a real exit() !
    }
 
-   /**
-    * Going up the stack from the current frame to find an exception handler.
-    *
-    * @return An exception handler block if found, NULL otherwise.
-    **/
-   svm::Block*
+   t::Block*
    Engine::find_nearest_exception_handler()
    {
-      svm::Block* result = NULL;
+      t::Block* result = NULL;
       if (this->stack.count() > 0)
       {
          for (ULong i = this->stack.count() - 1; i > 0 ; --i)
@@ -275,16 +270,11 @@ namespace NS_VM
       return result;
    }
 
-   /**
-    * Get the block associated with the name <name>.
-    *
-    * @return The block if found, NULL otherwise.
-    **/
-   svm::Block*
+   t::Block*
    Engine::get_block(std::string name)
    {
       //INTERNAL("Engine::get_block(%s)\n", name.c_str());
-      svm::Block* result = NULL;
+      t::Block* result = NULL;
       for (ULong i = 0 ; i < this->block_count ; ++ i)
       {
          if (this->blocks[i]->name.compare(name) == 0)
@@ -329,7 +319,7 @@ namespace NS_VM
    // -----------------------------------------
 
    void
-   Engine::run_block(svm::Block* block, bool add_to_stack)
+   Engine::run_block(t::Block* block, bool add_to_stack)
    {
       INTERNAL(
          "<block:%s @%lu> [%lu opcodes] : Running ... (heap_size=%lu)\n",
@@ -345,12 +335,12 @@ namespace NS_VM
       {
          for (long i = (long)block->argc - 1 ; i >= 0 ; -- i)
          {
-            SVM_ASSERT_STRING(block->argv[i]);
-            svm::Object* obj = this->heap.pick_last_and_pop();
+            t::String::assert(block->argv[i]);
+            t::Object* obj = this->heap.pick_last_and_pop();
 
-            svm::Class* cls = (svm::Class*)obj->cls;
+            t::Class* cls = (t::Class*)obj->cls;
             #ifdef _DEBUG_
-            if (cls->name != ((svm::String*)block->argv[i])->value)
+            if (cls->name != ((t::String*)block->argv[i])->value)
             {
                WARNING(
                   "Bad block parameter type, expected <%s> but got <%s>.\n",
@@ -362,45 +352,45 @@ namespace NS_VM
             block->heap.append(obj);
          }
       }
-      ASSERT(block != NULL, "Cannot use a <NULL> svm::Block*.\n");
+      ASSERT(block != NULL, "Cannot use a <NULL> t::Block*.\n");
 
-      SVM_DROP_SAFE(this->current_block);
+      t::Object::drop_safe(this->current_block);
       this->current_block = block;
-      SVM_PICK(block);
+      t::Object::pick(block);
 
       if (add_to_stack == true)
       {
          this->stack.append(block);
       }
 
-      // Execute each opcode on this block
-      svm::OpCode* opc;
+      // Execute each opcode in this block
+      t::OpCode* opc;
       for (ULong i = 0 ; i < block->count() ; ++i)
       {
          //INTERNAL("BLOCK LOOP\n");
          opc = block->get(i);
-         ASSERT_NOT_NULL(opc);
-         svm::Object** args;
+         t::Object::assert_not_null(opc);
+         t::Object** args;
          //INTERNAL("Make empty object array\n");
-         Engine::make_empty_object_array(args, opc->argc);
+         t::make_empty_object_array(args, opc->argc);
 
          // If opcode have arguments, replace each HeapObject by its real value
          //INTERNAL("Passing through arguments\n");
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
             //INTERNAL("arg %lu\n", j);
-            ASSERT_NOT_NULL(opc->argv[j]);
-            if (opc->argv[j]->cls == svm::heap_object_type)
+            t::Object::assert_not_null(opc->argv[j]);
+            if (opc->argv[j]->cls == t::tHEAP_OBJECT)
             {
-               svm::HeapObject* hobj = (svm::HeapObject*)opc->argv[j];
+               t::HeapObject* hobj = (t::HeapObject*)opc->argv[j];
                args[j] = this->current_block->heap.get(hobj->position);
             }
             else
             {
                args[j] = opc->argv[j];
             }
-            ASSERT_NOT_NULL(args[j]);
-            SVM_PICK(args[j]);
+            t::Object::assert_not_null(args[j]);
+            t::Object::pick(args[j]);
          }
          //INTERNAL("// Passing through arguments\n");
 
@@ -417,8 +407,8 @@ namespace NS_VM
             //INTERNAL("looping through opcode args\n");
             for (ULong k = 0 ; k < opc->argc ; ++k)
             {
-               svm::Object* o = args[k];
-               SVM_PICK(o);
+               t::Object* o = args[k];
+               t::Object::pick(o);
                if (k != 0)
                {
                   printf(", ");
@@ -426,22 +416,21 @@ namespace NS_VM
                printf("%lu/%d @%lu ::", (k+1), opc->argc, (ULong)o);
                if (o->cls != NULL)
                {
-                  printf("%s", ((svm::Class*)o->cls)->name.c_str());
+                  printf("%s", ((t::Class*)o->cls)->name.c_str());
                }
                else
                {
                   printf("<UnknownClass>");
                }
 
-               SVM_DROP(o);
+               t::Object::drop(o);
             }
             printf(")\n");
          }
          #endif
 
-         //INTERNAL("Some block assertions\n");
-         SVM_ASSERT_NOT_NULL(this->current_block);
-         SVM_ASSERT_NOT_NULL(block);
+         t::Object::assert_not_null(this->current_block);
+         t::Object::assert_not_null(block);
 
          bool opc_handled = false;
          bool opc_namespace_handled = false;
@@ -467,25 +456,26 @@ namespace NS_VM
          }
          #endif
 
-         // EXECPTION HANDLING
+         // EXCEPTION HANDLING
+         // ------------------
          // If current opcode has an exception, try to find an exception handler
          // (starting in the current block and going up in the stack) and run it,
          // otherwise just die printing a stacktrace.
          if (this->current_block->exception != NULL)
          {
-            svm::Block* exception_handler = this->find_nearest_exception_handler();
+            t::Block* exception_handler = this->find_nearest_exception_handler();
             if (exception_handler != NULL)
             {
-               SVM_ASSERT_NOT_NULL(exception_handler);
+               t::Object::assert_not_null(exception_handler);
                this->run_block(exception_handler);
             }
             else
             {
-               svm::Exception* e = (svm::Exception*)this->current_block->exception;
-               svm::Class* e_cls = (svm::Class*)this->current_block->exception->cls;
-               SVM_ASSERT_NOT_NULL(e_cls);
+               t::Exception* e = (t::Exception*)this->current_block->exception;
+               t::Class* e_cls = (t::Class*)this->current_block->exception->cls;
+               t::Object::assert_not_null(e_cls);
                printf("[Uncaught exception]\n%s: ", e_cls->name.c_str());
-               svm::UString::print((svm::UString*)e->message);
+               t::UnicodeString::print((svm::UnicodeString*)e->message);
                printf("\n");
                this->build_traceback();
                i = block->count();
@@ -496,12 +486,12 @@ namespace NS_VM
 
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
-            ASSERT_NOT_NULL(args[j]);
-            SVM_DROP(args[j]);
+            t::Object::assert_not_null(args[j]);
+            t::Object::drop(args[j]);
          }
          delete[] args;
          //opc = opc->next_opcode;
-         // TODO: Problem here ! Damn'it ! Reference counting is great !
+         // TODO: Problem here ! Damn'it ! Reference counting is great ! << WTF ?
          //delete args;
       }
    }
@@ -528,7 +518,7 @@ namespace NS_VM
 
       std::string s_main;
       s_main.assign("MAIN");
-      svm::Block* block = this->get_block(s_main);
+      t::Block* block = this->get_block(s_main);
 
       ASSERT(block != NULL, "No <MAIN> block found.");
       this->run_block(block);
@@ -537,9 +527,9 @@ namespace NS_VM
    }
 
    void
-   Engine::throw_exception(svm::Object* exception)
+   Engine::throw_exception(t::Object* exception)
    {
-      SVM_ASSERT_NOT_NULL(this->current_block);
+      t::Object::assert_not_null(this->current_block);
       this->current_block->throw_exception(exception);
    }
 }
