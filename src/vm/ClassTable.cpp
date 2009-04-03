@@ -1,6 +1,6 @@
-#include "svm/ClassTable.h"
+#include "vm/ClassTable.h"
 
-namespace svm
+namespace VM
 {
    ClassTable::ClassTable()
    {
@@ -21,20 +21,13 @@ namespace svm
    }
 
    void
-   ClassTable::append(Class* cls)
+   ClassTable::append(t::Class* cls)
    {
-      if (cls != NULL)
-      {
-         ClassTableEntry* entry = new ClassTableEntry();
-         entry->set_class(cls);
-         this->append(entry);
-      }
-      #ifdef _DEBUG_
-      else
-      {
-         WARNING("ClassTable::append(Class*) : Cannot append a NULL Class*.\n");
-      }
-      #endif
+      ASSERT(cls != NULL, "Cannot append a NULL t::Class*.\n");
+
+      ClassTableEntry* entry = new ClassTableEntry();
+      entry->set_class(cls);
+      this->append(entry);
    }
 
    void
@@ -47,12 +40,12 @@ namespace svm
       );*/
 
       #ifdef __DEBUG__
-      if (this->has(((Class*)entry->cls)->name))
+      if (this->has(((t::Class*)entry->cls)->name))
       {
          FATAL(
             "ClassTable[@%lu] : <%s> already declared.",
             (ULong)this,
-            ((Class*)entry->cls)->name.c_str()
+            ((t::Class*)entry->cls)->name.c_str()
          );
          abort();
       }
@@ -68,11 +61,11 @@ namespace svm
    }
 
    bool
-   ClassTable::append_method_to(Class* cls, Function* func)
+   ClassTable::append_method_to(t::Class* cls, Function* func)
    {
       //INTERNAL("ClassTable::append_method_to(Class*(@%lu), Function*(@%lu))\n", (ULong)cls, (ULong)func);
-      SVM_ASSERT_NOT_NULL(cls);
-      SVM_ASSERT_NOT_NULL(func);
+      t::Object::assert_not_null(cls);
+      t::Object::assert_not_null(func);
 
       bool result = false;
       long index = this->find(cls);
@@ -103,7 +96,7 @@ namespace svm
             ASSERT(func_index != -1, "Function must be findable at this point.");
 
             WARNING(
-               "<svm::Class*(@%lu)> has already a <svm::Function*(@%lu)> named <%s> at index %ld, along with: \n",
+               "<t::Class*(@%lu)> has already a <svm::Function*(@%lu)> named <%s> at index %ld, along with: \n",
                (ULong)cls,
                (ULong)func,
                this->items[index]->functions.functions[func_index]->function->name.c_str(),
@@ -118,7 +111,7 @@ namespace svm
       else
       {
          WARNING(
-            "<svm::Class*(@%lu)> [name=\"%s\"] not found.\n",
+            "<t::Class*(@%lu)> [name=\"%s\"] not found.\n",
             (ULong)this,
             cls->name.c_str()
          );
@@ -145,7 +138,7 @@ namespace svm
    #endif
 
    /*bool
-   ClassTable::declare_fields(svm::Class* cls, ULong field_count, svm::Variable** fields)
+   ClassTable::declare_fields(t::Class* cls, ULong field_count, svm::Variable** fields)
    {
       bool result = false;
       long class_index = this->find(cls);
@@ -165,88 +158,89 @@ namespace svm
       return this->item_count;
    }
 
-   svm::Object*
+   t::Object*
    ClassTable::declare_class(const char* class_name)
    {
-      svm::Object* cls = svm::Class::build(class_name);
-      this->append((svm::Class*)cls);
+      t::Object* cls = t::Class::build(class_name);
+      this->append((t::Class*)cls);
       return cls;
    }
 
-   svm::Object*
-   ClassTable::declare_class(const char* class_name, svm::Object* parent_class)
+   t::Object*
+   ClassTable::declare_class(const char* class_name, t::Object* parent_class)
    {
-      SVM_ASSERT_CLASS(parent_class);
+      t::Class::assert(parent_class);
 
-      svm::Object* cls = svm::Class::build(class_name, parent_class);
-      this->append((svm::Class*)cls);
+      t::Object* cls = t::Class::build(class_name, parent_class);
+      this->append((t::Class*)cls);
       return cls;
    }
 
-   svm::Object*
+   t::Object*
    ClassTable::declare_class(const char* class_name, const char* parent_class_name)
    {
-      std::string s_class_name, s_parent_class_name;
+      std::string s_class_name;
+      std::string s_parent_class_name;
       s_class_name.assign(class_name);
       s_parent_class_name.assign(parent_class_name);
-      svm::Object* result = NULL;
+      t::Object* result = NULL;
       long class_index = this->find(s_parent_class_name);
       if (class_index != -1)
       {
          result = this->declare_class(class_name, this->items[class_index]->cls);
       }
 
-      SVM_CHECK_NOT_NULL(result);
+      t::Object::assert_not_null(result);
 
       return result;
    }
 
-   svm::Object*
-   ClassTable::declare_method(svm::Class* cls, svm::CoreFunction* func)
+   t::Object*
+   ClassTable::declare_method(t::Class* cls, t::CoreFunction* func)
    {
-      this->append_method_to(cls, (svm::Function*)func);
+      this->append_method_to(cls, (t::Function*)func);
 
       return func;
    }
 
-   svm::Object*
-   ClassTable::declare_method(svm::Class* cls, svm::UserFunction* func)
+   t::Object*
+   ClassTable::declare_method(t::Class* cls, t::UserFunction* func)
    {
-      this->append_method_to(cls, (svm::Function*)func);
+      this->append_method_to(cls, (t::Function*)func);
 
       return func;
    }
 
-   svm::Object*
-   ClassTable::declare_method(svm::Object* cls, svm::Object* func)
+   t::Object*
+   ClassTable::declare_method(t::Object* cls, t::Object* func)
    {
       //INTERNAL("> opcode::declare_method(Object*(Class*)(@%lu), Object*(Function*)(@%lu))\n", (ULong)cls, (ULong)func);
-      SVM_ASSERT_CLASS(cls);
-      SVM_ASSERT_FUNCTION(func);
+      t::Class::assert(cls);
+      t::Function::assert(func);
 
-      this->append_method_to((svm::Class*)cls, (svm::Function*)func);
+      this->append_method_to((t::Class*)cls, (t::Function*)func);
       //INTERNAL("< opcode::declare_method(Object*(Class*)(@%lu), Object*(Function*)(@%lu))\n", (ULong)cls, (ULong)func);
 
       return func;
    }
 
-   svm::Object*
-   ClassTable::declare_method(svm::Class* cls, svm::Object* func)
+   t::Object*
+   ClassTable::declare_method(t::Class* cls, t::Object* func)
    {
-      SVM_ASSERT_FUNCTION(func);
+      t::Function::assert(func);
 
       #ifdef _DEBUG_
       if (!this->has(cls))
       {
          WARNING("Cannot find class <%s>.\n", cls->name.c_str());
       }
-      if (this->has_method(cls, (svm::Function*)func))
+      if (this->has_method(cls, (t::Function*)func))
       {
-         WARNING("Method <%s> already declared.\n", ((svm::Function*)func)->name.c_str());
+         WARNING("Method <%s> already declared.\n", ((t::Function*)func)->name.c_str());
       }
       #endif
 
-      this->append_method_to(cls, (svm::Function*)func);
+      this->append_method_to(cls, (t::Function*)func);
 
       #ifdef _SHOW_INTERNAL_
       /*svm::Function* f = (svm::Function*)func;
@@ -261,14 +255,14 @@ namespace svm
       return func;
    }
 
-   /*svm::Object*
-   ClassTable::declare_function(svm::Object* func)
+   /*t::Object*
+   ClassTable::declare_function(t::Object* func)
    {
       SVM_ASSERT_NOT_NULL(func);
 
       this->append((svm::Function*)func);
       ++ opcode::method_count;
-      opcode::methods = (svm::Object**)realloc(opcode::methods, sizeof(svm::Object*) * opcode::method_count);
+      opcode::methods = (t::Object**)realloc(opcode::methods, sizeof(t::Object*) * opcode::method_count);
       ASSERT_REALLOC(opcode::methods);
       opcode::methods[opcode::method_count - 1] = func;
       SVM_PICK(func);
@@ -324,21 +318,21 @@ namespace svm
          result = this->items[index]->cls;
       }
 
-      SVM_CHECK_NOT_NULL(result);
+      t::Object::assert_not_null(result);
       return result;
    }
 
-   Function*
+   t::Function*
    ClassTable::get_method(std::string class_name, std::string func_name)
    {
-      Class* cls = this->get(class_name);
+      t::Class* cls = this->get(class_name);
       return this->get_method(cls, func_name);
    }
 
-   Function*
-   ClassTable::get_method(Class* cls, std::string func)
+   t::Function*
+   ClassTable::get_method(t::Class* cls, std::string func)
    {
-      Function* result = NULL;
+      t::Function* result = NULL;
       while (result == NULL)
       {
          long index = this->find(cls);
@@ -355,7 +349,7 @@ namespace svm
          #endif
          if (result == NULL && cls->parent_class != NULL)
          {
-            cls = (Class*)cls->parent_class;
+            cls = (t::Class*)cls->parent_class;
          }
          else
          {
@@ -363,7 +357,7 @@ namespace svm
          }
       }
 
-      SVM_CHECK_NOT_NULL(result);
+      t::Object::assert_not_null(result);
 
       return result;
    }
@@ -375,13 +369,13 @@ namespace svm
    }
 
    bool
-   ClassTable::has(Class* cls)
+   ClassTable::has(t::Class* cls)
    {
       return this->find(cls) != -1;
    }
 
    bool
-   ClassTable::has_method(Class* cls, std::string name)
+   ClassTable::has_method(t::Class* cls, std::string name)
    {
       bool result = false;
       long index = this->find(cls);
@@ -393,7 +387,7 @@ namespace svm
    }
 
    bool
-   ClassTable::has_method(Class* cls, Function* func)
+   ClassTable::has_method(t::Class* cls, t::Function* func)
    {
       bool result = false;
       long index = this->find(cls);
