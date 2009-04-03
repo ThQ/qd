@@ -1,6 +1,6 @@
-#include "svm/FunctionTable.h"
+#include "vm/FunctionTable.h"
 
-namespace svm
+namespace vm
 {
    FunctionTable::FunctionTable()
    {
@@ -10,6 +10,7 @@ namespace svm
 
    FunctionTable::~FunctionTable()
    {
+      // @TODO: Drop functions in here
       /*
       if (this->functions != NULL)
       {
@@ -26,7 +27,7 @@ namespace svm
       SVM_ASSERT_NOT_NULL(func);
 
       FunctionTableEntry* entry = new FunctionTableEntry(func);
-      SVM_ASSERT_FUNCTION(entry->function);
+      t::Function::assert(entry->function);
       ++ this->function_count;
       this->functions = (FunctionTableEntry**)REALLOC(this->functions, sizeof(FunctionTableEntry*) * this->function_count);
       ASSERT_REALLOC(this->functions);
@@ -60,7 +61,7 @@ namespace svm
    {
       for (ULong i = 0 ; i < this->function_count ; ++ i)
       {
-         SVM_ASSERT_NOT_NULL(this->functions[i]->function);
+         t::Object::assert_not_null(this->functions[i]->function);
          this->functions[i]->function->assert_validity();
       }
    }
@@ -90,7 +91,7 @@ namespace svm
    }
 
    long
-   FunctionTable::find(Function* func)
+   FunctionTable::find(t::Function* func)
    {
       long result = -1;
       for (ULong i = 0 ; i < this->function_count ; ++i)
@@ -105,7 +106,7 @@ namespace svm
       return result;
    }
 
-   Function*
+   t::Function*
    FunctionTable::get(std::string name)
    {
       long index = this->find((std::string)name);
@@ -130,7 +131,7 @@ namespace svm
    }
 
    bool
-   FunctionTable::has(Function* func)
+   FunctionTable::has(t::Function* func)
    {
       return (this->find(func) != -1);
    }
@@ -142,7 +143,7 @@ namespace svm
       DEBUG("Listing functions (%lu) in FunctionTable @%lu :\n", this->function_count, (ULong)this);
       for (ULong i = 0 ; i < this->function_count ; ++i)
       {
-         svm::Function* func = (svm::Function*)this->functions[i]->function;
+         t::Function* func = (t::Function*)this->functions[i]->function;
          DEBUG(
             "#%lu : [name=\"%s\", references=%d, pointer=%lu, parameters=",
             i,
@@ -157,7 +158,7 @@ namespace svm
             {
                printf(", ");
             }
-            printf("%s", ((svm::Class*)func->arguments[j]->cls)->name.c_str());
+            printf("%s", ((t::Class*)func->arguments[j]->cls)->name.c_str());
          }
          printf("].\n");
       }

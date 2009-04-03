@@ -1,11 +1,10 @@
-#ifndef SVM_FUNCTION_TABLE_H
-#define SVM_FUNCTION_TABLE_H
+#ifndef VM_FUNCTION_TABLE
+#define VM_FUNCTION_TABLE NS_VM::FunctionTable
 
-#include "debug.h"
-#include "svm/Function.h"
-#include "svm/FunctionTableEntry.h"
+#include "t/Function.h"
+#include "vm/FunctionTableEntry.h"
 
-namespace svm
+namespace NS_VM
 {
    class FunctionTable
    {
@@ -15,16 +14,16 @@ namespace svm
       public: FunctionTable();
       public: ~FunctionTable();
       public: void append(FunctionTableEntry* entry);
-      public: void append(Function* func);
+      public: void append(t::Function* func);
       #ifdef _DEBUG_
       public: void assert_validity();
       #endif
       public: unsigned long count();
       public: long find(std::string name);
-      public: long find(Function* func);
-      public: Function* get(std::string name);
+      public: long find(t::Function* func);
+      public: t::Function* get(std::string name);
       public: bool has(std::string name);
-      public: bool has(Function* func);
+      public: bool has(t::Function* func);
       #ifdef _DEBUG_
       public: void list();
       #endif
