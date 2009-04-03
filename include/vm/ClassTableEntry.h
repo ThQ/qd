@@ -1,23 +1,23 @@
-#ifndef SVM_CLASS_TABLE_ENTRY_H
-#define SVM_CLASS_TABLE_ENTRY_H
+#ifndef VM_CLASS_TABLE_ENTRY
+#define VM_CLASS_TABLE_ENTRY NS_VM::ClassTableEntry
 
-#include "svm/Class.h"
-#include "svm/CoreFunction.h"
-#include "svm/FieldTable.h"
-#include "svm/FunctionTable.h"
-#include "svm/UserFunction.h"
+#include "t/Class.h"
+#include "t/CoreFunction.h"
+#include "t/UserFunction.h"
+#include "vm/FieldTable.h"
+#include "vm/FunctionTable.h"
 
-namespace svm
+namespace NS_VM
 {
    class ClassTableEntry
    {
-      public: Class* cls;
+      public: t::Class* cls;
       public: FieldTable fields;
       public: FunctionTable functions;
 
       public: ClassTableEntry();
       public: ~ClassTableEntry();
-      public: void set_class(Class* cls);
+      public: void set_class(t::Class* cls);
    };
 }
 

@@ -1,6 +1,6 @@
-#include "svm/ClassTableEntry.h"
+#include "t/ClassTableEntry.h"
 
-namespace svm
+namespace NS_VM
 {
    ClassTableEntry::ClassTableEntry()
    {
@@ -10,25 +10,20 @@ namespace svm
    ClassTableEntry::~ClassTableEntry()
    {
       //printf("Class name: %s @%lu / Ref count: %d\n", ((svm::Class*)this->cls)->name.c_str(), (ULong)this->cls, this->cls->references);
-      SVM_DROP_SAFE(((svm::Class*)this->cls)->parent_class);
-      SVM_DROP_SAFE(this->cls);
+      // SVM_DROP_SAFE(((svm::Class*)this->cls)->parent_class); Why would we drop the parent class ?
+      t::Object::drop_safe(this->cls);
       this->cls = NULL;
    }
 
    void
-   ClassTableEntry::set_class(Class* cls)
+   ClassTableEntry::set_class(t::Class* cls)
    {
+      ASSERT(cls != NULL, "Null class object.");
       if (cls != NULL)
       {
-         SVM_DROP_SAFE(this->cls);
+         t::Object::drop_safe(this->cls);
          this->cls = cls;
-         SVM_PICK(cls);
+         t::Object::pick(cls);
       }
-      #ifdef _SHOW_WARNING_
-      else
-      {
-         WARNING("svm::ClassTableEntry::set_Class(Class*) : Null class object.\n");
-      }
-      #endif
    }
 }
