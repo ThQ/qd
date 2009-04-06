@@ -13,7 +13,7 @@ namespace NS_VM
 
    Heap::~Heap()
    {
-      for (unsigned int i = 0 ; i < this->item_count ; ++ i)
+      for (UInt i = 0 ; i < this->item_count ; ++ i)
       {
          T_OBJECT::drop(this->items[i]);
       }
@@ -29,7 +29,7 @@ namespace NS_VM
    void
    Heap::append(T_OBJECT* obj)
    {
-      ASSERT(obj->cls != svm::heap_object_type, "<heap:%ld> : Cannot store object of type <system.HeapObject>.", (long)this);
+      // ASSERT(obj->cls != t::tHEAP_OBJECT, "<heap:%ld> : Cannot store object of type <system.HeapObject>.", (long)this);
 
       if (this->rooms == this->item_count)
       {
@@ -86,7 +86,7 @@ namespace NS_VM
       T_OBJECT* result = this->items[this->last_position - at];
       T_OBJECT::pick(result);
 
-      ASSERT(result != svm::heap_object_type, "<heap@x%x> cannot return <system.HeapObject> objects.\n", (UInt)this);
+      // ASSERT(result != t::tHEAP_OBJECT, "<heap@x%x> cannot return <system.HeapObject> objects.\n", (UInt)this);
 
       return result;
    }
