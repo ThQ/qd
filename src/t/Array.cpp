@@ -35,7 +35,7 @@ namespace NS_TYPE
       T_OBJECT::assert_not_null(type);
 
       Array* result = new Array();
-      result->set_type(type);
+      Array::set_type(result, type);
       result->item_count = len;
       result->items = (T_OBJECT**)MALLOC(sizeof(T_OBJECT*) * len);
       Array::clear(result);
@@ -50,7 +50,7 @@ namespace NS_TYPE
       ASSERT(len != 0, "Length should not be 0.");
 
       Array* result = new Array();
-      result->set_type(type);
+      Array::set_type(result, type);
       result->item_count = len;
       result->items = items;
 
@@ -127,8 +127,8 @@ namespace NS_TYPE
    Array::set_type(T_OBJECT* obj, T_OBJECT* type)
    {
       Array::assert(obj);
-      Array* arr = (Array*)obj;
 
+      Array* arr = (Array*)obj;
       T_OBJECT::drop_safe(arr->type);
       T_OBJECT::pick(type);
       arr->type = type;
