@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="global" full-name="core.global" char="g">
-   <include src="svm/Int.h" />
+   <include src="vm/Int.h" />
 
    <opcode name="send" char="s">
       <body>
@@ -17,10 +17,10 @@
 
    <opcode name="receive" char="r">
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="vm::int_type" />
       </parameters>
       <body><![CDATA[
-         ULong j_max = ((svm::Int*)argv[0])->value;
+         ULong j_max = ((vm::Int*)argv[0])->value;
 
          ASSERT(this->heap.count() >= j_max, "You cannot receive more than contained in the heap.\n");
          if (this->heap.count() >= j_max)
