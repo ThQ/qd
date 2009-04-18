@@ -27,16 +27,16 @@ define(`METHOD_START', `dnl
    define(`_m_alias_', translit(_method_count_, `0123456789', `abcdefghjk'))dnl
    define(`_m_name_', $1)dnl
    // _m_name_ ,  _method_count_ , _m_alias_ , || translit(`8', `0123456789', `abcdefghjk'))
-   INTERNAL("<svm::CoreFunction[name=\"_m_name_\"]> : declaring... ");
+   INTERNAL("<t::CoreFunction[name=\"_m_name_\"]> : declaring... ");
 ')dnl
 define(`PARAM', `dnl
    define(`_m_parameter_count_', incr(_m_parameter_count_))dnl
    METHOD_WRITE_PARAM(_m_parameter_count_, $1, $2, _m_alias_) dnl
 ')dnl
 define(`RETURNS', `dnl
-   svm::Function* _m_alias_ = svm::CoreFunction::build("_m_name_", (long int)_m_function_, $1);
-   SVM_ASSERT_FUNCTION( _m_alias_ );
-   SVM_PICK( _m_alias_ );
+   t::Function* _m_alias_ = t::CoreFunction::build("_m_name_", (long int)_m_function_, $1);
+   t::Function::assert( _m_alias_ );
+   t::Object::pick( _m_alias_ );
    ifdef(`_m_parameter_count_', `dnl
       ifelse(_m_parameter_count_, `0', `', `dnl
          concat(_m_alias_,->set_arguments)(_m_parameter_count_ dnl
@@ -46,21 +46,21 @@ define(`RETURNS', `dnl
       ')dnl
    ')dnl
    ifelse(_m_class_method, 1, `
-      engine.classes.declare_method(_m_object_type_, (svm::Object*)_m_alias_);
+      engine.classes.declare_method(_m_object_type_, (t::Object*)_m_alias_);
    ', `
       engine.functions.append(_m_alias_);
    ')dnl
-   SVM_DROP((svm::Object*)_m_alias_);
+   t::Object::drop((t::Object*)_m_alias_);
    ifdef(`_m_parameter_count_', `dnl
       ifelse(_m_parameter_count_, `0', `', `dnl
          define(`i', `1')dnl
          forloop(`i', `1', _m_parameter_count_, `dnl
-           SVM_DROP(concat(_m_alias_,`_a', i));
+           t::Object::drop(concat(_m_alias_,`_a', i));
            SVM_ASSERT_REF_COUNT(concat(_m_alias_,`_a', i), 1);
          ')dnl
       ')dnl
    ')dnl
-   SVM_ASSERT_FUNCTION(_m_alias_);
+   t::Function::assert(_m_alias_);
    SVM_ASSERT_REF_COUNT(_m_alias_ , 1);
    INTERNAL_APD("OK\n");
 ')dnl
@@ -73,7 +73,7 @@ define(`METHOD_DECLARE_PARAMS',  `dnl
 ')dnl
 dnl
 define(`METHOD_WRITE_PARAM', `dnl
-   svm::Object* $4_a$1 = svm::Variable::build($3, "$2");
+   t::Object* $4_a$1 = t::Variable::build($3, "$2");
    SVM_ASSERT_NOT_NULL($4_a$1);
-   SVM_PICK($4_a$1);
+   t::Object::pick($4_a$1);
 ')dnl
