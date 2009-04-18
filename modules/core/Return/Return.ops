@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="return" full-name="core.return" char="&lt;">
-   <include src="svm/Bool.h" />
+   <include src="t/Bool.h" />
 
    <opcode name="if" char="i">
       <parameters count="1">
@@ -9,7 +9,7 @@
       </parameters>
       <body>
          SVM_ASSERT_BOOL(argv[0]);
-         if (argv[0] == svm::True)
+         if (argv[0] == t::gTRUE)
          {
             opc->next_opcode = NULL;
          }
@@ -19,9 +19,9 @@
    <opcode name="s_if" char="I">
       <parameters count="0" />
       <body>
-         svm::Object* b = this->current_block->heap.get(0);
-         SVM_ASSERT_BOOL(b);
-         if (b == svm::True)
+         t::Object* b = this->current_block->heap.get(0);
+         t::Bool::assert(b);
+         if (b == t::gTRUE)
          {
             opc->next_opcode = NULL;
          }
@@ -38,11 +38,11 @@
 
    <opcode name="unless" char="u">
       <parameters count="1">
-         <parameter index="0" type="svm::bool_type" />
+         <parameter index="0" type="t::tBOOL" />
       </parameters>
       <body>
          SVM_ASSERT_BOOL(argv[0]);
-         if (argv[0] != svm::True)
+         if (argv[0] != t::gTRUE)
          {
             opc->next_opcode = NULL;
          }
@@ -52,9 +52,9 @@
    <opcode name="s_unless" char="U">
       <parameters count="0" />
       <body>
-         svm::Object* b = this->current_block->heap.get(0);
-         SVM_ASSERT_BOOL(b);
-         if (b == svm::False)
+         t::Object* b = this->current_block->heap.get(0);
+         t::Bool::assert(b);
+         if (b == t::gFALSE)
          {
             opc->next_opcode = NULL;
          }

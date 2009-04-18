@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="swap" full-name="core.swap" char="X">
-   <include src="svm/Int.h" />
+   <include src="t/Int.h" />
 
    <opcode name="pop" char="-">
       <body>
@@ -32,10 +32,10 @@
 
    <opcode name="get__i" char="r">
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="t::tINT" />
       </parameters>
       <body><![CDATA[
-         ULong j_max = ((svm::Int*)argv[0])->value;
+         ULong j_max = ((t::Int*)argv[0])->value;
 
          ASSERT(this->heap.count() >= j_max, "You cannot receive more than contained in the swap.\n");
          if (this->heap.count() >= j_max)

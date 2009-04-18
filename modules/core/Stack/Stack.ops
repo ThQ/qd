@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="stack" full-name="core.stack" char="S">
-   <include src="svm/Int.h" />
-   <include src="types.h" />
+   <include src="t/Int.h" />
 
    <opcode name="duplicate" char="d">
       <description>Puts a reference of the last element in the stack ontop the stack.</description>
       <parameters count="0" />
       <body>
-         svm::Object* obj = heap.get(0);
+         t::Object* obj = heap.get(0);
          heap.append(obj);
       </body>
    </opcode>
@@ -56,20 +55,20 @@
          {
             Object* obj = heap.items[i];
             printf("    > $%lu @%lu\n", (heap.item_count - i - 1), (ULong)obj);
-            printf("      type: %s\n", ((svm::Class*)obj->cls)->name.c_str());
+            printf("      type: %s\n", ((t::Class*)obj->cls)->name.c_str());
             printf("      references: %d\n", obj->references);
-            // [references=%d]", (heap.item_count - i - 1), ((svm::Class*)obj->cls)->name.c_str(), (ULong)obj, obj->references);
-            if (obj->cls == svm::string_type)
+            // [references=%d]", (heap.item_count - i - 1), ((t::Class*)obj->cls)->name.c_str(), (ULong)obj, obj->references);
+            if (obj->cls == t::tSTRING)
             {
                printf("      value: \"%s\"\n", ((svm::String*)obj)->value.c_str());
             }
-            else if (obj->cls == svm::int_type)
+            else if (obj->cls == t::tINT)
             {
                printf("      value: %ld\n", ((svm::Int*)obj)->value);
             }
-            else if (obj->cls == svm::bool_type)
+            else if (obj->cls == t::tBOOL)
             {
-               if (obj == svm::True)
+               if (obj == t::gTRUE)
                {
                   printf("      value: True\n");
                }
@@ -85,21 +84,21 @@
    <opcode name="reverse_i" char="r">
       <description>Reverses the last n elements of the stack.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" />
+         <parameter index="0" type="t::tINT" />
       </parameters>
       <body>
-         heap.reverse(((svm::Int*)opc->argv[0])->value);
+         heap.reverse(((t::Int*)opc->argv[0])->value);
       </body>
    </opcode>
 
    <opcode name="replace__io" char="Q">
       <description>Replaces an element of the stack by another.</description>
       <parameters count="2">
-         <parameter index="0" name="item_index" type="svm::int_type" />
+         <parameter index="0" name="item_index" type="t::tINT" />
          <parameter index="1" name="new_item" />
       </parameters>
       <body>
-         heap.replace_at(((svm::Int*)argv[0])->value, argv[1]);
+         heap.replace_at(((t::Int*)argv[0])->value, argv[1]);
       </body>
    </opcode>
 

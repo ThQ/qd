@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="jump" full-name="core.jump" char=">">
-   <include src="svm/Bool.h" />
-   <include src="svm/String.h" />
+   <include src="t/Bool.h" />
+   <include src="t/String.h" />
 
    <opcode name="if__bi" char="i">
       <description>Jumps to opcode at position opcode_pos if condition is true.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::bool_type" name="condition" />
-         <parameter index="1" type="svm::int_type" name="opcode_pos" />
+         <parameter index="0" type="t::tBOOL" name="condition" />
+         <parameter index="1" type="t::tINT" name="opcode_pos" />
       </parameters>
       <body>
-         if (argv[0] == svm::True)
+         if (argv[0] == t::gTRUE)
          {
-            i = ((svm::Int*)argv[1])->value;
+            i = ((t::Int*)argv[1])->value;
          }
       </body>
    </opcode>
@@ -21,9 +21,9 @@
    <opcode name="if_else_bss" char="e">
       <description>Jumps to opcode at position if_opcode_pos if condition is true, otherwise jumps at else_opcode_pos.</description>
       <parameters count="3">
-         <parameter index="0" type="svm::bool_type" name="condition" />
-         <parameter index="1" type="svm::string_type" name="if_opcode_pos" />
-         <parameter index="2" type="svm::string_type" name="else_opcode_pos" />
+         <parameter index="0" type="t::tBOOL" name="condition" />
+         <parameter index="1" type="t::tSTRING" name="if_opcode_pos" />
+         <parameter index="2" type="t::tSTRING" name="else_opcode_pos" />
       </parameters>
       <body>
          svm::Block* block;
@@ -49,7 +49,7 @@
          ASSERT(opc->argc % 2 != 0, "Argument count must be impair.\n");
          for (UInt j = 1 ; j < opc->argc ; j += 2)
          {
-            if (this->check_arguments(1, argv[j + 1], svm::string_type))
+            if (this->check_arguments(1, argv[j + 1], t::tSTRING))
             {
                if (argv[j] == argv[0])
                {
@@ -67,10 +67,10 @@
    <opcode name="to__i" char="2">
       <description>Jumps to opcode at opcode_pos.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" name="opcode_pos" description="The position to which jump."/>
+         <parameter index="0" type="t::tINT" name="opcode_pos" description="The position to which jump."/>
       </parameters>
       <body>
-         i = ((svm::Int*)argv[0])->value;
+         i = ((t::Int*)argv[0])->value;
          ASSERT(i &lt; block->opcode_count, "You're jumping off the block, don't forget the rope.");
       </body>
    </opcode>
@@ -78,12 +78,12 @@
    <opcode name="unless__i" char="U">
       <description>Jumps to opcode at opcode_pos if boolean on top of the stack is false.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::int_type" name="opcode_pos" />
+         <parameter index="0" type="t::tINT" name="opcode_pos" />
       </parameters>
       <body>
          if (heap.get(0) == svm::False)
          {
-            i = ((svm::Int*)argv[0])->value;
+            i = ((t::Int*)argv[0])->value;
          }
          heap.pop();
       </body>
@@ -92,13 +92,13 @@
    <opcode name="unless__bi" char="u">
       <description>Jumps to opcode at opcode_pos if condition is false.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::bool_type" name="condition" />
-         <parameter index="1" type="svm::int_type" name="opcode_pos" />
+         <parameter index="0" type="t::tBOOL" name="condition" />
+         <parameter index="1" type="t::tINT" name="opcode_pos" />
       </parameters>
       <body>
-         if (argv[0] == svm::False)
+         if (argv[0] == t::gFALSE)
          {
-            i = ((svm::Int*)argv[1])->value;
+            i = ((t::Int*)argv[1])->value;
          }
       </body>
    </opcode>

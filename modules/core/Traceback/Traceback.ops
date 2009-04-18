@@ -1,25 +1,24 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="traceback" full-name="core.traceback" char="T">
-   <include src="svm/Class.h" />
-   <include src="types.h" />
+   <include src="t/Class.h" />
 
    <opcode name="check" char="c">
       <parameters minimum-count="2">
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="1" type="t::tSTRING" />
       </parameters>
       <body>
-         svm::Class* cls = (svm::Class*)argv[0]->cls;
-         SVM_PICK(cls);
-         if (cls->name == ((svm::String*)argv[1])->value)
+         t::Class* cls = (t::Class*)argv[0]->cls;
+         t::Object::pick(cls);
+         if (cls->name == ((t::String*)argv[1])->value)
          {
-            this->current_block->heap.append(svm::True);
+            heap.append(t::gTRUE);
          }
          else
          {
-            this->current_block->heap.append(svm::False);
+            heap.append(t::gFALSE);
          }
-         SVM_DROP(cls);
+         t::Object::drop(cls);
       </body>
    </opcode>
 </namespace>
