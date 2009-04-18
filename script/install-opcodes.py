@@ -69,7 +69,7 @@ modules_c_init = ""
 modules_c_methods = ""
 modules_c_tear_down = ""
 for raw_module in raw_modules:
-   module = modules_dir + "/" + raw_module.replace(".", "/")
+   module = modules_dir + "/" + raw_module 
    module_name = module[module.rfind("/") + 1:]
 
    xop_file = module + "/" + module_name + ".ops"
@@ -78,7 +78,7 @@ for raw_module in raw_modules:
       xop.load_file(xop_file)
 
    if os.path.exists(h_file):
-      modules_c_includes += "#include \"modules/" + raw_module.replace(".", "/") + ".h\"\n"
+      modules_c_includes += "#include \"modules/" + raw_module + ".h\"\n"
 
       #modules_c_init += "INTERNAL(\"<> : initializing...\");\n"
       modules_c_init += "modules::" + raw_module.replace(".", "::") + "::initialize(engine);\n"
@@ -91,7 +91,7 @@ for raw_module in raw_modules:
       if not os.path.exists(module_dir):
          os.makedirs(module_dir)
 
-      shutil.copyfile(modules_dir + "/" + raw_module.replace(".", "/") + "/module.h", built_modules_dir + "/" + raw_module.replace(".", "/") + ".h")
+      shutil.copyfile(modules_dir + "/" + raw_module + "/module.h", built_modules_dir + "/" + raw_module + ".h")
 
 #print modules_c_includes
 #print modules_c_init
