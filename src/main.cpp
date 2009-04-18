@@ -2,7 +2,7 @@
 #include <getopt.h>
 #include <stdlib.h>
 
-#include "svm/EngineStarter.h"
+#include "vm/EngineStarter.h"
 
 int
 main (int argc, char **argv)
@@ -25,7 +25,7 @@ main (int argc, char **argv)
       switch (c)
       {
          case 'i':
-            //svm::EngineStarter* is = new svm::EngineStarter();
+            //vm::EngineStarter* is = new vm::EngineStarter();
             //is->setup();
             //is->tear_down();
             break;
@@ -38,7 +38,7 @@ main (int argc, char **argv)
    int real_argc = argc - optind;
    if (real_argc == 1)
    {
-      svm::EngineStarter starter;
+      vm::EngineStarter starter;
       starter.setup();
       starter.engine.run_file(argv[optind]);
       starter.tear_down();
