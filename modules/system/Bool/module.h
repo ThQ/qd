@@ -4,10 +4,9 @@
 include(`../../module.m4')
 
 #include <stdio.h>
-#include "debug.h"
-#include "svm/Bool.h"
-#include "svm/CoreFunction.h"
-#include "svm/Engine.h"
+#include "t/Bool.h"
+#include "t/CoreFunction.h"
+#include "vm/Engine.h"
 
 
 namespace modules { namespace system {
@@ -17,9 +16,9 @@ namespace modules { namespace system {
       public: static SVM_CLASS_METHOD(print)
       {
          ASSERT(argc == 1, "system.Bool.print(system.Bool). %d arguments given", argc);
-         SVM_ASSERT_BOOL(argv[0]);
+         t::Bool::assert(argv[0]);
 
-         if (argv[0] == svm::False) printf("False\n");
+         if (argv[0] == t::gFALSE) printf("False\n");
          else printf("True\n");
 
          return svm::Null;
@@ -27,41 +26,41 @@ namespace modules { namespace system {
 
       public: static void declare_methods(svm::Engine& engine)
       {
-         SVM_ASSERT_NOT_NULL(svm::bool_type);
-         SVM_ASSERT_CLASS(svm::bool_type);
+         SVM_ASSERT_NOT_NULL(t::tBOOL);
+         t::Class::assert(t::tBOOL);
 
-         METHOD(svm::bool_type, `print', print)
-         PARAM(`self', svm::bool_type)
-         RETURNS(svm::object_type)
+         METHOD(t::tBOOL, `print', print)
+         PARAM(`self', t::tBOOL)
+         RETURNS(t::tOBJECT)
       }
 
       public: static void finalize()
       {
-         ASSERT_NULL(svm::True);
-         ASSERT_NULL(svm::False);
-         ASSERT_NULL(svm::bool_type);
+         ASSERT_NULL(t::gTRUE);
+         ASSERT_NULL(t::gFALSE);
+         ASSERT_NULL(t::tBOOL);
       }
 
       public: static void initialize(svm::Engine& engine)
       {
-         svm::bool_type = engine.classes.declare_class("system.Bool", svm::object_type);
-         SVM_ASSERT_NOT_NULL(svm::bool_type);
-         SVM_PICK(svm::bool_type);
+         t::tBOOL = engine.classes.declare_class("system.Bool", t::tOBJECT);
+         SVM_ASSERT_NOT_NULL(t::tBOOL);
+         t::Object::pick(t::tBOOL);
 
-         svm::True = svm::Bool::build(1);
-         SVM_ASSERT_NOT_NULL(svm::True);
-         SVM_PICK(svm::True);
+         t::gTRUE = t::Bool::build(1);
+         SVM_ASSERT_NOT_NULL(t::gTRUE);
+         t::Object::pick(t::gTRUE);
 
-         svm::False = svm::Bool::build(0);
-         SVM_ASSERT_NOT_NULL(svm::False);
-         SVM_PICK(svm::False);
+         t::gFALSE = t::Bool::build(0);
+         SVM_ASSERT_NOT_NULL(t::gFALSE);
+         t::Object::pick(t::gFALSE);
       }
 
       public: static void tear_down(svm::Engine& engine)
       {
-         SVM_DROP(svm::True);
-         SVM_DROP(svm::False);
-         SVM_DROP(svm::bool_type);
+         t::Object::drop(t::gTRUE);
+         t::Object::drop(t::gFALSE);
+         t::Object::drop(t::tBOOL);
       }
    };
 
