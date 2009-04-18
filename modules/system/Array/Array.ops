@@ -1,27 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="array" full-name="system.array" char="a">
-   <include src="svm/Int.h" />
-   <include src="svm/Array.h" />
-   <include src="types.h" />
+   <include src="t/Int.h" />
+   <include src="t/Array.h" />
 
    <opcode name="new__ai" char="_">
       <parameters count="2">
          <parameter
             index="0"
-            type="svm::class_type"
+            type="t::tCLASS"
             name="item_type"
             description="Type of the items to be stored in the array."
          />
       <parameter
          index="1"
-         type="svm::int_type"
+         type="t::tINT"
          name="array_length"
          description="Length of the new array."
       />
       </parameters>
       <body>
-         svm::Object* arr = svm::Array::build(argv[0], argv[1]);
+         t::Object* arr = t::Array::build(argv[0], argv[1]);
          heap.append(arr);
       </body>
       <stack after="new_array @svm::Array" />
@@ -29,11 +28,11 @@
 
    <opcode name="get_item__ai" char="{">
       <parameters count="3">
-         <parameter index="0" type="svm::array_type" name="base_array" description="The array to get an item from." />
-         <parameter index="1" type="svm::int_type" name="item_index" description="Item index." />
+         <parameter index="0" type="t::tARRAY" name="base_array" description="The array to get an item from." />
+         <parameter index="1" type="t::tINT" name="item_index" description="Item index." />
       </parameters>
       <body>
-         svm::Object* obj = ((svm::Array*)argv[0])->items[((svm::Int*)argv[1])->value];
+         t::Object* obj = ((t::Array*)argv[0])->items[((t::Int*)argv[1])->value];
          heap.append(obj);
       </body>
       <stack after="item_retrieved" />
@@ -41,21 +40,21 @@
 
    <opcode name="set_item__ai" char="}">
       <parameters count="3">
-         <parameter index="0" type="svm::array_type" name="base_array" description="The array to set an item to." />
-         <parameter index="1" type="svm::int_type" name="item_index" description="Item index." />
+         <parameter index="0" type="t::tARRAY" name="base_array" description="The array to set an item to." />
+         <parameter index="1" type="t::tINT" name="item_index" description="Item index." />
          <parameter index="2" name="object" description="The item to store in the array." />
       </parameters>
       <body>
          // @TODO: Check for index out of range
-         if (argv[3] != ((svm::Array*)argv[0])->type)
+         if (argv[3] != ((t::Array*)argv[0])->type)
          {
-            svm::Object* e = svm::Exception::build();
-            e->set_class(svm::bad_type_exception_type);
+            t::Object* e = t::Exception::build();
+            e->set_class(t::tBAD_TYPE_EXCEPTION);
             this->throw_exception(e);
          }
          else
          {
-            ((svm::Array*)argv[0])->items[((svm::Int*)argv[1])->value] = argv[2];
+            ((t::Array*)argv[0])->items[((t::Int*)argv[1])->value] = argv[2];
          }
       </body>
       <stack />
