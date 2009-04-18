@@ -17,7 +17,7 @@ fModulesDeclareMethods="$dBuildModuleInclude/declare_methods.modules"
 fModulesTearDown="$dBuildModuleInclude/tear_down.modules"
 fModulesPrepared="$dBuild/modules_prepared"
 fModules="$dRoot/modules/modules"
-fEngineStarter="${dBuild}/src/svm/EngineStarter.cpp"
+fEngineStarter="${dBuild}/src/vm/EngineStarter.cpp"
 
 create_file="$fModulesInclude $fModulesInitialize $fModulesDeclareMethods $fModulesTearDown"
 
@@ -72,8 +72,8 @@ for module in ${modules_list[*]} ; do
    fi
 done
 
-c=`cat $fModulesInclude | $xReplace "// @MODULES[INCLUDE]" "$dBuild/include/svm/EngineStarter.h"`
-echo "$c" > "$dBuild/include/svm/EngineStarter.h"
+c=`cat $fModulesInclude | $xReplace "// @MODULES[INCLUDE]" "$dBuild/include/vm/EngineStarter.h"`
+echo "$c" > "$dBuild/include/vm/EngineStarter.h"
 
 c=`cat $fModulesInitialize | $xReplace "// @MODULES[INITIALIZE]" "$fEngineStarter"`
 echo "$c" > $fEngineStarter
