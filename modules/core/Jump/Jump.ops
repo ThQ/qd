@@ -26,16 +26,16 @@
          <parameter index="2" type="t::tSTRING" name="else_opcode_pos" />
       </parameters>
       <body>
-         svm::Block* block;
+         t::Block* block;
          if (argv[0] == svm::True)
          {
-            block = this->get_block(((svm::String*)argv[1])->value);
+            block = this->get_block(((t::String*)argv[1])->value);
             this->import_swap(block);
             this->run_block(block, true);
          }
          else
          {
-            block = this->get_block(((svm::String*)argv[2])->value);
+            block = this->get_block(((t::String*)argv[2])->value);
             this->import_swap(block);
             this->run_block(block, true);
          }
