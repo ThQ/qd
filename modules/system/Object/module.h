@@ -3,12 +3,10 @@
 
 include(`../../module.m4')
 
-#include "debug.h"
-#include "svm/Bool.h"
-#include "svm/CoreFunction.h"
-#include "svm/Engine.h"
-#include "svm/Int.h"
-#include "types.h"
+#include "t/Bool.h"
+#include "t/CoreFunction.h"
+#include "t/Int.h"
+#include "vm/Engine.h"
 
 namespace modules { namespace system {
 
@@ -16,58 +14,58 @@ namespace modules { namespace system {
    {
       public: static SVM_CLASS_METHOD(compare_to)
       {
-         Short s = svm::Object::compare_to(argv[0], argv[1]);
-         return svm::Int::build((Long)s);
+         Short s = t::Object::compare_to(argv[0], argv[1]);
+         return t::Int::build((Long)s);
       }
 
-      public: static void declare_methods(svm::Engine& engine)
+      public: static void declare_methods(vm::Engine& engine)
       {
-         METHOD(svm::object_type, `compare_to', compare_to)
-         PARAM(`self', svm::object_type)
-         PARAM(`another_object', svm::object_type)
-         RETURNS(svm::int_type)
+         METHOD(t::tOBJECT, `compare_to', compare_to)
+         PARAM(`self', t::tOBJECT)
+         PARAM(`another_object', t::tOBJECT)
+         RETURNS(t::tINT);
       }
 
       public: static void finalize()
       {
-         ASSERT_NULL(svm::object_type);
-         ASSERT_NULL(svm::function_type);
-         ASSERT_NULL(svm::null_type);
-         ASSERT_NULL(svm::Null);
+         ASSERT_NULL(t::tOBJECT);
+         ASSERT_NULL(t::tFUNCTION);
+         ASSERT_NULL(t::tNULL);
+         ASSERT_NULL(t::gNULL);
       }
 
-      public: static void initialize(svm::Engine& engine)
+      public: static void initialize(vm::Engine& engine)
       {
-         svm::object_type = engine.classes.declare_class("system.Object");
-         SVM_ASSERT_CLASS(svm::object_type);
-         SVM_PICK(svm::object_type);
-         svm::object_type->is_abstract = true;
+         t::tOBJECT = engine.classes.declare_class("system.Object");
+         t::Class::assert(t::tOBJECT);
+         t::Object::pick(t::tOBJECT);
+         t::tOBJECT->is_abstract = true;
 
-         svm::function_type = engine.classes.declare_class("system.Function");
-         SVM_ASSERT_CLASS(svm::function_type);
-         SVM_PICK(svm::function_type);
+         t::tFUNCTION = engine.classes.declare_class("system.Function");
+         t::Class::assert(t::tFUNCTION);
+         t::Object::pick(t::tFUNCTION);
 
-         svm::null_type = engine.classes.declare_class("system.Null", svm::object_type);
-         SVM_ASSERT_CLASS(svm::null_type);
-         SVM_PICK(svm::null_type);
-         svm::null_type->is_abstract = true;
+         t::tNULL = engine.classes.declare_class("system.Null", t::tOBJECT);
+         t::Class::assert(t::tNULL);
+         t::Object::pick(t::tNULL);
+         t::tNULL->is_abstract = true;
 
-         svm::Null = new svm::Object();
-         svm::Null->set_class(svm::null_type);
-         SVM_PICK(svm::Null);
+         t::gNULL = new t::Object();
+         t::gNULL->set_class(t::tNULL);
+         t::Object::pick(t::gNULL);
 
-         svm::heap_object_type = engine.classes.declare_class("system.HeapObject", svm::object_type);
-         SVM_ASSERT_CLASS(svm::heap_object_type);
-         SVM_PICK(svm::heap_object_type);
+         t::tHEAP_OBJECT = engine.classes.declare_class("system.HeapObject", t::tOBJECT);
+         t::Class::assert(t::tHEAP_OBJECT);
+         t::Object::pick(t::tHEAP_OBJECT);
       }
 
-      public: static void tear_down(svm::Engine& engine)
+      public: static void tear_down(vm::Engine& engine)
       {
-         SVM_DROP(svm::object_type);
-         SVM_DROP(svm::function_type);
-         SVM_DROP(svm::null_type);
-         SVM_DROP(svm::Null);
-         SVM_DROP(svm::heap_object_type);
+         t::Object::drop(t::tOBJECT);
+         t::Object::drop(t::tFUNCTION);
+         t::Object::drop(t::tNULL);
+         t::Object::drop(t::gNULL);
+         t::Object::drop(t::tHEAP_OBJECT);
       }
    };
 

@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="o" char="o">
-   <include src="svm/Bool.h" />
-   <include src="svm/String.h" />
+   <include src="t/Bool.h" />
+   <include src="t/String.h" />
 
    <opcode name="call" char="!">
       <parameters minimum-count="1" />
       <body><![CDATA[
-         svm::Object* result_obj;
+         t::Object* result_obj;
          ASSERT(opc->argc >= 1, "<opcode:OPC_OBJECT_CALL> must have at least one parameter. (%d given)\n", opc->argc);
          SVM_ASSERT_NOT_NULL(argv[0]);
          result_obj = this->call_object(opc->content, opc->argc, argv);
-         if (result_obj != svm::Null)
+         if (result_obj != t::gNULL)
          {
             this->current_block->heap.append(result_obj);
          }
@@ -20,13 +20,13 @@
 
    <opcode name="call_stack" char=".">
       <body><![CDATA[
-         svm::Object* result_obj;
+         t::Object** result_obj;
          opc->argc = 1;
          argv[0] = heap.pick_last_and_pop();
          heap.pop();
          result_obj = this->call_object((std::string)opc->content, opc->argc, argv);
          opc->argc = 0; // The cleanup below would fail otherwise
-         if (result_obj != svm::Null)
+         if (result_obj != t::gNULL)
          {
             this->current_block->heap.append(result_obj);
          }
@@ -35,37 +35,39 @@
 
    <opcode name="new__s" char="n">
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" />
+         <parameter index="0" type="t::tSTRING" />
       </parameters>
       <body><![CDATA[
-         long class_index = this->classes.find(((svm::String*)argv[0])->value);
+         long class_index = this->classes.find(((t::String*)argv[0])->value);
          if (class_index != -1)
          {
-            svm::Class* obj_cls = this->classes.items[class_index]->cls;
-            svm::UserObject* result_obj = new svm::UserObject();
-            SVM_PICK(result_obj);
+            t::Class* obj_cls = this->classes.items[class_index]->cls;
+            t::UserObject* result_obj = new t::UserObject();
+            t::Object::pick(result_obj);
             result_obj->set_class(obj_cls);
             SVM_ASSERT_NOT_NULL(result_obj->cls);
-            heap.append((svm::Object*)result_obj);
-            SVM_DROP(result_obj);
+            heap.append((t::Object**)result_obj);
+            t::Object::drop(result_obj);
          }
          // Class cannot be found, throw an exception
          else
          {
-            SVM_THROW_CLASS_NOT_FOUND_EXCEPTION(this, ((svm::Class*)argv[0]->cls));
+            // @TODO: Throw an exception
+            WARNING("Class cannot be found.");
+            //SVM_THROW_CLASS_NOT_FOUND_EXCEPTION(this, ((t::Class*)argv[0]->cls));
          }
       ]]></body>
    </opcode>
 
    <opcode name="get_field_at" char="[">
       <parameters count="2">
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="1" type="t::tINT" />
       </parameters>
       <body><![CDATA[
-         ULong field_at = ((svm::Int*)argv[1])->value;
+         ULong field_at = ((t::Int*)argv[1])->value;
          if (field_at >= 0 && field_at < argv[0]->field_count)
          {
-            svm::Object* obj = argv[0]->get_field(field_at);
+            t::Object** obj = argv[0]->get_field(field_at);
             this->current_block->heap.append(obj);
          }
          else
@@ -77,12 +79,12 @@
 
    <opcode name="set_field_at" char="]">
       <parameters count="3">
-         <parameter index="1" type="svm::int_type" />
+         <parameter index="1" type="t::tINT" />
       </parameters>
       <body>
-         if (argv[0] == svm::False)
+         if (argv[0] == t::gFALSE)
          {
-            this->run_block(this->get_block(((svm::String*)argv[1])->value), true);
+            this->run_block(this->get_block(((t::String*)argv[1])->value), true);
          }
       </body>
    </opcode>
@@ -90,14 +92,14 @@
    <opcode name="print" char="p">
       <parameters count="1" />
       <body>
-         svm::Object::print(argv[0]);
+         t::Object*::print(argv[0]);
       </body>
    </opcode>
 
    <opcode name="print_line" char="P">
       <parameters count="1" />
       <body>
-         svm::Object::print_line(argv[0]);
+         t::Object*::print_line(argv[0]);
       </body>
    </opcode>
 </namespace>
