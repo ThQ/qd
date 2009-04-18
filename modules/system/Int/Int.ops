@@ -11,7 +11,7 @@
          <parameter index="0" type="svm::int_type" name="int_to_add" />
       </parameters>
       <body>
-         Object* i1 = heap.get(0);
+         t::Object* i1 = heap.get(0);
          SVM_PICK(i1);
          long i = (long)(((svm::Int*)i1)->value + ((svm::Int*)argv[0])->value);
          heap.replace(1, svm::Int::build(i));
