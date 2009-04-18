@@ -18,7 +18,6 @@ namespace NS_TYPE
 
    Block::~Block()
    {
-      DEBUG("Are blocks really destroyed here ?");
       /*for (unsigned long i = 0 ; i < this->line_count ; ++ i)
       {
          //delete this->lines[i];
@@ -31,6 +30,7 @@ namespace NS_TYPE
    void
    Block::append(vm::OpCode* opc)
    {
+      // @TODO : Too much REALLOC
       ++ this->opcode_count;
       this->opcodes = (vm::OpCode**)REALLOC(this->opcodes, sizeof(vm::OpCode*) * this->opcode_count);
       this->opcodes[this->opcode_count - 1] = opc;
