@@ -5,10 +5,9 @@ include(`../../module.m4')
 #define MODULES_SYSTEM_EXCEPTION_H
 #define MODULE_SYSTEM_EXCEPTION
 
-#include "debug.h"
-#include "svm/Engine.h"
-#include "svm/Exception.h"
-#include "svm/CoreFunction.h"
+#include "t/Exception.h"
+#include "t/CoreFunction.h"
+#include "vm/Engine.h"
 
 namespace modules { namespace system {
 
@@ -17,53 +16,53 @@ namespace modules { namespace system {
       public: static SVM_METHOD(construct)
       {
          ASSERT(argc == 0, "system.Exception.__construct__(). %d parameters given.", argc);
-         return svm::Exception::build();
+         return t::Exception::build();
       }
 
       public: static void declare_methods(svm::Engine& engine)
       {
-         SVM_ASSERT_NOT_NULL(svm::exception_type);
-         SVM_ASSERT_NOT_NULL(svm::runtime_exception_type);
-         SVM_ASSERT_NOT_NULL(svm::class_not_found_exception_type);
-         SVM_ASSERT_NOT_NULL(svm::class_not_found_exception_type);
+         SVM_ASSERT_NOT_NULL(t::tEXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tRUNTIME_EXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tCLASS_NOT_FOUND_EXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tINDEX_OUT_OF_RANGE_EXCEPTION);
 
          FUNCTION(`system.Exception.__construct__', construct)
-         RETURNS(svm::exception_type)
+         RETURNS(t::tEXCEPTION)
       }
 
       public: static void finalize()
       {
-         ASSERT_NULL(svm::exception_type);
-         ASSERT_NULL(svm::runtime_exception_type);
-         ASSERT_NULL(svm::class_not_found_exception_type);
-         ASSERT_NULL(svm::index_out_of_range_exception_type);
+         ASSERT_NULL(t::tEXCEPTION);
+         ASSERT_NULL(t::tRUNTIME_EXCEPTION);
+         ASSERT_NULL(t::tCLASS_NOT_FOUND_EXCEPTION);
+         ASSERT_NULL(t::tINDEX_OUT_OF_RANGE_EXCEPTION);
       }
 
       public: static void initialize(svm::Engine& engine)
       {
-         svm::exception_type = engine.classes.declare_class("system.Exception", svm::object_type);
-         SVM_ASSERT_NOT_NULL(svm::exception_type);
-         SVM_PICK(svm::exception_type);
+         t::tEXCEPTION = engine.classes.declare_class("system.Exception", svm::object_type);
+         SVM_ASSERT_NOT_NULL(t::tEXCEPTION);
+         t::Object::pick(t::tEXCEPTION);
 
-         svm::runtime_exception_type = engine.classes.declare_class("system.RuntimeException", svm::exception_type);
-         SVM_ASSERT_NOT_NULL(svm::runtime_exception_type);
-         SVM_PICK(svm::runtime_exception_type);
+         t::tRUNTIME_EXCEPTION = engine.classes.declare_class("system.RuntimeException", t::tEXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tRUNTIME_EXCEPTION);
+         t::Object::pick(t::tRUNTIME_EXCEPTION);
 
-         svm::class_not_found_exception_type = engine.classes.declare_class("system.ClassNotFoundException", svm::exception_type);
-         SVM_ASSERT_NOT_NULL(svm::class_not_found_exception_type);
-         SVM_PICK(svm::class_not_found_exception_type);
+         t::tCLASS_NOT_FOUND_EXCEPTION = engine.classes.declare_class("system.ClassNotFoundException", t::tEXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tCLASS_NOT_FOUND_EXCEPTION);
+         t::Object::pick(t::tCLASS_NOT_FOUND_EXCEPTION);
 
-         svm::index_out_of_range_exception_type = engine.classes.declare_class("system.IndexOutOfRangeException", svm::exception_type);
-         SVM_ASSERT_NOT_NULL(svm::index_out_of_range_exception_type);
-         SVM_PICK(svm::index_out_of_range_exception_type);
+         t::tINDEX_OUT_OF_RANGE_EXCEPTION = engine.classes.declare_class("system.IndexOutOfRangeException", t::tEXCEPTION);
+         SVM_ASSERT_NOT_NULL(t::tINDEX_OUT_OF_RANGE_EXCEPTION);
+         t::Object::pick(t::tINDEX_OUT_OF_RANGE_EXCEPTION);
       }
 
       public: static void tear_down(svm::Engine& engine)
       {
-         SVM_DROP(svm::index_out_of_range_exception_type);
-         SVM_DROP(svm::runtime_exception_type);
-         SVM_DROP(svm::class_not_found_exception_type);
-         SVM_DROP(svm::exception_type);
+         t::Object::drop(t::tINDEX_OUT_OF_RANGE_EXCEPTION);
+         t::Object::drop(t::tRUNTIME_EXCEPTION);
+         t::Object::drop(t::tCLASS_NOT_FOUND_EXCEPTION);
+         t::Object::drop(t::tEXCEPTION);
       }
    };
 
