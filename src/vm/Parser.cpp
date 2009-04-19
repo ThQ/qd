@@ -128,7 +128,7 @@ namespace NS_VM
    }
 
    ULong
-   Parser::parse_line(t::OpCode* opc, std::string content, ULong start, ULong end)
+   Parser::parse_line(vm::OpCode* opc, std::string content, ULong start, ULong end)
    {
       INTERNAL("Parser::parse_line from %lu to %lu.\n", start, end);
       ULong result = start;
@@ -163,7 +163,7 @@ namespace NS_VM
       //svm::OpCode* previous_opcode = NULL;
       while ((at = content.find('\n', (size_t)last_at)) != std::string::npos)
       {
-         t::OpCode* opc = new t::OpCode();
+         vm::OpCode* opc = new vm::OpCode();
          last_at = Parser::parse_line(opc, content, last_at, at);
          opc->content.clear();
 

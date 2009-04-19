@@ -17,7 +17,7 @@ namespace NS_VM
    class Parser
    {
       public: static UInt parse_arguments(std::string content, ULong start, ULong end, t::Object**& arguments);
-      public: static ULong parse_line(t::OpCode* opc, std::string content, ULong start, ULong end);
+      public: static ULong parse_line(vm::OpCode* opc, std::string content, ULong start, ULong end);
       public: static ULong parse_lines(std::string content, t::Block**& blocks);
    };
 }
