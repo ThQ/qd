@@ -1,7 +1,7 @@
 #ifndef MODULES_SYSTEM_ARRAY_H
 #define MODULES_SYSTEM_ARRAY_H
 
-#include "vm/Array.h"
+#include "t/Array.h"
 
 namespace modules { namespace system
 {

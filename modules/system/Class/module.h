@@ -1,34 +1,37 @@
 #ifndef MODULES_SYSTEM_CLASS_H
 #define MODULES_SYSTEM_CLASS_H
 
-#include "svm/Class.h"
+#include "t/Class.h"
 
-namespace modules { namespace system
+namespace modules
 {
-   class Class
+   namespace system
    {
-      public: static void declare_methods(svm::Engine& engine)
+      class Class
       {
-         SVM_ASSERT_NOT_NULL(svm::bad_type_exception_type);
-      }
+         public: static void declare_methods(vm::Engine& engine)
+         {
+            SVM_ASSERT_NOT_NULL(t::tBAD_TYPE_EXCEPTION);
+         }
 
-      public: static void finalize()
-      {
-         ASSERT_NULL(svm::bad_type_exception_type);
-      }
+         public: static void finalize()
+         {
+            ASSERT_NULL(t::tBAD_TYPE_EXCEPTION);
+         }
 
-      public: static void initialize(svm::Engine& engine)
-      {
-         svm::bad_type_exception_type = engine.classes.declare_class("system.BadTypeException", svm::object_type);
-         SVM_ASSERT_CLASS(svm::bad_type_exception_type);
-         SVM_PICK(svm::bad_type_exception_type);
-      }
+         public: static void initialize(vm::Engine& engine)
+         {
+            t::tBAD_TYPE_EXCEPTION = engine.classes.declare_class("system.BadTypeException", t::tOBJECT);
+            t::Class::assert(t::tBAD_TYPE_EXCEPTION);
+            t::Object::pick(t::tBAD_TYPE_EXCEPTION);
+         }
 
-      public: static void tear_down(svm::Engine& engine)
-      {
-         SVM_DROP(svm::bad_type_exception_type);
-      }
-   };
-} }
+         public: static void tear_down(vm::Engine& engine)
+         {
+            t::Object::drop(t::tBAD_TYPE_EXCEPTION);
+         }
+      };
+   }
+}
 
 #endif

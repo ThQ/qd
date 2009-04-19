@@ -2,120 +2,119 @@
 
 include(`../../module.m4')
 
-#include "debug.h"
-#include "svm/CoreFunction.h"
-#include "svm/Engine.h"
-#include "svm/List.h"
+#include "t/CoreFunction.h"
+#include "t/List.h"
+#include "vm/Engine.h"
 
 #define MODULES_SYSTEM_LIST_H
 #define MODULE_SYSTEM_LIST
 
-
-#include "modules/system/List.h"
-
-namespace modules { namespace system
+namespace modules
 {
-   class List
+   namespace system
    {
-      public: static SVM_METHOD(construct)
+      class List
       {
-         svm::Object* l = svm::List::build();
-         return l;
-      }
+         public: static SVM_METHOD(construct)
+         {
+            t::Object* l = t::List::build();
+            return l;
+         }
 
-      public: static SVM_CLASS_METHOD(get_item)
-      {
-         ASSERT(argc == 2, "system.List.get_item : 2 parameters. (Not %d)", argc);
-         SVM_ASSERT_LIST(argv[0]);
-         SVM_ASSERT_INT(argv[1]);
+         public: static SVM_CLASS_METHOD(get_item)
+         {
+            ASSERT(argc == 2, "system.List.get_item : 2 parameters. (Not %d)", argc);
+            t::List::assert(argv[0]);
+            t::List::assert(argv[1]);
 
-         svm::Object* result = svm::List::get_item(argv[0], ((svm::Int*)argv[1])->value);
+            t::Object* result = t::List::get_item(argv[0], ((t::Int*)argv[1])->value);
 
-         return result;
-      }
+            return result;
+         }
 
-      public: static SVM_CLASS_METHOD(pop)
-      {
-         ASSERT(argc == 2, "system.List.pop : 2 parameters. (Not %d)", argc);
-         SVM_ASSERT_LIST(argv[0]);
-         SVM_ASSERT_INT(argv[1]);
+         public: static SVM_CLASS_METHOD(pop)
+         {
+            ASSERT(argc == 2, "system.List.pop : 2 parameters. (Not %d)", argc);
+            t::List::assert(argv[0]);
+            t::Int::assert(argv[1]);
 
-         svm::Object* result = svm::List::pop(argv[0], ((svm::Int*)argv[1])->value);
+            t::Object* result = t::List::pop(argv[0], ((t::Int*)argv[1])->value);
 
-         return result;
-      }
+            return result;
+         }
 
-      public: static SVM_CLASS_METHOD(push)
-      {
-         ASSERT(argc == 2, "system.List.push : 2 parameters. (Not %d)\n", argc);
-         SVM_ASSERT_LIST(argv[0]);
-         SVM_ASSERT_NOT_NULL(argv[1]);
+         public: static SVM_CLASS_METHOD(push)
+         {
+            ASSERT(argc == 2, "system.List.push : 2 parameters. (Not %d)\n", argc);
+            t::List::assert(argv[0]);
+            SVM_ASSERT_NOT_NULL(argv[1]);
 
-         svm::List::append(argv[0], argv[1]);
+            t::List::append(argv[0], argv[1]);
 
-         return svm::Null;
-      }
+            return t::gNULL;
+         }
 
-      public: static SVM_CLASS_METHOD(set_item)
-      {
-         ASSERT(argc == 3, "system.List.set_item : 3 parameters. (Not %d)\n", argc);
-         SVM_ASSERT_LIST(argv[0]);
-         SVM_ASSERT_INT(argv[1]);
+         public: static SVM_CLASS_METHOD(set_item)
+         {
+            ASSERT(argc == 3, "system.List.set_item : 3 parameters. (Not %d)\n", argc);
+            t::List::assert(argv[0]);
+            t::Int::assert(argv[1]);
 
-         svm::Object* result = svm::List::set_item(argv[0], ((svm::Int*)argv[1])->value, argv[2]);
+            t::Object* result = t::List::set_item(argv[0], ((t::Int*)argv[1])->value, argv[2]);
 
-         return result;
-      }
+            return result;
+         }
 
-      public: static void declare_methods(svm::Engine& engine)
-      {
-         SVM_ASSERT_NOT_NULL(svm::list_type);
-         SVM_ASSERT_NOT_NULL(svm::int_type);
+         public: static void declare_methods(vm::Engine& engine)
+         {
+            SVM_ASSERT_NOT_NULL(t::tLIST);
+            SVM_ASSERT_NOT_NULL(t::tINT);
 
-         FUNCTION(`system.List.__construct__', construct)
-         PARAM(`self', svm::list_type)
-         RETURNS(svm::list_type)
+            FUNCTION(`system.List.__construct__', construct)
+            PARAM(`self', t::tLIST)
+            RETURNS(t::tLIST)
 
-         METHOD(svm::list_type, `get_item', get_item)
-         PARAM(`self', svm::list_type)
-         PARAM(`index', svm::int_type)
-         RETURNS(svm::object_type)
+            METHOD(t::tLIST, `get_item', get_item)
+            PARAM(`self', t::tLIST)
+            PARAM(`index', t::tINT)
+            RETURNS(t::tOBJECT)
 
-         METHOD(svm::list_type, `pop', pop)
-         PARAM(`self', svm::list_type)
-         PARAM(`num', svm::int_type)
-         RETURNS(svm::object_type)
+            METHOD(t::tLIST, `pop', pop)
+            PARAM(`self', t::tLIST)
+            PARAM(`num', t::tINT)
+            RETURNS(t::tOBJECT)
 
-         METHOD(svm::list_type, `push', push)
-         PARAM(`self', svm::list_type)
-         PARAM(`obj', svm::object_type)
-         RETURNS(svm::object_type)
+            METHOD(t::tLIST, `push', push)
+            PARAM(`self', t::tLIST)
+            PARAM(`obj', t::tOBJECT)
+            RETURNS(t::tOBJECT)
 
-         METHOD(svm::list_type, `set_item', set_item)
-         PARAM(`self', svm::list_type)
-         PARAM(`index', svm::int_type)
-         PARAM(`obj', svm::object_type)
-         RETURNS(svm::object_type)
-      }
+            METHOD(t::tLIST, `set_item', set_item)
+            PARAM(`self', t::tLIST)
+            PARAM(`index', t::tINT)
+            PARAM(`obj', t::tOBJECT)
+            RETURNS(t::tOBJECT)
+         }
 
-      public: static void finalize()
-      {
-         ASSERT_NULL(svm::list_type);
-      }
+         public: static void finalize()
+         {
+            ASSERT_NULL(t::tLIST);
+         }
 
-      public: static void initialize(svm::Engine& engine)
-      {
-         svm::list_type = engine.classes.declare_class("system.List", svm::object_type);
-         SVM_ASSERT_CLASS(svm::list_type);
-         SVM_PICK(svm::list_type);
-      }
+         public: static void initialize(vm::Engine& engine)
+         {
+            t::tLIST = engine.classes.declare_class("system.List", t::tOBJECT);
+            t::Class::assert(t::tLIST);
+            t::Object::pick(t::tLIST);
+         }
 
-      public: static void tear_down(svm::Engine& engine)
-      {
-         SVM_DROP(svm::list_type);
-      }
-   };
+         public: static void tear_down(vm::Engine& engine)
+         {
+            t::Object::drop(t::tLIST);
+         }
+      };
 
-} }
+   }
+}
 
 #endif

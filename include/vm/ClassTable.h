@@ -42,7 +42,7 @@ namespace NS_VM
       public: bool has(std::string name);
       public: bool has(t::Class* cls);
       public: bool has_method(t::Class* cls, std::string name);
-      public: bool has_method(t::Class* cls, Function* func);
+      public: bool has_method(t::Class* cls, t::Function* func);
 
       #ifdef _DEBUG_
       public: void list(bool show_functions);

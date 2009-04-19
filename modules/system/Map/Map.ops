@@ -1,44 +1,43 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
 <namespace name="m" char="m">
-   <include src="svm/Int.h" />
-   <include src="svm/Map.h" />
-   <include src="types.h" />
+   <include src="t/Int.h" />
+   <include src="t/Map.h" />
 
    <opcode name="new" char="_">
       <parameters count="0" />
       <body>
-         svm::Object* m = svm::Map::build();
-         this->current_block->heap.append(m);
+         t::Object* m = t::Map::build();
+         block->heap.append(m);
       </body>
    </opcode>
 
-   <opcode name="get_item" char="&lt;">
+   <opcode name="get_item__Mo" char="&lt;">
       <parameters count="2">
-         parameter index="0" type="svm::map_type" />
+         <parameter index="0" type="t::tMAP" />
       </parameters>
       <body>
          // TODO: Woho, we must use a dynamic Equals here, to find the key
-         int value_pos = svm::Map::find_key((svm::Map*)argv[0], argv[1]);
+         int value_pos = t::Map::find_key((t::Map*)argv[0], argv[1]);
          if (value_pos != -1)
          {
-            this->current_block->heap.append(((svm::Map*)argv[0])->items[value_pos]);
+            block->heap.append(((t::Map*)argv[0])->items[value_pos]);
          }
          else
          {
-            // TODO : Must be throwing an exception here !
+            // @TODO : Must be throwing an exception here !
             FATAL("Must be throwing a system.BadKeyException here.");
             abort();
          }
       </body>
    </opcode>
 
-   <opcode name="set_item" char="=">
+   <opcode name="set_item__Moo" char="=">
       <parameters count="3">
-         <parameter index="0" type="svm::map_type" />
+         <parameter index="0" type="t::tMAP" />
       </parameters>
       <body>
-         svm::Map::set_item(argv[0], argv[1], argv[2]);
+         t::Map::set_item(argv[0], argv[1], argv[2]);
       </body>
    </opcode>
 
