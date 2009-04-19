@@ -1,7 +1,7 @@
-#ifndef SVM_ENGINE_STARTER_H
-#define SVM_ENGINE_STARTER_H
+#ifndef VM_ENGINE_STARTER_H
+#define VM_ENGINE_STARTER_H
 
-#include "svm/Engine.h"
+#include "vm/Engine.h"
 // @MODULES[INCLUDE]
 
 namespace svm
