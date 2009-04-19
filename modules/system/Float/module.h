@@ -5,38 +5,40 @@ include(`../../module.m4')
 #define MODULES_SYSTEM_FLOAT_H
 #define MODULE_SYSTEM_FLOAT
 
-#include "debug.h"
-#include "svm/CoreFunction.h"
-#include "svm/Engine.h"
-#include "svm/Float.h"
+#include "t/CoreFunction.h"
+#include "t/Float.h"
+#include "vm/Engine.h"
 
-namespace modules { namespace system {
-
-   class Float
+namespace modules
+{
+   namespace system
    {
-      public: static void declare_methods(svm::Engine& engine)
+      class Float
       {
-         SVM_ASSERT_NOT_NULL(svm::float_type);
-      }
+         public: static void declare_methods(vm::Engine& engine)
+         {
+            SVM_ASSERT_NOT_NULL(t::tFLOAT);
+         }
 
-      public: static void finalize()
-      {
-         ASSERT_NULL(svm::float_type);
-      }
+         public: static void finalize()
+         {
+            ASSERT_NULL(t::tFLOAT);
+         }
 
-      public: static void initialize(svm::Engine& engine)
-      {
-         svm::float_type = engine.classes.declare_class("system.Float", svm::object_type);
-         SVM_ASSERT_CLASS(svm::float_type);
-         SVM_PICK(svm::float_type);
-      }
+         public: static void initialize(vm::Engine& engine)
+         {
+            t::tFLOAT = engine.classes.declare_class("system.Float", t::tOBJECT);
+            t::Class::assert(t::tFLOAT);
+            t::Object::pick(t::tFLOAT);
+         }
 
-      public: static void tear_down(svm::Engine& engine)
-      {
-         SVM_DROP(svm::float_type);
-      }
-   };
+         public: static void tear_down(vm::Engine& engine)
+         {
+            t::Object::drop(t::tFLOAT);
+         }
+      };
 
-} }
+   }
+}
 
 #endif
