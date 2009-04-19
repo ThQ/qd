@@ -14,6 +14,7 @@
 #include "t/Exception.h"
 #include "t/Float.h"
 #include "t/Function.h"
+#include "t/HeapObject.h"
 #include "t/Int.h"
 #include "t/List.h"
 #include "t/Map.h"
@@ -24,12 +25,11 @@
 #include "vm/ClassTable.h"
 #include "vm/FunctionTable.h"
 #include "vm/Heap.h"
-#include "vm/HeapObject.h"
-#include "vm/IntUtil.h"
-#include "vm/ListUtil.h"
 #include "vm/OpCode.h"
 #include "vm/Parser.h"
 #include "vm/Stack.h"
+#include "util/Int.h"
+#include "util/List.h"
 // @MODULES[INCLUDE]
 
 #define SVM_METHOD(name) t::Object* name(svm::Engine* engine, int argc, t::Object** argv)
