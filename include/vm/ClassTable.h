@@ -36,9 +36,9 @@ namespace NS_VM
       //public: t::Object* declare_function(t::Object* func);
       public: long find(t::Class* cls);
       public: long find(std::string name);
-      public: Class* get(std::string name);
-      public: Function* get_method(std::string class_name, std::string func_name);
-      public: Function* get_method(t::Class* cls, std::string func);
+      public: t::Class* get(std::string name);
+      public: t::Function* get_method(std::string class_name, std::string func_name);
+      public: t::Function* get_method(t::Class* cls, std::string func);
       public: bool has(std::string name);
       public: bool has(t::Class* cls);
       public: bool has_method(t::Class* cls, std::string name);

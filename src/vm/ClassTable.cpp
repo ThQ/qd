@@ -308,11 +308,11 @@ namespace VM
       return result;
    }
 
-   Class*
+   t::Class*
    ClassTable::get(std::string name)
    {
       long index = this->find(name);
-      Class* result = NULL;
+      t::Class* result = NULL;
       if (index != -1)
       {
          result = this->items[index]->cls;
