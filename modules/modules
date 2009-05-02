@@ -3,7 +3,7 @@ core.Object
 core.Bool
 core.Int
 core.Float
-system/String
+core.String
 # system/UString
 core.Exception
 core.Class
