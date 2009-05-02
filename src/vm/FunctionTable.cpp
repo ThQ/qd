@@ -21,10 +21,10 @@ namespace NS_VM
 
    // TODO: Way too REALLOC intensive
    void
-   FunctionTable::append(Function* func)
+   FunctionTable::append(t::Function* func)
    {
       //INTERNAL("FunctionTable(@%lu)::append(Function*) @%lu\n", (ULong)this, this->function_count);
-      SVM_ASSERT_NOT_NULL(func);
+      //SVM_ASSERT_NOT_NULL(func);
 
       FunctionTableEntry* entry = new FunctionTableEntry(func);
       t::Function::assert(entry->function);
@@ -110,7 +110,7 @@ namespace NS_VM
    FunctionTable::get(std::string name)
    {
       long index = this->find((std::string)name);
-      Function* result = NULL;
+      t::Function* result = NULL;
       if (index != -1)
       {
          result = this->functions[index]->function;
