@@ -6,7 +6,7 @@ system/Float
 system/String
 # system/UString
 core.Exception
-system/Class
+core.Class
 system/Type
 core/Stack
 core/Jump

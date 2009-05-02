@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="List">
+   <include path="t/Class.h" />
+   <include path="t/Exception.h" />
+
+   <type name="core.BadTypeException" object="t::tBAD_TYPE_EXCEPTION" parent="t::tEXCEPTION" />
+</module>
+
