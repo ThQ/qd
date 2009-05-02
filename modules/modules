@@ -8,15 +8,15 @@ core.String
 core.Exception
 core.Class
 core.Type
-core/Stack
-core/Jump
-core/Loop
-core/Return
+vm.Stack
+vm.Jump
+vm.Loop
+vm.Return
 core.List
 core.Array
 core.Map
 core.Function
 # system/io/File
-core/Global
-core/Swap
-core/Traceback
+vm.Global
+vm.Swap
+vm.Traceback
