@@ -6,6 +6,7 @@ import os.path
 
 import xop
 
+# @TODO: Should be relative !
 D_ROOT="/home/thomas/dev/c++/sws"
 D_MODULES=os.path.join(D_ROOT, "modules")
 D_OUTPUT=os.path.join(D_ROOT, "build/doc/opcodes")
