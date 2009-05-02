@@ -7,7 +7,7 @@ system/String
 # system/UString
 core.Exception
 core.Class
-system/Type
+core.Type
 core/Stack
 core/Jump
 core/Loop
