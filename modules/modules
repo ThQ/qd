@@ -1,5 +1,5 @@
 system/Block
-system/Object
+core.Object
 system/Bool
 system/Int
 core.Float
@@ -16,7 +16,7 @@ core.List
 core.Array
 system/Map
 core.Function
-#system/io/File
+# system/io/File
 core/Global
 core/Swap
 core/Traceback

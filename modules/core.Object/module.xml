@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="List">
+   <include path="t/Float.h" />
+
+   <type name="core.Object" object="t::tObject"/>
+   <type name="core.Null" object="t::tNULL" parent="t::tOBJECT" />
+   <type name="core.Function" object="t::tFUNCTION" parent="t::tOBJECT" />
+   <type name="core.HeapObject" object="t::tHEAP_OBJECT" parent="t::tOBJECT" />
+   <object object="t::gNULL" value="new t::Object()" />
+</module>
+
