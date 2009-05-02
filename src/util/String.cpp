@@ -8,7 +8,7 @@ namespace NS_UTIL
       t::String* s = (t::String*)format_str;
       ULong len = s->value.length();
       ULong arg = 0;
-      t::String* result = t::String::build();
+      t::String* result = (t::String*)t::String::build();
 
       // Traversing characters for a sequence like %[b|i|s%]
       for (ULong i = 0 ; i < len ; ++i)
