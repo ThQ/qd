@@ -4,8 +4,8 @@ system/Bool
 system/Int
 system/Float
 system/String
-#system/UString
-system/Exception
+# system/UString
+core.Exception
 system/Class
 system/Type
 core/Stack
