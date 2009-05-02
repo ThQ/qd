@@ -28,7 +28,7 @@
 
 namespace NS_TYPE
 {
-   extern T_OBJECT* float_type;
+   extern T_OBJECT* tFLOAT;
 
    class Float : public T_OBJECT
    {

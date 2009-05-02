@@ -2,12 +2,12 @@
 
 namespace NS_TYPE
 {
-   T_OBJECT* float_type = NULL;
+   T_OBJECT* tFLOAT = NULL;
 
    Float::Float()
    {
       this->value = 0;
-      this->set_class(float_type);
+      this->set_class(NS_TYPE::tFLOAT);
    }
 
    T_OBJECT*
