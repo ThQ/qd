@@ -7,7 +7,7 @@ namespace NS_TYPE
    Int::Int()
    {
       this->references = 0;
-      this->set_class(NS_TYPE::int_type);
+      this->set_class(NS_TYPE::tINT);
       this->value = 0;
    }
 

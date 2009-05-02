@@ -11,7 +11,7 @@
 
 namespace NS_TYPE
 {
-   extern T_OBJECT* string_type;
+   extern T_OBJECT* tSTRING;
 
    class String : public T_OBJECT
    {
@@ -27,8 +27,8 @@ namespace NS_TYPE
        */
       public: inline static void assert(T_OBJECT* obj)
       {
-         ASSERT_NOT_NULL(NS_TYPE::string_type);
-         T_OBJECT::assert_type(obj, NS_TYPE::string_type);
+         ASSERT_NOT_NULL(NS_TYPE::tSTRING);
+         T_OBJECT::assert_type(obj, NS_TYPE::tSTRING);
       }
 
       public: static T_OBJECT* build();
@@ -60,7 +60,7 @@ namespace NS_TYPE
        */
       public: inline static bool check(T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::string_type);
+         return T_OBJECT::check_type(obj, NS_TYPE::tSTRING);
       }
 
       public: static Short compare_to(T_OBJECT* s1, T_OBJECT* s2);

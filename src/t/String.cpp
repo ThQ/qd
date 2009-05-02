@@ -2,11 +2,11 @@
 
 namespace NS_TYPE
 {
-   T_OBJECT* string_type = NULL;
+   T_OBJECT* tSTRING = NULL;
 
    String::String()
    {
-      this->set_class(string_type);
+      this->set_class(tSTRING);
    }
 
    T_OBJECT*
