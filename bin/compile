@@ -49,9 +49,11 @@ function compile_project() {
    fi
 }
 
-
+echo "Qd-compile [$1]"
 if [ "$1" == "t" ] ; then
    compile_project "$svm_t_CXX" "${t_SOURCES[*]}" "$svm_t_OUTPUT" "$dTmp"
-else
-   compile_project "$svm_introspection_CXX" "${svm_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
+elif [ "$1" == "debug" ] ; then
+   compile_project "$debug_CXX" "${debug_SOURCES[*]}" "$debug_OUTPUT" "$dTmp"
+elif [ "$1" == "introspection" ] ; then
+   compile_project "$svm_introspection_CXX" "${release_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
 fi
