@@ -117,8 +117,8 @@ namespace NS_VM
    };
 
    // @TODO: Shouldn't be elsewhere ? in NS_T ?
-   typedef Object*(*MethodPointer)(int argc, t::Object** argv);
-   typedef Object*(*ClassMethodPointer)(Engine* engine, t::Object* &self, int argc, t::Object** argv);
+   typedef t::Object*(*MethodPointer)(int argc, t::Object** argv);
+   typedef t::Object*(*ClassMethodPointer)(vm::Engine* engine, t::Object* &self, int argc, t::Object** argv);
 }
 
 #endif
