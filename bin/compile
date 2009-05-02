@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source ./rc.conf
+source ./config
 
 # $0 : Source files
 # $1 : Output

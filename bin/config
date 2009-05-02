@@ -1,11 +1,16 @@
 #!/bin/bash
 
-dRoot=`pwd`
+progdir=`dirname $0`
+cd $progdir
+
+dRoot="$PWD/.."
 dData="$dRoot/data"
 dBuild="$dRoot/build"
 dModules="$dRoot/modules"
 dScript="$dRoot/script"
 dTmp="/tmp"
+
+xPython="python"
 
 base_SOURCES_TYPES=( \
 $dRoot/src/t/Array.cpp \
