@@ -10,7 +10,7 @@ namespace NS_TYPE
 {
    extern T_OBJECT* tEXCEPTION;
    extern T_OBJECT* tRUNTIME_EXCEPTION;
-   extern T_OBJECT* tINDEX_OUT_OF_RANGE;
+   extern T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION;
 
    class Exception : public T_OBJECT
    {
