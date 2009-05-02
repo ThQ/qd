@@ -51,7 +51,7 @@ namespace NS_TYPE
        */
       public: inline static void assert(T_OBJECT* obj)
       {
-         T_OBJECT::assert_type(obj, NS_TYPE::int_type);
+         T_OBJECT::assert_type(obj, NS_TYPE::tINT);
       }
 
       public: static T_OBJECT* build();
@@ -66,7 +66,7 @@ namespace NS_TYPE
        */
       public: inline static bool check(T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::int_type);
+         return T_OBJECT::check_type(obj, NS_TYPE::tINT);
       }
 
       public: static Short compare_to(T_OBJECT* i1, T_OBJECT* i2);
