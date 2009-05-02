@@ -1,6 +1,9 @@
-{% autoescape off %}
-#ifndef MODULES_{{ module.id }}
-#define MODULES_{{ module.id }}
+{% autoescape off %}#ifndef MODULES_{{ module.id }}_H
+#define MODULES_{{ module.id }}_H
+
+#include "t/Class.h"
+#include "t/CoreFunction.h"
+#include "vm/Engine.h"
 
 {% for include in module.includes %}#include "{{ include }}"
 {% endfor %}
@@ -22,7 +25,7 @@ namespace modules
       public: static void declare_methods (vm::Engine& engine)
       {
          {% for type in module.types %}
-         /* [{{ forloop.counter}}/{{ module.types|length }}] {{ type.vm_name }} */
+         // [{{ forloop.counter}}/{{ module.types|length }}] {{ type.vm_name }}
          {% for method in type.methods %}
 
             // ({{ forloop.counter }}/{{ type.methods|length}}) {{type.vm_name}}.{{ method.vm_name }} ({{ method.signature }})
@@ -36,7 +39,7 @@ namespace modules
                t::Function::assert(function__{{ method.vm_name }});
                t::Object::pick(function__{{ method.vm_name }});
                {% if method.has_parameters %}
-               function__{{ method.vm_name}}.set_arguments({{ method.parameters|length}}, {% for param in method.parameters %}{% if not forloop.first %}, {%endif%}f__{{ method.vm_name }}_param{{ forloop.counter0}}{% endfor %});
+               function__{{ method.vm_name}}->set_arguments({{ method.parameters|length}}, {% for param in method.parameters %}{% if not forloop.first %}, {%endif%}f__{{ method.vm_name }}_param{{ forloop.counter0}}{% endfor %});
                {% endif %}
                engine.classes.declare_method({{ type.object }}, (t::Object*)function__{{ method.vm_name}});
                t::Object::drop(function__{{ method.vm_name }});
@@ -71,9 +74,7 @@ namespace modules
          t::Object::drop({{type.object}});
          {% endfor %}
       }
-
-   }
+   };
 }
 
-#endif
-{% endautoescape %}
+#endif{% endautoescape %}
