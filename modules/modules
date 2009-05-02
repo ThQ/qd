@@ -12,7 +12,7 @@ core/Stack
 core/Jump
 core/Loop
 core/Return
-system/List
+core.List
 system/Array
 system/Map
 system/Function
