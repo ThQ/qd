@@ -36,7 +36,7 @@
 
 namespace NS_TYPE
 {
-   extern T_OBJECT* int_type;
+   extern T_OBJECT* tINT;
 
    class Int : Object
    {

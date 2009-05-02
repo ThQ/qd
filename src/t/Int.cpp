@@ -2,7 +2,7 @@
 
 namespace NS_TYPE
 {
-   T_OBJECT* int_type = NULL;
+   T_OBJECT* tINT = NULL;
 
    Int::Int()
    {
