@@ -15,7 +15,7 @@ core/Return
 core.List
 core.Array
 system/Map
-system/Function
+core.Function
 #system/io/File
 core/Global
 core/Swap
