@@ -4,7 +4,7 @@
    <include path="t/Exception.h" />
 
    <type name="core.Exception" object="t::tOBJECT" parent="t::tOBJECT" />
-   <type name="core.RuntimeException" object="t::tRUNTIME_EXCEPTION" parent="t::tEXCEPTION" parent="t::tEXCEPTION" />
+   <type name="core.RuntimeException" object="t::tRUNTIME_EXCEPTION" parent="t::tEXCEPTION" />
    <type name="core.ClassNotFoundException" object="t::tCLASS_NOT_FOUND_EXCEPTION" parent="t::tEXCEPTION" />
    <type name="core.IndexOutOfRangeException" object="t::tINDEX_OUT_OF_RANGE_EXCEPTION" parent="t::tEXCEPTION" />
 
