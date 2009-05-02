@@ -1,22 +1,22 @@
-core.Block
-core.Object
-core.Bool
-core.Int
-core.Float
-core.String
-# core.UnicodeString
-core.Exception
-core.Class
-core.Type
-vm.Stack
-vm.Jump
-vm.Loop
-vm.Return
-core.List
-core.Array
-core.Map
-core.Function
+core/Block
+core/Object
+core/Bool
+core/Int
+core/Float
+core/String
+# core/UnicodeString
+core/Exception
+core/Class
+core/Type
+vm/Stack
+vm/Jump
+vm/Loop
+vm/Return
+core/List
+core/Array
+core/Map
+core/Function
 # system/io/File
-vm.Global
-vm.Swap
-vm.Traceback
+vm/Global
+vm/Swap
+vm/Traceback
