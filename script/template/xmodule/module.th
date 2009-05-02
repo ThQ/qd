@@ -1,0 +1,73 @@
+{% autoescape off %}
+#ifndef MODULES_{{ module.id }}
+#define MODULES_{{ module.id }}
+
+{% for include in module.includes %}#include "{{ include }}"
+{% endfor %}
+
+namespace modules
+{
+   class {{ module.name }}
+   {
+      {% for type in module.types %}
+      {% for method in type.methods %}
+      public: static t::Object* {{ method.name }}(vm::Engine* engine, t::Object* self, int argc, t::Object** argv)
+      {
+         {{ method.body }}
+         return result;
+      }
+      {% endfor %}
+      {% endfor %}
+
+      public: static void declare_methods (vm::Engine& engine)
+      {
+         {% for type in module.types %}
+         /* [{{ forloop.counter}}/{{ module.types|length }}] {{ type.vm_name }} */
+         {% for method in type.methods %}
+
+            // ({{ forloop.counter }}/{{ type.methods|length}}) {{type.vm_name}}.{{ method.vm_name }} ({{ method.signature }})
+               INTERNAL("<t::Function|{{type.vm_name}}.{{method.vm_name}}({{method.signature}}) : declaring...");
+         {% for parameter in method.parameters %}
+               t::Object* f__{{ method.vm_name }}_param{{ forloop.counter0 }} = t::Variable::build("{{ parameter.0 }}", {{parameter.1}});
+               t::Object::pick (f__{{ method.vm_name }}_param{{ forloop.counter0 }});
+         {% endfor %}
+
+               t::Function* function__{{ method.vm_name }} = t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }});
+               t::Function::assert(function__{{ method.vm_name }});
+               t::Object::pick(function__{{ method.vm_name }});
+               function__{{ method.vm_name}}.set_arguments({{ method.parameters|length}}, {% for param in method.parameters %}{% if not forloop.first %}, {%endif%}f__{{ method.vm_name }}_param{{ forloop.counter0}}{% endfor %});
+               engine.classes.declare_method(, (t::Object*)function__{{ method.vm_name}});
+               t::Object::drop(function__{{ method.vm_name }});
+               INTERNAL_APD("OK");
+         {% endfor %}
+         {% endfor %}
+      }
+
+      public: static void finalize()
+      {
+         {% for type in module.types %}
+         ASSERT({{ type.object }} == NULL, "modules.{{ module.name }}.finalize() : {{type.object}} must be NULL.");
+         {% endfor %}
+      }
+
+      public: static void initialize(vm::Engine& engine)
+      {
+         {% for type in module.types %}
+         {{ type.object }} = engine.classes.declare_class("{{ type.vm_name }}", {{ type.parent_object }});
+         t::Class::assert({{ type.object }});
+         t::Object::pick({{ type.object }});
+         {% endfor %}
+      }
+
+      public: static void tear_down(vm::Engine& engine)
+      {
+         {% for type in module.types %}
+         t::Object::drop({{type.object}});
+         {% endfor %}
+      }
+
+   }
+}
+
+#endif
+{% endautoescape %}
