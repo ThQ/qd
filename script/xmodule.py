@@ -1,6 +1,7 @@
 #!/usr/bin/python
 
 from django.template.loader import render_to_string
+import logging
 import sys
 import xml.dom.minidom
 
@@ -52,6 +53,12 @@ class XModule:
          method.vm_name = n_node.attributes["name"].childNodes[0].nodeValue
          method.name = method.vm_name
 
+      if n_node.attributes.has_key("returns"):
+         method.return_type = n_node.attributes["returns"].childNodes[0].nodeValue
+      else:
+         logging.warning("No return type defined for <" + type.name + "." + method.name + ">")
+         method.return_type = "t::tOBJECT"
+
       for n_child in n_node.childNodes:
          if n_child.localName == "body":
             method.body = n_child.childNodes[0].nodeValue
@@ -83,6 +90,7 @@ class XModuleTypeMethod:
       self.parameters = []
       self.body = ""
       self.signature = ""
+      self.return_type = ""
 
 if __name__ == "__main__":
    module = XModule()
