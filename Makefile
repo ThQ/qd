@@ -1,7 +1,7 @@
 # SOFTWARES
 xPYTHON=python
 xSH=/bin/bash
-xCOMPILE=$(xSH) rc.compile
+xCOMPILE=$(xSH) ./bin/compile
 
 srcdir=.
 DATA_DIR=${srcdir}/data
