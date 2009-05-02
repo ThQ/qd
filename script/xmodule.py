@@ -66,6 +66,9 @@ class XModule:
             if n_child.attributes.has_key("name") and n_child.attributes.has_key("type"):
                method.parameters.append((n_child.attributes["name"].childNodes[0].nodeValue, n_child.attributes["type"].childNodes[0].nodeValue))
 
+      if len(method.parameters) > 0:
+         method.has_parameters = True
+
       for param in method.parameters:
          if method.signature != "":
             method.signature += ", "
@@ -91,6 +94,7 @@ class XModuleTypeMethod:
       self.body = ""
       self.signature = ""
       self.return_type = ""
+      self.has_parameters = False
 
 if __name__ == "__main__":
    module = XModule()
