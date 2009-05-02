@@ -1,9 +1,20 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="List">
-   <include path="t/Float.h" />
+<module name="Object">
+   <include path="t/Object.h" />
+   <include path="t/Function.h" />
+   <include path="t/Int.h" />
 
-   <type name="core.Object" object="t::tObject"/>
+   <type name="core.Object" object="t::tObject">
+      <method name="compare_to" returns="t::tINT">
+         <parameter name="an_object" type="t::tObject" />
+         <body>
+            Short s = t::Object::compare_to(argv[0], argv[1]);
+            t::Object* result = t::Int::build((Long)s);
+         </body>
+      </method>
+   </type>
+
    <type name="core.Null" object="t::tNULL" parent="t::tOBJECT" />
    <type name="core.Function" object="t::tFUNCTION" parent="t::tOBJECT" />
    <type name="core.HeapObject" object="t::tHEAP_OBJECT" parent="t::tOBJECT" />
