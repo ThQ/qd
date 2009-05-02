@@ -8,7 +8,7 @@
    <type name="core.List" object="t::tLIST" parent="t::tOBJECT">
 
       <method name="get_item">
-         <parameter name="index" c-type="t::tINT" />
+         <parameter name="index" type="t::tINT" />
          <body>
             t::Object* result = t::List::get_item(argv[0], ((t::Int*)argv[1])->value);
          </body>
