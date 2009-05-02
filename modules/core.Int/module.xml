@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="Int">
+   <include path="t/Bool.h" />
+   <include path="t/Int.h" />
+
+   <type name="core.Int" object="t::tINT" parent="t::tOBJECT">
+      <method name="add" returns="t::tINT">
+         <parameter name="i" type="::tINT" />
+         <body>
+            t::Int::add_to(argv[0], argv[1]);
+            t::Object* result = argv[0];
+         </body>
+      </method>
+
+      <method name="compare_to" returns="t::tINT">
+         <parameter name="i" type="::tINT" />
+         <body>
+            Short i = t::Int::compare_to(argv[0], argv[1]);
+            t::Object* result = t::Int::build((Long)i);
+         </body>
+      </method>
+
+      <method name="equals" returns="t::tBOOL">
+         <parameter name="i" type="::tINT" />
+         <body>
+            bool equals = ((t::Int*)argv[0])->value == ((t::Int*)argv[1])->value;
+            t::Object* result =  equals ? t::gTRUE : t::gFALSE;
+         </body>
+      </method>
+
+      <method name="is_greater" returns="t::tBOOL">
+         <parameter name="i" type="::tINT" />
+         <body>
+            bool comp = ((t::Int*)argv[0])->value > ((t::Int*)argv[1])->value;
+            t::Object* result = comp ? t::gTRUE : t::gFALSE;
+         </body>
+      </method>
+
+      <method name="is_greater_or_equal" returns="t::tBOOL">
+         <parameter name="i" type="::tINT" />
+         <body>
+            bool comp = ((t::Int*)argv[0])->value >= ((t::Int*)argv[1])->value;
+            t::Object* result = comp ? t::gTRUE : t::gFALSE;
+         </body>
+      </method>
+
+      <method name="multiply" returns="t::tINT">
+         <parameter name="i" type="t::tINT" />
+         <body>
+            t::Int::multiply_to(argv[0], argv[1]);
+            t::Object* result = argv[0];
+         </body>
+      </method>
+
+
+      <method name="print" returns="t::tOBJECT">
+         <body>
+            t::Int::print(argv[0]);
+            t::Object* result = t::gNULL;
+         </body>
+      </method>
+
+      <method name="print_line" returns="t::tOBJECT">
+         <body>
+            t::Int::print_line(argv[0]);
+            t::Object* result = t::gNULL;
+         </body>
+      </method>
+
+      <method name="substract" returns="t::tINT">
+         <parameter name="i" type="::tINT" />
+         <body>
+            t::Int::subtract_to(argv[0], argv[1]);
+            t::Object* result = argv[0];
+         </body>
+      </method>
+   </type>
+
+</module>

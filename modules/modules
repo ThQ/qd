@@ -1,7 +1,7 @@
 system/Block
 core.Object
 core.Bool
-system/Int
+core.Int
 core.Float
 system/String
 # system/UString
