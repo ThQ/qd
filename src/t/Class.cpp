@@ -2,8 +2,8 @@
 
 namespace NS_TYPE
 {
-   T_OBJECT* class_not_found_exception_type = NULL;
-   T_OBJECT* bad_type_exception_type = NULL;
+   T_OBJECT* tCLASS_NOT_FOUND_EXCEPTION = NULL;
+   T_OBJECT* tBAD_TYPE_EXCEPTION = NULL;
 
    Class::Class()
    {

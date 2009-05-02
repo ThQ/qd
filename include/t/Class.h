@@ -47,8 +47,8 @@
 
 namespace NS_TYPE
 {
-   extern T_OBJECT* class_not_found_exception_type;
-   extern T_OBJECT* bad_type_exception_type;
+   extern T_OBJECT* tCLASS_NOT_FOUND_EXCEPTION;
+   extern T_OBJECT* tBAD_TYPE_EXCEPTION;
 
    class Class : public T_OBJECT
    {
