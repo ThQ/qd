@@ -32,11 +32,13 @@ namespace modules
                t::Object::pick (f__{{ method.vm_name }}_param{{ forloop.counter0 }});
          {% endfor %}
 
-               t::Function* function__{{ method.vm_name }} = t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }}, {{ method.return_type }});
+               t::Function* function__{{ method.vm_name }} = (t::Function*)t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }}, {{ method.return_type }});
                t::Function::assert(function__{{ method.vm_name }});
                t::Object::pick(function__{{ method.vm_name }});
+               {% if method.has_parameters %}
                function__{{ method.vm_name}}.set_arguments({{ method.parameters|length}}, {% for param in method.parameters %}{% if not forloop.first %}, {%endif%}f__{{ method.vm_name }}_param{{ forloop.counter0}}{% endfor %});
-               engine.classes.declare_method(, (t::Object*)function__{{ method.vm_name}});
+               {% endif %}
+               engine.classes.declare_method({{ type.object }}, (t::Object*)function__{{ method.vm_name}});
                t::Object::drop(function__{{ method.vm_name }});
                INTERNAL_APD("OK");
          {% endfor %}
@@ -53,7 +55,11 @@ namespace modules
       public: static void initialize(vm::Engine& engine)
       {
          {% for type in module.types %}
+         {% if type.parent_object %}
          {{ type.object }} = engine.classes.declare_class("{{ type.vm_name }}", {{ type.parent_object }});
+         {% else %}
+         {{ type.object }} = engine.classes.declare_class("{{ type.vm_name }}");
+         {% endif %}
          t::Class::assert({{ type.object }});
          t::Object::pick({{ type.object }});
          {% endfor %}
