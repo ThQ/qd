@@ -10,6 +10,7 @@ DOC_DIR=${BUILD_DIR}/doc
 OPCODES_DOC_DIR=${DOC_DIR}/opcodes
 MODULES_DIR=${srcdir}/modules
 DEST_DIR=${BUILD_DIR}/svm
+BIN_DIR=${srcdir}/bin
 TEST_CXX_DIR=${srcdir}/test/c++
 script_dir=$(srcdir)/script
 
@@ -74,7 +75,7 @@ prepare-modules:
 		--list=$(MODULES_DIR)/modules \
 		--opcodes-ini=$(BUILD_DIR)/opcodes.ini \
 		--modules-setup=$(BUILD_DIR)/src/Engine.cpp
-	$(xSH) $(script_dir)/install-modules.sh
+	$(xSH) $(BIN_DIR)/install-modules
 
 search-todo:
 	grep --directories=recurse --exclude=*.svn-base  "//\s*@?TODO" *
