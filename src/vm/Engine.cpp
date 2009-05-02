@@ -37,7 +37,7 @@ namespace NS_VM
       t::Object::pick(traceback);
       for (ULong i = this->stack.count() - 1 ; i > 0 ; --i)
       {
-         t::Object* entry = svm::Map::build();
+         t::Object* entry = t::Map::build();
          t::Map::assert(entry);
          t::Object::pick(entry);
          std::string s_key;
@@ -184,7 +184,7 @@ namespace NS_VM
             s_msg.assign("Expected type<");
             s_msg.append(cls->name);
             s_msg.append("> but got <");
-            s_msg.append(((svm::Class*)obj->cls)->name);
+            s_msg.append(((t::Class*)obj->cls)->name);
             s_msg.append(">.");
 
             t::Object* msg = t::String::build(s_msg);
@@ -288,7 +288,7 @@ namespace NS_VM
    }
 
    void
-   Engine::import_swap(Block* block)
+   Engine::import_swap(t::Block* block)
    {
       ULong swap_len = this->heap.count();
       for (ULong i = 0 ; i < swap_len ; ++i)
@@ -299,7 +299,7 @@ namespace NS_VM
    }
 
    void
-   Engine::make_empty_object_array(svm::Object**& obj, UInt count)
+   Engine::make_empty_object_array(t::Object**& obj, UInt count)
    {
       switch (count)
       {
@@ -308,7 +308,7 @@ namespace NS_VM
             break;
 
          default:
-            obj = new svm::Object*[count];
+            obj = new t::Object*[count];
       }
    }
 
@@ -344,7 +344,7 @@ namespace NS_VM
             {
                WARNING(
                   "Bad block parameter type, expected <%s> but got <%s>.\n",
-                  ((svm::String*)block->argv[i])->value.c_str(),
+                  ((t::String*)block->argv[i])->value.c_str(),
                   cls->name.c_str()
                );
             }
@@ -475,7 +475,7 @@ namespace NS_VM
                t::Class* e_cls = (t::Class*)this->current_block->exception->cls;
                t::Object::assert_not_null(e_cls);
                printf("[Uncaught exception]\n%s: ", e_cls->name.c_str());
-               t::UnicodeString::print((svm::UnicodeString*)e->message);
+               t::UnicodeString::print((t::UnicodeString*)e->message);
                printf("\n");
                this->build_traceback();
                i = block->count();
