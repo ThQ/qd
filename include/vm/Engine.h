@@ -32,8 +32,8 @@
 #include "util/List.h"
 // @MODULES[INCLUDE]
 
-#define SVM_METHOD(name) t::Object* name(svm::Engine* engine, int argc, t::Object** argv)
-#define SVM_CLASS_METHOD(name) t::Object* name(svm::Engine* engine, t::Object* self, int argc, t::Object** argv)
+#define SVM_METHOD(name) t::Object* name(vm::Engine* engine, int argc, t::Object** argv)
+#define SVM_CLASS_METHOD(name) t::Object* name(vm::Engine* engine, t::Object* self, int argc, t::Object** argv)
 
 #define SVM_THROW_CLASS_NOT_FOUND_EXCEPTION(eng, cls) \
    DEPRECATED(); \
