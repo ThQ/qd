@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="Array">
+   <include path="t/Array.h" />
+
+   <type name="core.Array" object="t::tARRAY" parent="t::tOBJECT" />
+</module>
