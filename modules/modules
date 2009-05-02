@@ -14,7 +14,7 @@ core/Loop
 core/Return
 core.List
 core.Array
-system/Map
+core.Map
 core.Function
 # system/io/File
 core/Global
