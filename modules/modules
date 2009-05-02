@@ -4,7 +4,7 @@ core.Bool
 core.Int
 core.Float
 core.String
-# system/UString
+# core.UnicodeString
 core.Exception
 core.Class
 core.Type
