@@ -1,4 +1,4 @@
-system/Block
+core.Block
 core.Object
 core.Bool
 core.Int
