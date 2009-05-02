@@ -4,7 +4,7 @@ core/Bool
 core/Int
 core/Float
 core/String
-# core/UnicodeString
+#core/UnicodeString
 core/Exception
 core/Class
 core/Type
@@ -16,7 +16,7 @@ core/List
 core/Array
 core/Map
 core/Function
-# system/io/File
+#system/io/File
 vm/Global
 vm/Swap
 vm/Traceback
