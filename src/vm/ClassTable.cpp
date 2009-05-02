@@ -1,6 +1,6 @@
 #include "vm/ClassTable.h"
 
-namespace VM
+namespace NS_VM
 {
    ClassTable::ClassTable()
    {
@@ -61,7 +61,7 @@ namespace VM
    }
 
    bool
-   ClassTable::append_method_to(t::Class* cls, Function* func)
+   ClassTable::append_method_to(t::Class* cls, t::Function* func)
    {
       //INTERNAL("ClassTable::append_method_to(Class*(@%lu), Function*(@%lu))\n", (ULong)cls, (ULong)func);
       t::Object::assert_not_null(cls);

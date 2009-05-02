@@ -1,6 +1,6 @@
 #include "vm/FunctionTable.h"
 
-namespace vm
+namespace NS_VM
 {
    FunctionTable::FunctionTable()
    {

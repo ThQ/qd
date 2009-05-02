@@ -1,4 +1,4 @@
-#include "t/ClassTableEntry.h"
+#include "vm/ClassTableEntry.h"
 
 namespace NS_VM
 {
