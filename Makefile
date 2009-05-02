@@ -40,7 +40,7 @@ doc-opcodes:
 	cd $(script_dir) ; export DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
 
 build: prepare-modules update-version-number
-	$(xCOMPILE)
+	$(xCOMPILE) introspection
 
 build-debug: prepare-modules update-version-number
 	$(xCOMPILE) debug
