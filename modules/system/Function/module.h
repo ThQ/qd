@@ -5,34 +5,34 @@ include(`../../module.m4')
 #define MODULES_FUNCTION_H
 
 
-#include "debug.h"
-#include "svm/CoreFunction.h"
-#include "svm/Engine.h"
+#include "t/Class.h"
+#include "t/CoreFunction.h"
+#include "vm/Engine.h"
 
 namespace modules { namespace system {
 
    class Function
    {
-      public: static void declare_methods(svm::Engine& engine)
+      public: static void declare_methods(vm::Engine& engine)
       {
-         SVM_ASSERT_CLASS(svm::bad_argument_type_exception_type);
+         t::Class::assert(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
       }
 
       public: static void finalize()
       {
-         ASSERT_NULL(svm::bad_argument_type_exception_type);
+         ASSERT_NULL(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
       }
 
-      public: static void initialize(svm::Engine& engine)
+      public: static void initialize(vm::Engine& engine)
       {
-         svm::bad_argument_type_exception_type = engine.classes.declare_class("system.BadArgumentTypeException", svm::exception_type);
-         SVM_ASSERT_CLASS(svm::bad_argument_type_exception_type);
-         SVM_PICK(svm::bad_argument_type_exception_type);
+         t::tBAD_ARGUMENT_TYPE_EXCEPTION = engine.classes.declare_class("system.BadArgumentTypeException", t::tEXCEPTION);
+         t::Class::assert(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
+         t::Object::pick(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
       }
 
-      public: static void tear_down(svm::Engine& engine)
+      public: static void tear_down(vm::Engine& engine)
       {
-         SVM_DROP(svm::bad_argument_type_exception_type);
+         t::Object::drop(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
       }
    };
 
