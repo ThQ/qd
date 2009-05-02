@@ -5,9 +5,9 @@
    <include path="t/Function.h" />
    <include path="t/Int.h" />
 
-   <type name="core.Object" object="t::tObject">
+   <type name="core.Object" object="t::tOBJECT">
       <method name="compare_to" returns="t::tINT">
-         <parameter name="an_object" type="t::tObject" />
+         <parameter name="an_object" type="t::tOBJECT" />
          <body>
             Short s = t::Object::compare_to(argv[0], argv[1]);
             t::Object* result = t::Int::build((Long)s);
