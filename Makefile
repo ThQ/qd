@@ -1,8 +1,4 @@
 # SOFTWARES
-xPYTHON=python
-xSH=/bin/bash
-xCOMPILE=$(xSH) ./bin/compile
-
 srcdir=.
 DATA_DIR=${srcdir}/data
 BUILD_DIR=${srcdir}/build
@@ -13,6 +9,10 @@ DEST_DIR=${BUILD_DIR}/svm
 BIN_DIR=${srcdir}/bin
 TEST_CXX_DIR=${srcdir}/test/c++
 script_dir=$(srcdir)/script
+
+xPYTHON=python
+xSH=/bin/bash
+xCOMPILE=cd $(BIN_DIR) && $(xSH) compile
 
 bin_PROGRAMS=svm
 
@@ -75,7 +75,7 @@ prepare-modules:
 		--list=$(MODULES_DIR)/modules \
 		--opcodes-ini=$(BUILD_DIR)/opcodes.ini \
 		--modules-setup=$(BUILD_DIR)/src/Engine.cpp
-	$(xSH) $(BIN_DIR)/install-modules
+	cd $(BIN_DIR) && $(xSH) install-modules
 
 search-todo:
 	grep --directories=recurse --exclude=*.svn-base  "//\s*@?TODO" *
