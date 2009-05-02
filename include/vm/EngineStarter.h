@@ -4,7 +4,7 @@
 #include "vm/Engine.h"
 // @MODULES[INCLUDE]
 
-namespace svm
+namespace NS_VM
 {
    class EngineStarter
    {

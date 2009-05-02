@@ -1,6 +1,6 @@
-#include "svm/EngineStarter.h"
+#include "vm/EngineStarter.h"
 
-namespace svm
+namespace NS_VM
 {
    void
    EngineStarter::setup()
