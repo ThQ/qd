@@ -1,6 +1,6 @@
 system/Block
 core.Object
-system/Bool
+core.Bool
 system/Int
 core.Float
 system/String

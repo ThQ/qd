@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="Map">
+   <include path="t/Map.h" />
+
+   <type name="core.Bool" object="t::tBOOL" parent="t::tOBJECT">
+      <method name="print_line" returns="t::tOBJECT">
+         <body>
+            if (argv[0] == t::gFALSE) printf("False\n");
+            else printf("True\n");
+            t::Object* result = t::gNULL;
+         </body>
+      </method>
+   </type>
+
+   <object object="t::gTRUE" value="t::Bool::build(1)" />
+   <object object="t::gFALSE" value="t::Bool::build(0)" />
+</module>
+
