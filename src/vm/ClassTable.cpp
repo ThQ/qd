@@ -279,7 +279,7 @@ namespace NS_VM
    */
 
    long
-   ClassTable::find(Class* cls)
+   ClassTable::find(t::Class* cls)
    {
       long result = -1;
       for (ULong i = 0 ; i < this->item_count ; ++i)
@@ -406,7 +406,7 @@ namespace NS_VM
       for (ULong i = 0 ; i < this->count() ; ++i)
       {
          DEBUG("#%lu : ", i);
-         DEBUG_APD("%s\n", ((Class*)this->items[i]->cls)->name.c_str());
+         DEBUG_APD("%s\n", ((t::Class*)this->items[i]->cls)->name.c_str());
          if (show_functions)
          {
             this->items[i]->functions.list();
