@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="List">
+<module name="Class">
    <include path="t/Class.h" />
    <include path="t/Exception.h" />
 

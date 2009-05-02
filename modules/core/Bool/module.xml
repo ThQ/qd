@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Map">
-   <include path="t/Map.h" />
+<module name="Bool">
+   <include path="t/Bool.h" />
 
    <type name="core.Bool" object="t::tBOOL" parent="t::tOBJECT">
       <method name="print_line" returns="t::tOBJECT">

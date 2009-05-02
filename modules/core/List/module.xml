@@ -25,7 +25,7 @@
          <parameter name="obj" type="t::tOBJECT" />
          <body>
             t::List::append(argv[0], argv[1]);
-            t::Object* result = gNULL;
+            t::Object* result = t::gNULL;
          </body>
       </method>
 
