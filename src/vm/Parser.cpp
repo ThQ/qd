@@ -38,8 +38,8 @@ namespace NS_VM
                {
                   ++ argc;
                   argv = (t::Object**)REALLOC(argv, sizeof(t::Object*) * argc);
-                  if (c == 'F') argv[argc - 1] = svm::False;
-                  else argv[argc - 1] = svm::True;
+                  if (c == 'F') argv[argc - 1] = t::gFALSE;
+                  else argv[argc - 1] = t::gTRUE;
                   t::Object::pick(argv[argc - 1]);
                   INTERNAL("<Bool> argument found: %d.\n", c == 'T');
                }
@@ -75,7 +75,7 @@ namespace NS_VM
             case 2:
                ++ argc;
                argv = (t::Object**)REALLOC(argv, sizeof(t::Object*) * argc);
-               argv [ argc - 1 ] = t::HeapObject::build(FALSE, c - 48);
+               argv [ argc - 1 ] = t::HeapObject::build(false, c - 48);
                t::Object::pick(argv[argc - 1]);
                step = 0;
                break;
@@ -83,7 +83,7 @@ namespace NS_VM
             case 3:
                ++ argc;
                argv = (t::Object**)REALLOC(argv, sizeof(t::Object*) * argc);
-               argv [ argc - 1 ] = t::HeapObject::build(TRUE, c - 48);
+               argv [ argc - 1 ] = t::HeapObject::build(true, c - 48);
                step = 0;
                break;
 
