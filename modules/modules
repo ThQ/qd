@@ -13,7 +13,7 @@ core/Jump
 core/Loop
 core/Return
 core.List
-system/Array
+core.Array
 system/Map
 system/Function
 #system/io/File
