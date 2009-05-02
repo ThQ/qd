@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="List">
+   <include path="t/CoreFunction.h" />
+   <include path="t/List.h" />
+   <include path="vm/Engine.h" />
+
+   <type name="core.List" object="t::tLIST" parent="t::tOBJECT">
+
+      <method name="get_item">
+         <parameter name="index" c-type="t::tINT" />
+         <body>
+            t::Object* result = t::List::get_item(argv[0], ((t::Int*)argv[1])->value);
+         </body>
+      </method>
+
+      <method name="pop">
+         <parameter name="num" type="t::tINT" />
+         <body>
+            t::Object* result = t::List::pop(argv[0], ((t::Int*)argv[1])->value);
+         </body>
+      </method>
+
+      <method name="push">
+         <parameter name="obj" type="t::tOBJECT" />
+         <body>
+            t::List::append(argv[0], argv[1]);
+            t::Object* result = gNULL;
+         </body>
+      </method>
+
+      <method name="set_item" returns="t::tOBJECT">
+         <parameter name="index" type="t::tINT" />
+         <parameter name="obj" type="t::tOBJECT" />
+         <body>
+            t::Object* result = t::List::set_item(argv[0], ((t::Int*)argv[1])->value, argv[2]);
+         </body>
+      </method>
+
+   </type>
+
+</module>
