@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="List">
+   <include path="t/Float.h" />
+
+   <type name="core.Float" object="t::tFLOAT" parent="t::tOBJECT" />
+</module>
+

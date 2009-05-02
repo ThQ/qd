@@ -2,7 +2,7 @@ system/Block
 system/Object
 system/Bool
 system/Int
-system/Float
+core.Float
 system/String
 # system/UString
 core.Exception
