@@ -79,7 +79,7 @@ class File:
       return s
 
    def export_function_definitions(self):
-      s = " bool svm::Engine::run_" + self.namespace.name.lower() + "_opc(ULong &i, Block* block, Heap& heap, OpCode* opc, Object** argv)\n"
+      s = " bool vm::Engine::run_" + self.namespace.name.lower() + "_opc(ULong &i, t::Block* block, vm::Heap& heap, vm::OpCode* opc, t::Object** argv)\n"
       s += "{\n"
       s += "   bool result = false;\n";
       s += "   switch (opc->method)\n";
@@ -99,7 +99,7 @@ class File:
 
 
    def export_function_prototypes(self):
-      s = "public: bool run_" + self.namespace.name.lower() + "_opc(ULong &i, Block* block, Heap& heap, OpCode* opc, Object** argv);\n"
+      s = "public: bool run_" + self.namespace.name.lower() + "_opc(ULong &i, t::Block* block, vm::Heap& heap, vm::OpCode* opc, t::Object** argv);\n"
 
       return s
 
