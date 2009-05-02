@@ -28,11 +28,11 @@ namespace modules
             // ({{ forloop.counter }}/{{ type.methods|length}}) {{type.vm_name}}.{{ method.vm_name }} ({{ method.signature }})
                INTERNAL("<t::Function|{{type.vm_name}}.{{method.vm_name}}({{method.signature}}) : declaring...");
          {% for parameter in method.parameters %}
-               t::Object* f__{{ method.vm_name }}_param{{ forloop.counter0 }} = t::Variable::build("{{ parameter.0 }}", {{parameter.1}});
+               t::Object* f__{{ method.vm_name }}_param{{ forloop.counter0 }} = t::Variable::build({{parameter.1}}, "{{ parameter.0 }}");
                t::Object::pick (f__{{ method.vm_name }}_param{{ forloop.counter0 }});
          {% endfor %}
 
-               t::Function* function__{{ method.vm_name }} = t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }});
+               t::Function* function__{{ method.vm_name }} = t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }}, {{ method.return_type }});
                t::Function::assert(function__{{ method.vm_name }});
                t::Object::pick(function__{{ method.vm_name }});
                function__{{ method.vm_name}}.set_arguments({{ method.parameters|length}}, {% for param in method.parameters %}{% if not forloop.first %}, {%endif%}f__{{ method.vm_name }}_param{{ forloop.counter0}}{% endfor %});
