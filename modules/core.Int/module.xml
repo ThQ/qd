@@ -5,6 +5,7 @@
    <include path="t/Int.h" />
 
    <type name="core.Int" object="t::tINT" parent="t::tOBJECT">
+   <!--
       <method name="add" returns="t::tINT">
          <parameter name="i" type="::tINT" />
          <body>
@@ -75,6 +76,7 @@
             t::Object* result = argv[0];
          </body>
       </method>
+      -->
    </type>
 
 </module>
