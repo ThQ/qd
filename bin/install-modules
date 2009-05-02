@@ -1,14 +1,7 @@
 #!/bin/bash
 
-cd ${0%/*}/..
+source ./config
 
-dRoot=`pwd`
-dScript="${dRoot}/script"
-dBuild="${dRoot}/build"
-dBuildInclude="${dBuild}/include"
-dBuildModuleInclude="$dBuildInclude/modules"
-dBuildSrc="$dBuild/src"
-dModules="$dRoot/modules"
 create_directories="$dBuild $dBuildInclude $dBuildModuleInclude $dBuildSrc"
 
 fModulesInclude="$dBuildModuleInclude/include.modules"
@@ -21,8 +14,6 @@ fEngineStarter="${dBuild}/src/vm/EngineStarter.cpp"
 
 create_file="$fModulesInclude $fModulesInitialize $fModulesDeclareMethods $fModulesTearDown"
 
-xPython="python"
-xReplace="${xPython} ${dScript}/replace.py"
 
 cd "$dRoot"
 
@@ -38,8 +29,14 @@ done
 modules_list=`cat $fModules`
 for module in ${modules_list[*]} ; do
    if [ "${module:0:1}" != "#" ] ; then
-      module_rel_id="${module//.//}"
-      module_def_file="${module_rel_id}/module.h"
+      module_rel_id="${module}"
+      echo $module_rel_id
+      module_def_file="${module_rel_id}/module"
+      if [ -f "$dModules/$module_def_file.xml" ] ; then
+         module_def_file="${module_def_file}.xml"
+      else
+         module_def_file="${module_def_file}.h"
+      fi
       module_abs_file="${dModules}/${module_def_file}"
       module_rel_dir="${module_rel_id}"
       module_abs_dir="${dModules}/${module_rel_dir}"
@@ -48,7 +45,14 @@ for module in ${modules_list[*]} ; do
       if [ -f "$module_abs_file" ] ; then
          cd $module_abs_dir
          mkdir -p "${dBuildModuleInclude}/${module_rel_dir}"
-         m4 "module.h" > ${dBuildModuleInclude}/${module_rel_id}.h
+
+         if [ -f "module.xml" ]; then
+            cd $dBin
+            $xSh xmodule-to-cpp $module_abs_dir/module.xml > ${dBuildModuleInclude}/${module_rel_id}.h
+            cd $module_abs_dir
+         else
+            m4 "module.h" > ${dBuildModuleInclude}/${module_rel_id}.h
+         fi
 
          echo "#include \"modules/${module_rel_id}.h\"" >> $fModulesInclude
 

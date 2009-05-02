@@ -5,12 +5,18 @@ cd $progdir
 
 dRoot="$PWD/.."
 dData="$dRoot/data"
+dBin="$dRoot/bin"
 dBuild="$dRoot/build"
+dBuildInclude="${dBuild}/include"
+dBuildModuleInclude="$dBuildInclude/modules"
+dBuildSrc="$dBuild/src"
 dModules="$dRoot/modules"
 dScript="$dRoot/script"
 dTmp="/tmp"
 
 xPython="python"
+xReplace="${xPython} ${dScript}/replace.py"
+xSh="bash"
 
 base_SOURCES_TYPES=( \
 $dRoot/src/t/Array.cpp \
