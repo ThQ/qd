@@ -22,7 +22,7 @@ namespace NS_VM
    {
       T_OBJECT::pick(block);
       ++ this->block_count;
-      this->blocks = (t::Block**)realloc(this->blocks, sizeof(Block*) * this->block_count);
+      this->blocks = (t::Block**)realloc(this->blocks, sizeof(t::Block*) * this->block_count);
       ASSERT_REALLOC(this->blocks);
       this->blocks[this->block_count - 1] = block;
    }
@@ -33,7 +33,7 @@ namespace NS_VM
       return this->block_count;
    }
 
-   Block*
+   t::Block*
    Stack::get(ULong at)
    {
       ASSERT(
