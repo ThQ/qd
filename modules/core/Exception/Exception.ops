@@ -10,7 +10,7 @@
       </parameters>
       <body>
          t::Block* handler = this->get_block(((t::String*)argv[0])->value);
-         SVM_ASSERT_NOT_NULL(handler);
+         //SVM_ASSERT_NOT_NULL(handler);
          t::Object::pick(handler);
          block->set_exception_handler(handler);
          t::Object::drop(handler);
