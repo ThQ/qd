@@ -57,17 +57,17 @@ for module in ${modules_list[*]} ; do
          echo "#include \"modules/${module_rel_id}.h\"" >> $fModulesInclude
 
          echo "INTERNAL(\"<module:${module}> : setup... \\n\");" \
-            "modules::${module//./::}::initialize(this->engine);" \
+            "modules::${module////::}::initialize(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
             >> $fModulesInitialize
 
          echo "INTERNAL(\"<module:${module}> : declaring methods... \\n\");" \
-            "modules::${module//./::}::declare_methods(this->engine);" \
+            "modules::${module////::}::declare_methods(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
             >> $fModulesDeclareMethods
 
          echo "INTERNAL(\"<module:${module}> : tearing down... \\n\");" \
-            "modules::${module//./::}::tear_down(this->engine);" \
+            "modules::${module////::}::tear_down(this->engine);" \
             "INTERNAL(\"OK\\n\");" \
             >> $fModulesTearDown
 
