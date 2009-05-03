@@ -9,7 +9,7 @@
       <body><![CDATA[
          t::Object* result_obj;
          ASSERT(opc->argc >= 1, "<opcode:OPC_OBJECT_CALL> must have at least one parameter. (%d given)\n", opc->argc);
-         SVM_ASSERT_NOT_NULL(argv[0]);
+            //SVM_ASSERT_NOT_NULL(argv[0]);
          result_obj = this->call_object(opc->content, opc->argc, argv);
          if (result_obj != t::gNULL)
          {
@@ -45,8 +45,8 @@
             t::UserObject* result_obj = new t::UserObject();
             t::Object::pick(result_obj);
             result_obj->set_class(obj_cls);
-            SVM_ASSERT_NOT_NULL(result_obj->cls);
-            heap.append((t::Object**)result_obj);
+            //SVM_ASSERT_NOT_NULL(result_obj->cls);
+            heap.append((t::Object*)result_obj);
             t::Object::drop(result_obj);
          }
          // Class cannot be found, throw an exception
@@ -72,7 +72,8 @@
          }
          else
          {
-            SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(this, field_at, argv[0]->field_count);
+            // @TODO : Throw an exception
+            //SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(this, field_at, argv[0]->field_count);
          }
       ]]></body>
    </opcode>
