@@ -97,7 +97,7 @@
          <parameter index="2" type="t::tSTRING" comment="Field type" />
       </parameters>
       <body>
-         long class_index = this->classes.find((t::String*)argv[0])->value);
+         long class_index = this->classes.find(((t::String*)argv[0])->value);
          if (class_index != -1)
          {
             long type_index = this->classes.find(((t::String*)argv[2])->value);
