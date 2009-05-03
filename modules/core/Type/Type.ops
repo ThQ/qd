@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="type" full-name="system.type" char="t">
-   <include src="svm/Class.h" />
+<namespace name="type" full-name="core.type" char="t">
+   <include src="t/Class.h" />
 
    <opcode name="check__os" char="c">
       <description>Returns true if an object's class matches a class name.</description>
       <parameters count="2">
-         <parameter index="1" type="svm::object_type" name="object" />
-         <parameter index="1" type="svm::string_type" name="type_name" />
+         <parameter index="1" type="t::tOBJECT" name="object" />
+         <parameter index="1" type="t::tSTRING" name="type_name" />
       </parameters>
       <body>
-         svm::Class* cls = (svm::Class*)argv[0]->cls;
-         SVM_PICK(cls);
-         if (cls->name == ((svm::String*)argv[1])->value)
+         t::Class* cls = (t::Class*)argv[0]->cls;
+         t::Object::pick(cls);
+         if (cls->name == ((t::String*)argv[1])->value)
          {
-            heap.append(svm::True);
+            heap.append(t::gTRUE);
          }
          else
          {
-            heap.append(svm::False);
+            heap.append(t::gFALSE);
          }
-         SVM_DROP(cls);
+         t::Object::drop(cls);
       </body>
       <stack after="are_of_same_type @svm::bool_type" />
       <example>
@@ -36,11 +36,11 @@
       <body><![CDATA[
          svm::Object* arg = heap.get(0);
          SVM_ASSERT_NOT_NULL(arg);
-         svm::Class* cls = (svm::Class*)arg->cls;
+         t::Class* cls = (t::Class*)arg->cls;
          SVM_ASSERT_NOT_NULL(cls);
-         SVM_PICK(cls);
+         t::Object::pick(cls);
          printf("%s", cls->name.c_str());
-         SVM_DROP(cls);
+         t::Object::drop(cls);
       ]]></body>
       <example>
          s:push__s "Yup"
@@ -51,14 +51,14 @@
    <opcode name="print__o" char="p">
       <description>Prints an object's class name.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::object_type" name="object" />
+         <parameter index="0" type="t::tOBJECT" name="object" />
       </parameters>
       <body><![CDATA[
-         svm::Class* cls = (svm::Class*)argv[0]->cls;
-         SVM_ASSERT_NOT_NULL(cls);
-         SVM_PICK(cls);
+         t::Class* cls = (t::Class*)argv[0]->cls;
+         //SVM_ASSERT_NOT_NULL(cls);
+         t::Object::pick(cls);
          printf("%s", cls->name.c_str());
-         SVM_DROP(cls);
+         t::Object::drop(cls);
       ]]></body>
       <example>
          type:print_s "Yup" # Prints system.String without CR/LF
