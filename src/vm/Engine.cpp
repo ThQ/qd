@@ -364,7 +364,7 @@ namespace NS_VM
       }
 
       // Execute each opcode in this block
-      t::OpCode* opc;
+      vm::OpCode* opc;
       for (ULong i = 0 ; i < block->count() ; ++i)
       {
          //INTERNAL("BLOCK LOOP\n");
@@ -372,7 +372,7 @@ namespace NS_VM
          t::Object::assert_not_null(opc);
          t::Object** args;
          //INTERNAL("Make empty object array\n");
-         t::make_empty_object_array(args, opc->argc);
+         make_empty_object_array(args, opc->argc);
 
          // If opcode have arguments, replace each HeapObject by its real value
          //INTERNAL("Passing through arguments\n");
