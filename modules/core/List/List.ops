@@ -87,7 +87,7 @@
          <parameter index="0" type="t::tLIST" />
       </parameters>
       <body>
-         t::ListUtil::print((t::List*)argv[0]);
+         util::List::print((t::List*)argv[0]);
       </body>
    </opcode>
 
