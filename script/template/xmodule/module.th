@@ -1,5 +1,5 @@
-{% autoescape off %}#ifndef MODULES_{{ module.id }}_H
-#define MODULES_{{ module.id }}_H
+{% autoescape off %}#ifndef MODULES{% for ns in module.namespaces %}_{{ ns|upper }}{% endfor %}_H
+#define MODULES{% for ns in module.namespaces %}_{{ ns|upper }}{% endfor %}_H
 
 #include "t/Class.h"
 #include "t/CoreFunction.h"
@@ -10,8 +10,11 @@
 
 namespace modules
 {
-   class {{ module.name }}
-   {
+   {% for ns in module.namespaces %}{% if not forloop.last %}
+   namespace {{ ns }} {
+   {% else %}
+   class {{ ns }} {
+   {% endif%}{% endfor %}
       {% for type in module.types %}
       {% for method in type.methods %}
       public: static t::Object* {{ method.name }}(vm::Engine* engine, t::Object* self, int argc, t::Object** argv)
@@ -74,7 +77,11 @@ namespace modules
          t::Object::drop({{type.object}});
          {% endfor %}
       }
+   {% for ns in module.namespaces %}{% if forloop.first %}
    };
+   {% else %}
+   }
+   {% endif%}{% endfor %}
 }
 
 #endif{% endautoescape %}

@@ -11,6 +11,7 @@ class XModule:
       self.name = ""
       self.types = []
       self.includes = []
+      self.namespaces = []
 
    def load(self, file_path):
       doc = xml.dom.minidom.parse(file_path)
@@ -18,6 +19,7 @@ class XModule:
 
       if n_ns.attributes.has_key("name"):
          self.name = n_ns.attributes["name"].childNodes[0].nodeValue
+         self.namespaces = self.name.split(".")
          self.id = self.name.upper()
 
       for n_node in n_ns.childNodes:
