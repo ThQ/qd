@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Object">
+<module name="core.Object">
    <include path="t/Object.h" />
    <include path="t/Function.h" />
    <include path="t/Int.h" />

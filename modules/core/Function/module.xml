@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Function">
+<module name="core.Function">
    <include path="t/Exception.h" />
 
    <type name="core.BadArgumentTypeException" object="t::tBAD_ARGUMENT_TYPE_EXCEPTION" parent="t::tEXCEPTION" />

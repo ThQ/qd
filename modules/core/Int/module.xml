@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Int">
+<module name="core.Int">
    <include path="t/Bool.h" />
    <include path="t/Int.h" />
 

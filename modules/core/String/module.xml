@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="String">
+<module name="core.String">
    <include path="t/String.h" />
 
    <type name="core.String" object="t::tSTRING" parent="t::tOBJECT" />

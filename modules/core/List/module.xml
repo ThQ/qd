@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="List">
+<module name="core.List">
    <include path="t/CoreFunction.h" />
    <include path="t/List.h" />
-   <include path="vm/Engine.h" />
 
    <type name="core.List" object="t::tLIST" parent="t::tOBJECT">
 

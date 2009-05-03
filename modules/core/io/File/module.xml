@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Int">
+<module name="core.io.File">
    <include path="t/File.h" />
 
    <type name="core.io.FileReader" object="t::tFILE" parent="t::tOBJECT">

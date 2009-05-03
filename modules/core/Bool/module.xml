@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Bool">
+<module name="core.Bool">
    <include path="t/Bool.h" />
 
    <type name="core.Bool" object="t::tBOOL" parent="t::tOBJECT">

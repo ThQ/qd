@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Exception">
+<module name="core.Exception">
    <include path="t/Exception.h" />
 
    <type name="core.Exception" object="t::tOBJECT" parent="t::tOBJECT" />

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<module name="Map">
+<module name="core.Map">
    <include path="t/Map.h" />
 
    <type name="core.Map" object="t::tMAP" parent="t::tOBJECT" />
