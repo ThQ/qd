@@ -20,7 +20,7 @@
 
    <opcode name="call_stack" char=".">
       <body><![CDATA[
-         t::Object** result_obj;
+         t::Object* result_obj;
          opc->argc = 1;
          argv[0] = heap.pick_last_and_pop();
          heap.pop();
