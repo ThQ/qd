@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 
-<namespace name="stack" full-name="core.stack" char="S">
+<namespace name="stack" full-name="vm.stack" char="S">
    <include src="t/Int.h" />
 
    <opcode name="duplicate" char="d">
@@ -53,7 +53,7 @@
          printf("Stack\n");
          for(ULong i = 0 ; i < heap.item_count ; ++ i)
          {
-            Object* obj = heap.items[i];
+            t::Object* obj = heap.items[i];
             printf("    > $%lu @%lu\n", (heap.item_count - i - 1), (ULong)obj);
             printf("      type: %s\n", ((t::Class*)obj->cls)->name.c_str());
             printf("      references: %d\n", obj->references);
