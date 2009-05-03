@@ -6,17 +6,17 @@
    <opcode name="append__s" char="n">
       <description>Appends a string to the string on top of the stack.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" name="string_to_append" />
+         <parameter index="0" type="t::tSTRING" name="string_to_append" />
       </parameters>
       <body>
-         svm::Object* s = heap.get(0);
-         SVM_PICK(s);
+         t::Object* s = heap.get(0);
+         t::Object::pick(s);
          heap.pop();
-         svm::Object* new_s = svm::String::join(s, argv[0]);
+         t::Object* new_s = t::String::join(s, argv[0]);
          heap.append(new_s);
-         SVM_DROP(s);
+         t::Object::drop(s);
       </body>
-      <stack after="concat_string @svm::String" />
+      <stack after="concat_string @t::String" />
       <example>
          -- MAIN
          s:push__s "Look "
@@ -28,52 +28,52 @@
    <opcode name="append_char__si" char="c">
       <description>Appends a char to a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" name="base_string" />
-         <parameter index="1" type="svm::int_type" name="char_to_append" />
+         <parameter index="0" type="t::tSTRING" name="base_string" />
+         <parameter index="1" type="t::tINT" name="char_to_append" />
       </parameters>
       <body>
-         svm::Object* obj = svm::String::append(argv[0], (char)((svm::Int*)argv[0])->value);
+         t::Object* obj = t::String::append(argv[0], (char)((t::Int*)argv[0])->value);
          heap.append(obj);
       </body>
-      <stack after="concat_string @svm::String" />
+      <stack after="concat_string @t::String" />
    </opcode>
 
    <opcode name="find__ss" char="f">
       <description>Looks for a substring in a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" name="base_string" />
-         <parameter index="1" type="svm::string_type" name="string_to_find" />
+         <parameter index="0" type="t::tSTRING" name="base_string" />
+         <parameter index="1" type="t::tSTRING" name="string_to_find" />
       </parameters>
       <body>
-         heap.append(svm::String::find(argv[0], argv[1], svm::Int::build((long int)0)));
+         heap.append(t::String::find(argv[0], argv[1], t::Int::build((long int)0)));
       </body>
-      <stack after="position_of_the_substring @svm::Integer" />
+      <stack after="position_of_the_substring @t::Integer" />
    </opcode>
 
    <!--
    <opcode name="each__sB" char="e">
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" />
-         <parameter index="1" type="svm::string_type" />
+         <parameter index="0" type="t::tSTRING" />
+         <parameter index="1" type="t::tSTRING" />
      </parameters>
      <body><![CDATA[
       String* base = ((String*)argv[0]);
-      SVM_PICK(argv[0]);
+      t::Object::pick(argv[0]);
       Block* cblock = this->get_block(((String*)argv[1])->value);
-      SVM_PICK(cblock);
+      t::Object::pick(cblock);
       if (cblock != NULL)
       {
          size_t len = base->value.length();
          for (size_t i = 0 ; i < len ; ++i)
          {
-            svm::Object* c = svm::String::build((char)base->value.at(i));
+            t::Object* c = t::String::build((char)base->value.at(i));
             cblock->heap.clear();
             cblock->heap.append(c);
             this->run_block(cblock, false);
          }
       }
-      SVM_DROP(cblock);
-      SVM_DROP(argv[0]);
+      t::Object::drop(cblock);
+      t::Object::drop(argv[0]);
      ]]></body>
    </opcode>
    -->
@@ -81,23 +81,23 @@
    <opcode name="get_item_at__si" char="C">
       <description>Gets a character from a string.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" name="base_string" />
+         <parameter index="0" type="t::tSTRING" name="base_string" />
          <parameter index="1" type="svm::integer_type" name="position" />
       </parameters>
       <body>
-         heap.append(svm::String::get_character(argv[0], argv[1]));
+         heap.append(t::String::get_character(argv[0], argv[1]));
       </body>
-      <stack after="one_char_long_string @svm::String" />
+      <stack after="one_char_long_string @t::String" />
    </opcode>
 
    <opcode name="equals__ss" char="=">
       <description>Compares two strings.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" name="string1"  />
-         <parameter index="1" type="svm::string_type" name="string2" />
+         <parameter index="0" type="t::tSTRING" name="string1"  />
+         <parameter index="1" type="t::tSTRING" name="string2" />
       </parameters>
       <body>
-         heap.append(svm::String::equals(argv[0], argv[1]));
+         heap.append(t::String::equals(argv[0], argv[1]));
       </body>
       <stack after="are_those_two_strings_equal @svm::Bool" />
    </opcode>
@@ -107,26 +107,26 @@
       <parameters count="0" />
       <body>
          Object* s1 = heap.get(0);
-         SVM_PICK(s1);
+         t::Object::pick(s1);
          Object* s2 = heap.get(1);
-         SVM_PICK(s2);
-         heap.replace(2, svm::String::equals(s1, s2));
-         SVM_DROP(s2);
-         SVM_DROP(s1);
+         t::Object::pick(s2);
+         heap.replace(2, t::String::equals(s1, s2));
+         t::Object::drop(s2);
+         t::Object::drop(s1);
       </body>
-      <stack before="string1 @svm::String|string2 @svm::String" after="are_those_two_strings_equal @svm::Bool" />
+      <stack before="string1 @t::String|string2 @t::String" after="are_those_two_strings_equal @svm::Bool" />
    </opcode>
 
    <opcode name="join_" char="j">
       <description>Joins several strings.</description>
       <parameters minimum-count="1" />
       <body><![CDATA[
-         svm::Object* obj = svm::String::build();
+         t::Object* obj = t::String::build();
          for (ULong j = 0 ; j < opc->argc ; ++j)
          {
-            if (this->check_arguments(1, argv[j], svm::string_type))
+            if (this->check_arguments(1, argv[j], t::tSTRING))
             {
-               svm::String::append(obj, argv[j]);
+               t::String::append(obj, argv[j]);
             }
             else
             {
@@ -140,14 +140,14 @@
    <opcode name="join__ss" char="+">
       <description>Joins two strings.</description>
       <parameters count="2">
-         <parameter index="0" type="svm::string_type" name="string1" />
-         <parameter index="1" type="svm::string_type" name="string2" />
+         <parameter index="0" type="t::tSTRING" name="string1" />
+         <parameter index="1" type="t::tSTRING" name="string2" />
       </parameters>
       <body>
-         svm::Object* obj = svm::String::join(argv[0], argv[1]);
+         t::Object* obj = t::String::join(argv[0], argv[1]);
          heap.append(obj);
       </body>
-      <stack after="result_string @svm::String" />
+      <stack after="result_string @t::String" />
    </opcode>
 
    <opcode name="length" char="L">
@@ -155,46 +155,46 @@
       <parameters count="0" />
       <body>
          Object* s = heap.get(0);
-         SVM_PICK(s);
+         t::Object::pick(s);
          heap.pop();
-         heap.append(svm::String::get_length(s));
-         SVM_DROP(s);
+         heap.append(t::String::get_length(s));
+         t::Object::drop(s);
       </body>
-      <stack before="string @svm::String" after="string @svm::String|string_length @svm::Integer" />
+      <stack before="string @t::String" after="string @t::String|string_length @t::Integer" />
    </opcode>
 
    <opcode name="lower_case" char="l">
       <description>Makes a copy of a string with all characters converted to lower-case.</description>
       <parameters count="0" />
       <body>
-         svm::Object* base = heap.get(0);
-         heap.replace_at(0, svm::String::lower(base));
+         t::Object* base = heap.get(0);
+         heap.replace_at(0, t::String::lower(base));
       </body>
-      <stack before="string @svm::String" after="lower_case_string @svm::String" />
+      <stack before="string @t::String" after="lower_case_string @t::String" />
    </opcode>
 
    <opcode name="lpad__sis" char="W">
       <description>Left pads a string with another string.</description>
       <parameters count="3">
-         <parameter index="0" type="svm::string_type" name="base_string" />
-         <parameter index="1" type="svm::int_type" name="new_length" />
-         <parameter index="2" type="svm::string_type" name="pad_string" />
+         <parameter index="0" type="t::tSTRING" name="base_string" />
+         <parameter index="1" type="t::tINT" name="new_length" />
+         <parameter index="2" type="t::tSTRING" name="pad_string" />
       </parameters>
       <body>
-         heap.append(svm::String::lpad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
+         heap.append(t::String::lpad(argv[0], ((t::Int*)argv[1])->value, argv[2]));
       </body>
-      <stack after="joined_string @svm::String" />
+      <stack after="joined_string @t::String" />
    </opcode>
 
    <opcode name="ord" char="o">
       <description>Gets the ascii code of the first character of a string.</description>
       <parameters count="0" />
       <body>
-         svm::Object* obj = NULL;
-         svm::String* base = (svm::String*)heap.get(0);
+         t::Object* obj = NULL;
+         t::String* base = (t::String*)heap.get(0);
          if (base->value.length() >= 1)
          {
-            obj = svm::Int::build((long)(char)base->value[0]);
+            obj = t::Int::build((long)(char)base->value[0]);
          }
          else
          {
@@ -204,35 +204,35 @@
          ASSERT_NOT_NULL(obj);
          heap.replace_at(0, obj);
       </body>
-      <stack before="string @svm::String" after="string @svm:::String|integer @svm::Integer" />
+      <stack before="string @t::String" after="string @svm:::String|integer @t::Integer" />
    </opcode>
 
    <opcode name="pad__sis" char="w">
       <description>Pads a string with another string.</description>
       <parameters count="3">
-         <parameter index="0" type="svm::string_type" name="base_string" />
-         <parameter index="1" type="svm::int_type" name="new_length" />
-         <parameter index="2" type="svm::string_type" name="pad_string" />
+         <parameter index="0" type="t::tSTRING" name="base_string" />
+         <parameter index="1" type="t::tINT" name="new_length" />
+         <parameter index="2" type="t::tSTRING" name="pad_string" />
       </parameters>
       <body>
-         heap.append(svm::String::pad(argv[0], ((svm::Int*)argv[1])->value, argv[2]));
+         heap.append(t::String::pad(argv[0], ((t::Int*)argv[1])->value, argv[2]));
       </body>
    </opcode>
 
    <opcode name="prepend__s" char="Q">
       <description>Prepends a string to the string on top of the stack.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" name="string_to_prepend" />
+         <parameter index="0" type="t::tSTRING" name="string_to_prepend" />
       </parameters>
       <body>
-         svm::Object* s = heap.get(0);
-         SVM_PICK(s);
+         t::Object* s = heap.get(0);
+         t::Object::pick(s);
          heap.pop();
-         svm::Object* new_s = svm::String::join(argv[0], s);
+         t::Object* new_s = t::String::join(argv[0], s);
          heap.append(new_s);
-         SVM_DROP(s);
+         t::Object::drop(s);
       </body>
-      <stack before="base_string @svm::String" after="base_string @svm::String|new_string @svm::String" />
+      <stack before="base_string @t::String" after="base_string @t::String|new_string @t::String" />
       <example>
          s:push__s " Ma!"
          s:prepend__s "Look"
@@ -244,17 +244,17 @@
       <description>Prints the last element of the stack as a string.</description>
       <parameters count="0" />
       <body>
-         svm::String::print(heap.get(0));
+         t::String::print(heap.get(0));
       </body>
    </opcode>
 
    <opcode name="print__s" char="r">
       <description>Prints a string.</description>
       <parameters count="0">
-         <parameter index="0" type="svm::string_type" />
+         <parameter index="0" type="t::tSTRING" />
       </parameters>
       <body>
-         svm::String::print(argv[0]);
+         t::String::print(argv[0]);
       </body>
    </opcode>
 
@@ -262,29 +262,29 @@
       <description>Prints on a new line the last elements of the stack as a string.</description>
       <parameters count="0" />
       <body>
-         svm::String::print_line(heap.get(0));
+         t::String::print_line(heap.get(0));
       </body>
    </opcode>
 
    <opcode name="print_line__s" char="R">
       <description>Prints a string on a new line.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" name="line_to_print" />
+         <parameter index="0" type="t::tSTRING" name="line_to_print" />
       </parameters>
       <body>
-         svm::String::print_line(argv[0]);
+         t::String::print_line(argv[0]);
       </body>
    </opcode>
 
    <opcode name="push__s" char="#">
       <description>Pushes a string on top of the stack.</description>
       <parameters count="1">
-         <parameter index="0" type="svm::string_type" name="string_to_push" />
+         <parameter index="0" type="t::tSTRING" name="string_to_push" />
       </parameters>
       <body>
          heap.append(argv[0]);
       </body>
-      <stack after="string_pushed @svm::String" />
+      <stack after="string_pushed @t::String" />
       <example>
          s:push__s "Look ma!" # Pushes "Look ma!" onto the stack
       </example>
@@ -294,10 +294,10 @@
       <description>Makes a copy of a string with all characters' case swaped.</description>
       <parameters count="0" />
       <body>
-         svm::Object* base = heap.get(0);
-         heap.replace_at(0, svm::String::swap_case(base));
+         t::Object* base = heap.get(0);
+         heap.replace_at(0, t::String::swap_case(base));
       </body>
-      <stack before="base_string @svm::String" after="swaped_case_string @svm::String" />
+      <stack before="base_string @t::String" after="swaped_case_string @t::String" />
       <example>
          s:push__s "AAbbCCdd"
          s:swap_case
@@ -309,10 +309,10 @@
       <description>Replaces the last element of the stack with a copy of itself with all letters converted to upper-case.</description>
       <parameters count="0" />
       <body>
-         svm::Object* base = heap.get(0);
-         heap.replace_at(0, svm::String::upper(base));
+         t::Object* base = heap.get(0);
+         heap.replace_at(0, t::String::upper(base));
       </body>
-      <stack before="string @svm::String" after="upper_case_string @svm::String" />
+      <stack before="string @t::String" after="upper_case_string @t::String" />
    </opcode>
 
 </namespace>
