@@ -75,7 +75,7 @@ namespace NS_VM
    }
 
    void
-   FieldTable::set_fields(ULong count, Variable** fields)
+   FieldTable::set_fields(ULong count, t::Variable** fields)
    {
       if(count > this->field_room)
       {

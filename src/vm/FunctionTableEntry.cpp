@@ -34,7 +34,7 @@ namespace NS_VM
       for(UInt i = 0 ; i < func->arguments_count ; ++i)
       {
          t::Variable::assert(func->arguments[i]);
-         t::Variable::assert(((Variable*)func->arguments[i])->object_type);
+         t::Variable::assert(((t::Variable*)func->arguments[i])->object_type);
 
          t::Variable* func_var_arg = (t::Variable*)func->arguments[i];
          this->signature += ",";
