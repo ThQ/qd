@@ -34,10 +34,10 @@
       <description>Prints the class name of the last element of the stack.</description>
       <parameters count="0" />
       <body><![CDATA[
-         svm::Object* arg = heap.get(0);
-         SVM_ASSERT_NOT_NULL(arg);
+         t::Object* arg = heap.get(0);
+         //SVM_ASSERT_NOT_NULL(arg);
          t::Class* cls = (t::Class*)arg->cls;
-         SVM_ASSERT_NOT_NULL(cls);
+         //SVM_ASSERT_NOT_NULL(cls);
          t::Object::pick(cls);
          printf("%s", cls->name.c_str());
          t::Object::drop(cls);
