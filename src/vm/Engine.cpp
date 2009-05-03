@@ -221,7 +221,7 @@ namespace NS_VM
             t::Object* given_type = argv[i]->cls;
             t::Object::pick(given_type);
 
-            t::Variable* func_var_arg = ((t::Variable*)f->arguments[i])->object_type;
+            t::Class* func_var_arg = ((t::Variable*)f->arguments[i])->object_type;
             result = t::Class::is_child_of(argv[i]->cls, func_var_arg);
             if (result != true)
             {
