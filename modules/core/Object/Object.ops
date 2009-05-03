@@ -93,14 +93,14 @@
    <opcode name="print" char="p">
       <parameters count="1" />
       <body>
-         t::Object*::print(argv[0]);
+         t::Object::print(argv[0]);
       </body>
    </opcode>
 
    <opcode name="print_line" char="P">
       <parameters count="1" />
       <body>
-         t::Object*::print_line(argv[0]);
+         t::Object::print_line(argv[0]);
       </body>
    </opcode>
 </namespace>
