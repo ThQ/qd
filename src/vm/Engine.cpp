@@ -369,7 +369,7 @@ namespace NS_VM
       {
          //INTERNAL("BLOCK LOOP\n");
          opc = block->get(i);
-         t::Object::assert_not_null(opc);
+         // t::Object::assert_not_null(opc);
          t::Object** args;
          //INTERNAL("Make empty object array\n");
          make_empty_object_array(args, opc->argc);
@@ -475,7 +475,7 @@ namespace NS_VM
                t::Class* e_cls = (t::Class*)this->current_block->exception->cls;
                t::Object::assert_not_null(e_cls);
                printf("[Uncaught exception]\n%s: ", e_cls->name.c_str());
-               t::UnicodeString::print((t::UnicodeString*)e->message);
+               t::String::print((t::String*)e->message);
                printf("\n");
                this->build_traceback();
                i = block->count();
