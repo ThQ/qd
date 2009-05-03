@@ -10,7 +10,8 @@
    </opcode>
 
    <opcode name="nop" char=";">
-      <body />
+      <body>
+      </body>
    </opcode>
 
    <opcode name="receive" char="r">

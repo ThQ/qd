@@ -60,11 +60,11 @@
             // [references=%d]", (heap.item_count - i - 1), ((t::Class*)obj->cls)->name.c_str(), (ULong)obj, obj->references);
             if (obj->cls == t::tSTRING)
             {
-               printf("      value: \"%s\"\n", ((svm::String*)obj)->value.c_str());
+               printf("      value: \"%s\"\n", ((t::String*)obj)->value.c_str());
             }
             else if (obj->cls == t::tINT)
             {
-               printf("      value: %ld\n", ((svm::Int*)obj)->value);
+               printf("      value: %ld\n", ((t::Int*)obj)->value);
             }
             else if (obj->cls == t::tBOOL)
             {

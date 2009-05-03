@@ -67,8 +67,8 @@
          ULong field_at = ((t::Int*)argv[1])->value;
          if (field_at >= 0 && field_at < argv[0]->field_count)
          {
-            t::Object** obj = argv[0]->get_field(field_at);
-            this->current_block->heap.append(obj);
+            t::Object* obj = argv[0]->get_field(field_at);
+            heap.append(obj);
          }
          else
          {
