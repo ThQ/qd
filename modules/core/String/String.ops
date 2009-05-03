@@ -106,9 +106,9 @@
       <description>Compares two strings.</description>
       <parameters count="0" />
       <body>
-         Object* s1 = heap.get(0);
+         t::Object* s1 = heap.get(0);
          t::Object::pick(s1);
-         Object* s2 = heap.get(1);
+         t::Object* s2 = heap.get(1);
          t::Object::pick(s2);
          heap.replace(2, t::String::equals(s1, s2));
          t::Object::drop(s2);
@@ -154,7 +154,7 @@
       <description>Gets the length of a string.</description>
       <parameters count="0" />
       <body>
-         Object* s = heap.get(0);
+         t::Object* s = heap.get(0);
          t::Object::pick(s);
          heap.pop();
          heap.append(t::String::get_length(s));
