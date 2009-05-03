@@ -27,7 +27,7 @@
       </parameters>
       <body>
          t::Block* block;
-         if (argv[0] == svm::True)
+         if (argv[0] == t::gTRUE)
          {
             block = this->get_block(((t::String*)argv[1])->value);
             this->import_swap(block);
@@ -81,7 +81,7 @@
          <parameter index="0" type="t::tINT" name="opcode_pos" />
       </parameters>
       <body>
-         if (heap.get(0) == svm::False)
+         if (heap.get(0) == t::gFALSE)
          {
             i = ((t::Int*)argv[0])->value;
          }
