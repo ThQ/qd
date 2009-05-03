@@ -33,7 +33,7 @@
          t::Object::pick(return_type);
 
          t::Block* block = this->get_block(((t::String*)argv[3])->value);
-         SVM_ASSERT_NOT_NULL(block);
+         //SVM_ASSERT_NOT_NULL(block);
 
          t::UserFunction* func = new t::UserFunction();
          t::Object::pick(func);
@@ -47,7 +47,7 @@
             for (ULong i = 4, j = 0 ; i < opc->argc ; i += 2, ++j)
             {
                t::String::assert(argv[i]);
-               SVM_ASSERT_NOT_NULL(argv[i + 1]);
+               // SVM_ASSERT_NOT_NULL(argv[i + 1]);
 
                t::Object* arg_cls = (t::Object*)this->classes.get(((t::String*)argv[i + 1])->value);
 
@@ -97,7 +97,7 @@
          <parameter index="2" type="t::tSTRING" comment="Field type" />
       </parameters>
       <body>
-         long class_index = this->classes.find((tsvm::String*)argv[0])->value);
+         long class_index = this->classes.find((t::String*)argv[0])->value);
          if (class_index != -1)
          {
             long type_index = this->classes.find(((t::String*)argv[2])->value);
