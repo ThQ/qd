@@ -47,6 +47,9 @@ class XModule:
       for n_child in n_node.childNodes:
          if n_child.localName == "method":
             self.parse_type_method_node(type, n_child)
+
+      if type.object == type.parent_object:
+         logging.error("<" + type.vm_name + "> cannot set object <" + type.object + "> and be a child of same <" + type.parent_object + ">.")
       self.types.append(type)
 
    def parse_type_method_node(self, type, n_node):
