@@ -73,7 +73,7 @@ bin_PROGRAMS="svm"
 svm_SOURCES=($dRoot/src/main.cpp ${base_SOURCES[*]})
 svm_CXXFLAGS="-I$dBuild/include -I$dRoot/include -Wall"
 svm_LDADD="-licui18n -licuuc -licudata"
-svm_CXX="g++ $svm_CXXFLAGS $svm_LDADD"
+svm_CXX="g++ $svm_CXXFLAGS $svm_LDADD -DPACKAGE_NAME=\"Qd\" -DPACKAGE_AUTHOR_NAME=\"ThomasQuemard\" -DPACKAGE_VERSION=\""`cat $dRoot/VERSION`"\""
 svm_OUTPUT="$dBuild/svm"
 
 debug_CXX="$svm_CXX -pg -O0 -D __DEBUG__=1 -D USE_COLORS=1"
