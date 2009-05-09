@@ -76,7 +76,7 @@ namespace NS_TYPE
          if (object->cls != type)
          {
             FATAL(
-                  "<Object @%lu> is of type <%lu>, not <%lu> as expected.",
+                  "<Object @%lu> is of type <@%lu>, not <@%lu> as expected.",
                   (ULong)object,
                   (ULong)object->cls,
                   (ULong)type
