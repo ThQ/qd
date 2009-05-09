@@ -15,6 +15,7 @@ vm/Return
 core/List
 core/Array
 core/Map
+core/Variable
 core/Function
 #system/io/File
 vm/Global
