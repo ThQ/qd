@@ -100,6 +100,11 @@ namespace NS_VM
       public: static void make_empty_object_array(t::Object**& obj, UInt count);
 
       /**
+       * Prints information about the engine to the console.
+       */
+      public: static void print_version();
+
+      /**
        * Runs each opcode of a <block>.
        */
       public: void run_block(t::Block* block, bool add_to_stack = true);

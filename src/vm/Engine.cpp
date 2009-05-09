@@ -312,6 +312,16 @@ namespace NS_VM
       }
    }
 
+   void
+   Engine::print_version()
+   {
+      printf("%s v%s\n\n", PACKAGE_NAME, PACKAGE_VERSION);
+      printf("name: %s\n", PACKAGE_NAME);
+      printf("version: %s\n", PACKAGE_VERSION);
+      printf("author: %s\n", PACKAGE_AUTHOR_NAME);
+
+   }
+
    // -----------------------------------------
    // This is a placeholder. DO NOT REMOVE!
    // -----------------------------------------
