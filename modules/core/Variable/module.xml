@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+
+<module name="core.Variable">
+   <include path="t/Variable.h" />
+
+   <type name="core.Variable" object="t::tVARIABLE" parent="t::tOBJECT" />
+</module>
+
