@@ -9,6 +9,10 @@
 #error "PACKAGE_NAME is not defined."
 #endif
 
+#ifndef PACKAGE_AUTHOR_NAME
+#error "PACKAGE_AUTHOR_NAME is not defined."
+#endif
+
 // -------------------------
 // NAMESPACES
 // -------------------------
