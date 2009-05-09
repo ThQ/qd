@@ -30,11 +30,18 @@ namespace NS_TYPE
 {
    extern T_OBJECT* tFLOAT;
 
+   /**
+    * An internal representation of a float.
+    */
    class Float : public T_OBJECT
    {
       public: long double value;
 
       public: Float();
+
+      /**
+       * Builds a t::Float from a c long double <d>.
+       */
       public: static T_OBJECT* build(long double d);
    };
 }
