@@ -33,12 +33,18 @@ namespace modules
 
             // ({{ forloop.counter }}/{{ type.methods|length}}) {{type.vm_name}}.{{ method.vm_name }} ({{ method.signature }})
                INTERNAL("<t::Function|{{type.vm_name}}.{{method.vm_name}}({{method.signature}}) : declaring...");
+               ASSERT({{ method.return_type }} != NULL, "{{ method.return_type }} must NOT be NULL.");
+
          {% for parameter in method.parameters %}
+               ASSERT({{ parameter.1}} != NULL, "{{ parameter.1}} must NOT be NULL.");
                t::Object* f__{{ method.vm_name }}_param{{ forloop.counter0 }} = t::Variable::build({{parameter.1}}, "{{ parameter.0 }}");
+               ASSERT(f__{{ method.vm_name }}_param{{ forloop.counter0 }} != NULL, "f__{{ method.vm_name }}_param{{ forloop.counter0 }} must NOT be NULL.");
+               t::Variable::assert(f__{{ method.vm_name }}_param{{ forloop.counter0 }});
                t::Object::pick (f__{{ method.vm_name }}_param{{ forloop.counter0 }});
          {% endfor %}
 
                t::Function* function__{{ method.vm_name }} = (t::Function*)t::CoreFunction::build("{{ method.vm_name }}", (long int){{ method.vm_name }}, {{ method.return_type }});
+               ASSERT(function__{{ method.vm_name}} != NULL, "function__{{ method.vm_name}} must NOT be NULL.");
                t::Function::assert(function__{{ method.vm_name }});
                t::Object::pick(function__{{ method.vm_name }});
                {% if method.has_parameters %}
@@ -46,7 +52,7 @@ namespace modules
                {% endif %}
                engine.classes.declare_method({{ type.object }}, (t::Object*)function__{{ method.vm_name}});
                t::Object::drop(function__{{ method.vm_name }});
-               INTERNAL_APD("OK");
+               INTERNAL_APD(" OK\n");
          {% endfor %}
          {% endfor %}
       }
