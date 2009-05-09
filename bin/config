@@ -59,6 +59,7 @@ base_utils_SOURCES=( \
 $dRoot/src/util/Class.cpp \
 $dRoot/src/util/Int.cpp \
 $dRoot/src/util/List.cpp \
+$dRoot/src/util/Object.cpp \
 $dRoot/src/util/String.cpp \
 )
 
