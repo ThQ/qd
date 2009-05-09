@@ -11,28 +11,6 @@
 #include "t/String.h"
 #include "t/Variable.h"
 
-#ifdef __ALLOW_SVM_ASSERTIONS__
-   #define __SVM_ASSERT_FUNCTION(f) \
-   if(f->cls != t::function_type) \
-   { \
-      FATAL( \
-            "<svm::T_OBJECT*(@%ld).type(@%ld) != <svm::function_type(@%ld)>.\n", \
-            (long int)(f), \
-            (long int)f->cls, \
-            (long int)t::function_type \
-     ); \
-     abort(); \
-   }
-#else
-   #define __SVM_ASSERT_FUNCTION(f)
-#endif
-
-#ifdef __ALLOW_SVM_CHECKS__
-   #define __SVM_CHECK_FUNCTION(f) if(f->cls != t::function_type){WARNING("Bad type given, expected system.Function.\n");}
-#else
-   #define __SVM_CHECK_FUNCTION(f)
-#endif
-
 namespace NS_TYPE
 {
    extern T_OBJECT* tFUNCTION;
@@ -63,6 +41,10 @@ namespace NS_TYPE
       #ifdef _DEBUG_
       public: void assert_validity();
       #endif
+
+      /**
+       * Builds a string from a function <func>.
+       */
       public: static T_OBJECT* cast_to_string(T_OBJECT* func);
 
       /*
@@ -73,9 +55,24 @@ namespace NS_TYPE
          return T_OBJECT::check_type(obj, NS_TYPE::tFUNCTION);
       }
 
+      /**
+       * Builds a string from a function <func> and prints it to the console.
+       */
       public: static void print(T_OBJECT* func);
+
+      /**
+       * Sets the arguments.
+       */
       public: void set_arguments(UInt count, ...);
+
+      /**
+       * Sets the arguments.
+       */
       public: void set_arguments(UInt count, T_OBJECT** args);
+
+      /**
+       * Sets the return type to <type>.
+       */
       public: void set_return_type(T_OBJECT* type);
    };
 }
