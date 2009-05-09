@@ -66,14 +66,37 @@ namespace NS_TYPE
          return true;
       }
 
+      /**
+       * Builds an empty Class.
+       */
       public: static T_OBJECT* build();
+
+      /**
+       * Builds a class named <name>.
+       */
       public: static T_OBJECT* build(std::string name);
+
+      /**
+       * Builds a class named <name>.
+       */
       public: static T_OBJECT* build(const char* name);
+
+      /**
+       * Builds a class named <name>, and whose parent class is <parent_class>.
+       */
       public: static T_OBJECT* build(const char* name, T_OBJECT* parent_class);
+
+      /**
+       * Builds a class named <name>, and whose parent class is <parent_class>.
+       */
       public: static T_OBJECT* build(std::string name, T_OBJECT* parent_class);
+
+      /**
+       * Builds a class whose parent class is <parent_class>.
+       */
       public: static T_OBJECT* build(T_OBJECT* parent_class);
 
-      /*
+      /**
        * Checks if an object is of type t::Class.
        */
       public: inline static bool check(T_OBJECT* obj)
@@ -81,7 +104,14 @@ namespace NS_TYPE
          return true;
       }
 
+      /**
+       * Checks if <cls> is a child of <parent_class>.
+       */
       public: static bool is_child_of(T_OBJECT* cls, T_OBJECT* parent_class);
+
+      /**
+       * Sets the parent class.
+       */
       public: void set_parent_class(T_OBJECT* parent_class);
    };
 }
