@@ -8,6 +8,7 @@ namespace NS_TYPE
    Class::Class()
    {
       this->parent_class = NULL;
+      this->name = "";
    }
 
    Class::~Class()
