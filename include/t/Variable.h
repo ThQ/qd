@@ -6,6 +6,7 @@
 #include "t/Class.h"
 #include "t/Object.h"
 #include "t/String.h"
+#include "util/Object.h"
 
 #ifdef __ALLOW_SVM_ASSERTIONS__
    #define __SVM_ASSERT_VARIABLE(v) DEPRECATED(); if(v->cls != NS_TYPE::tVARIABLE){FATAL("Bad type given, expected system.Variable.\n\n");abort();}
@@ -37,7 +38,7 @@ namespace NS_TYPE
        */
       public: inline static void assert(T_OBJECT* obj)
       {
-         return T_OBJECT::assert_type(obj, NS_TYPE::tVARIABLE);
+         return util::Object::assert_type(obj, NS_TYPE::tVARIABLE);
       }
 
       /**
