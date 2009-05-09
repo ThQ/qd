@@ -11,7 +11,7 @@ namespace NS_TYPE
    extern T_OBJECT* tBOOL;
 
    /**
-    * A boolean object to use inside SVM.
+    * A boolean object.
     */
    class Bool : public T_OBJECT
    {
