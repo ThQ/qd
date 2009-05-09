@@ -62,12 +62,14 @@ namespace modules
       {
          {% for type in module.types %}
          {% if type.parent_object %}
+         INTERNAL("{{ type.object }} ({{ type.vm_name }}) < {{ type.parent_object }} : declaring...");
          {{ type.object }} = engine.classes.declare_class("{{ type.vm_name }}", {{ type.parent_object }});
          {% else %}
          {{ type.object }} = engine.classes.declare_class("{{ type.vm_name }}");
          {% endif %}
          t::Class::assert({{ type.object }});
          t::Object::pick({{ type.object }});
+         INTERNAL_APD(" OK\n");
          {% endfor %}
       }
 
