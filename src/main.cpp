@@ -12,7 +12,8 @@ main (int argc, char **argv)
    {
       static struct option long_options[] =
       {
-         {"initialize", no_argument, 0, 'i'}
+         {"initialize", no_argument, 0, 's'},
+         {"info", no_argument, 0, 'i'}
       };
       int option_index = 0;
       c = getopt_long (argc, argv, "", long_options, &option_index);
@@ -24,10 +25,13 @@ main (int argc, char **argv)
 
       switch (c)
       {
-         case 'i':
+         case 's':
             //vm::EngineStarter* is = new vm::EngineStarter();
             //is->setup();
             //is->tear_down();
+            break;
+         case 'i':
+            vm::Engine::print_version();
             break;
 
          default:
