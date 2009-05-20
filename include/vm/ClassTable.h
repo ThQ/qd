@@ -11,6 +11,11 @@
 
 namespace NS_VM
 {
+   /**
+    * A list of all classes declared internally.
+    *
+    * @TODO: Make that a Bn-Tree
+    */
    class ClassTable
    {
       public: ClassTableEntry** items;
@@ -18,16 +23,48 @@ namespace NS_VM
 
       public: ClassTable();
       public: ~ClassTable();
+
+      /**
+       * Append a t::Class to the list.
+       */
       public: void append(t::Class* cls);
+
+      /**
+       * Appends a ClassTableEntry to the list.
+       */
       public: void append(ClassTableEntry* entry);
+
+      /**
+       * Appends a t::Function to a t::Class contained in the list.
+       */
       public: bool append_method_to(t::Class* cls, t::Function* func);
       #ifdef _DEBUG_
       public: void assert_validity();
       #endif
-      public: unsigned long count();
+
+
+      /**
+       * Return how many classes are stored in this list.
+       */
+      public: ULong count();
+
       //public: bool declare_fields(t::Class* cls, unsigned long field_count, svm::Variable** fields);
+
+      /**
+       * Create a new class named <class_name> and store it in this list.
+       */
       public: t::Object* declare_class(const char* class_name);
+
+      /**
+       * Create a new class named <class_name>, whose parent is <parent_class>,
+       * and store it in this list.
+       */
       public: t::Object* declare_class(const char* class_name, t::Object* parent_class);
+
+      /**
+       * Create a new class named <class_name>, whose parent name is
+       * <parent_class_name>, and store it in this list.
+       */
       public: t::Object* declare_class(const char* class_name, const char* parent_class_name);
       public: t::Object* declare_method(t::Class* cls, t::CoreFunction* func);
       public: t::Object* declare_method(t::Class* cls, t::UserFunction* func);
