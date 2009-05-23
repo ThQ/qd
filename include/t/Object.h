@@ -37,11 +37,14 @@
    if (((Object*)object)->references != ref_count) \
    { FATAL("<Object*(@%lu)>.references must be <%d>, not <%d>.", (ULong)object, ref_count, ((Object*)object)->references); abort(); }
 
-
 #define SVM_OBJECT_FIELDS_STEP 5
 
 namespace NS_TYPE
 {
+
+   /**
+    * Objects for the VM.
+    */
    class Object
    {
       public: Object* cls;
@@ -56,6 +59,8 @@ namespace NS_TYPE
 
       /**
        * Asserts an object is not NULL.
+       *
+       * @param object An object to check.
        */
       public: inline static void assert_not_null(Object* object)
       {
@@ -67,8 +72,10 @@ namespace NS_TYPE
       }
 
       /**
-       * Asserts  an object is of type <type>.
-       * Exits the application if not.
+       * Asserts an object is of type <type>. Exits the application otherwise.
+       *
+       * @param object An object to check.
+       * @param type A type to assert.
        */
       public: inline static void assert_type(Object* object, Object* type)
       {
@@ -88,18 +95,26 @@ namespace NS_TYPE
 
       /**
        * Builds an array of object of length argc.
+       *
+       * @param argc How many objects.
+       * @return An [Object] array of length [argc].
        */
       public: static Object** build_array(int argc, ...);
 
       /**
        * Compares two objects.
-       * \return 0 if they are the same object, -1 if obj1 < obj2 and 1 otherwise
+       *
+       * @param obj1 Object 1.
+       * @param obj2 Object 2.
+       * @return 0 if they are the same object, -1 if obj1 < obj2 and 1 otherwise
        */
       public: static Short compare_to(Object* obj1, Object* obj2);
 
       /**
-       * Checks if an object is of type <type>.
-       * \return True if <object> is of type <type>
+       * Checks if an object is of type [type].
+       * @param object An object to check.
+       * @param type The type to check.
+       * @return true if [object] is of type [type].
        */
       public: static bool check_type(Object* object, Object* type)
       {
@@ -121,12 +136,18 @@ namespace NS_TYPE
 
       /**
        * Decreases the reference count of an object.
+       *
+       * @param obj An object to drop.
+       * @return true if everything went well.
        */
       public: static bool drop(Object* obj);
 
       /**
        * Decreases the reference count of an object after having checking for
        * null references.
+       *
+       * @param obj An object to drop.
+       * @return true if everything went well.
        */
       public: inline static void drop_safe(Object* obj)
       {
@@ -138,18 +159,34 @@ namespace NS_TYPE
 
       /**
        * Gets the value of an object field.
+       *
+       * @param at The index of the field to get.
+       * @return The object in field at [at].
        */
       public: Object* get_field(ULong at);
 
+
+      /**
+       * Checks if an object is null.
+       *
+       * @param obj An object to check.
+       * @return true if [obj] is null.
+       */
       public: static bool is_null(Object* obj);
 
       /**
        * Increases the reference count of an object.
+       *
+       * @param obj An object to pick.
+       * @return true if everything went well.
        */
       public: static bool pick(Object* obj);
 
       /**
        * Increases the reference count of an object.
+       *
+       * @param obj An object to pick.
+       * @return true if everything went well.
        */
       public: inline static bool pick_safe(Object* obj)
       {
@@ -164,19 +201,42 @@ namespace NS_TYPE
 
       /**
        * Prints the string representation of an object.
+       *
+       * @param o An object to print.
        */
       public: static void print(Object* o);
 
       /**
        * Prints on a new line the string representation of an object.
+       *
+       * @param o An object to print.
        */
       public: static void print_line(Object* o);
+
+      /**
+       * Resizes field array.
+       *
+       * @param new_size The new size of the field array.
+       */
       public: void resize_field_array(ULong new_size);
+
+      /**
+       * Resized field array up.
+       */
       public: void resize_fields_up();
+
+      /**
+       * Sets the class of an object.
+       *
+       * @param type The new class.
+       */
       public: void set_class(Object* type);
 
       /**
        * Sets an object's field.
+       *
+       * @param at The index of the field.
+       * @param obj An object to set the field to.
        */
       public: void set_field(ULong at, Object* obj);
    };
