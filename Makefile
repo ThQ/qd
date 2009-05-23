@@ -35,6 +35,11 @@ help:
 clean-build:
 	rm -rf $(BUILD_DIR)/*
 
+doc: doc-source doc-opcodes
+
+doc-source:
+	doxygen Doxyfile
+
 doc-opcodes:
 	rm $(OPCODES_DOC_DIR)/*
 	cd $(script_dir) ; export DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
