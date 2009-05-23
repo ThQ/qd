@@ -16,6 +16,9 @@ namespace NS_TYPE
    extern T_OBJECT* tFUNCTION;
    extern T_OBJECT* tBAD_ARGUMENT_TYPE_EXCEPTION;
 
+   /**
+    * An internal function to the VM.
+    */
    class Function : public T_OBJECT
    {
       //public: const char* signature;
@@ -27,11 +30,20 @@ namespace NS_TYPE
       public: bool is_static;
       public: bool is_user;
 
+      /**
+       * Constructor.
+       */
       public: Function();
+
+      /**
+       * Destructor.
+       */
       public: ~Function();
 
       /**
        * Asserts that an object is of type t::tFUNCTION.
+       *
+       * @param obj An object to check.
        */
       public: inline static void assert(T_OBJECT* obj)
       {
@@ -39,16 +51,24 @@ namespace NS_TYPE
       }
 
       #ifdef _DEBUG_
+      /**
+       * Asserts the validity.
+       */
       public: void assert_validity();
       #endif
 
       /**
        * Builds a string from a function <func>.
+       *
+       * @param func The function to cast to string.
        */
       public: static T_OBJECT* cast_to_string(T_OBJECT* func);
 
       /*
        * Checks if an object is of type t::Function.
+       *
+       * @param obj An object to check.
+       * @return true if [obj] is of type t::Function.
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -57,21 +77,30 @@ namespace NS_TYPE
 
       /**
        * Builds a string from a function <func> and prints it to the console.
+       *
+       * @param func The function to print.
        */
       public: static void print(T_OBJECT* func);
 
       /**
        * Sets the arguments.
+       *
+       * @param count How many arguments are passed.
        */
       public: void set_arguments(UInt count, ...);
 
       /**
        * Sets the arguments.
+       *
+       * @param count How many arguments are passed.
+       * @param args Arguments to set.
        */
       public: void set_arguments(UInt count, T_OBJECT** args);
 
       /**
        * Sets the return type to <type>.
+       *
+       * @type Return type.
        */
       public: void set_return_type(T_OBJECT* type);
    };
