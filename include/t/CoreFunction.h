@@ -5,11 +5,19 @@
 
 namespace NS_TYPE
 {
+   /**
+    * An internal function created internally.
+    */
+
    class CoreFunction : public T_FUNCTION
    {
-      public: unsigned long function_pointer;
+      public: ULong function_pointer;
 
-      public: static CoreFunction* build(const char* name, long int pointer, Object* return_type);
+      /**
+       * Creates a t::CoreFunction object whose name is <name> and return type
+       * is <return_type>, it uses the function pointed by <pointer>.
+       */
+      public: static CoreFunction* build(const char* name, ULong pointer, T_OBJECT* return_type);
    };
 }
 

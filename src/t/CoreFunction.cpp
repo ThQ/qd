@@ -3,7 +3,7 @@
 namespace NS_TYPE
 {
    CoreFunction*
-   CoreFunction::build(const char* name, long pointer, Object* return_type)
+   CoreFunction::build(const char* name, ULong pointer, Object* return_type)
    {
       ASSERT(strlen(name) > 0, "<svm::CoreFunction>.name must be longer than 0 characters.\n");
       ASSERT(pointer != 0, "<svm::CoreFunction> cannot bind a null pointer.\n");
