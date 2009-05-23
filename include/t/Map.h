@@ -4,36 +4,14 @@
 #include "t/Object.h"
 #include "t/String.h"
 
-#ifdef __ALLOW_SVM_ASSERTIONS__
-   #define SVM_ASSERT_MAP(m) \
-   DEPRECATED(); \
-   SVM_ASSERT_NOT_NULL(m); \
-   if (m->cls != NS_TYPE::tMAP) \
-   { \
-      FATAL("Should be of type <system.Map>.\n"); \
-      abort();\
-   }
-#else
-   #define SVM_ASSERT_MAP(m) DEPRECATED();
-#endif
-
-#ifdef __ALLOW_SVM_CHECKS__
-   #define SVM_CHECK_MAP(m) \
-   DEPRECATED(); \
-   SVM_CHECK_NOT_NULL(m); \
-   if (m->cls != t::tMAP) \
-   { \
-      WARNING("Bad type given, expected <system.Map>.\n"); \
-   }
-#else
-   #define SVM_CHECK_MAP(m) DEPRECATED();
-#endif
-
-namespace t
+namespace NS_TYPE
 {
    extern T_OBJECT* tMAP;
 
-   class Map : public Object
+   /**
+    * A map is a list of key-value pairs.
+    */
+   class Map : public T_OBJECT
    {
       public: int length;
       public: T_OBJECT** keys;
@@ -43,6 +21,8 @@ namespace t
 
       /**
        * Asserts that an object is of type t::Map.
+       *
+       * @param obj An object to check.
        */
       public: inline static void assert(T_OBJECT* obj)
       {
@@ -54,16 +34,60 @@ namespace t
 
       /*
        * Checks if an object is of type t::Map.
+       *
+       * @param obj An object to check.
+       * @return true if [obj] is of type t::Map.
        */
       public: inline static bool check(T_OBJECT* obj)
       {
          return T_OBJECT::check_type(obj, NS_TYPE::tMAP);
       }
 
+      /**
+       * Clears a map : Drop every object and resizes the map to zero.
+       *
+       * @param map The map to clear.
+       * @return [map].
+       */
       public: static T_OBJECT* clear(T_OBJECT* map);
+
+      /**
+       * Finds the position of a key in a map.
+       *
+       * @param map The map to search.
+       * @param key The key to look for.
+       * @return If found, the position of the key, otherwise -1.
+       */
       public: static int find_key(Map* map, T_OBJECT* key);
+
+      /**
+       * Sets an item in a map.
+       *
+       * @param map The map to set an item to.
+       * @param key The key to set.
+       * @param value The value to use.
+       * @return [value].
+       */
       public: static T_OBJECT* set_item(T_OBJECT* map, T_OBJECT* key, T_OBJECT* value);
+
+      /**
+       * Sets an item in a map.
+       *
+       * @param map The map to set an item to.
+       * @param key The key to set.
+       * @param value The value to use.
+       * @return [value].
+       */
       public: static T_OBJECT* set_item(T_OBJECT* map, std::string key, std::string value);
+
+      /**
+       * Slices a map from [key1] to [key2].
+       *
+       * @param map The map to slice.
+       * @param key1 Slice start
+       * @param key2 Slice end.
+       * @deprecated Maps are not supposed to be ordered, no slicing should be possible.
+       */
       public: static T_OBJECT* slice(T_OBJECT* map, T_OBJECT* key1, T_OBJECT* key2);
    };
 }
