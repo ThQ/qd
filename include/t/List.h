@@ -42,7 +42,7 @@ namespace NS_TYPE
        * @param list A list to append to.
        * @param obj An object to append.
        * @return [list]
-       * @depreacted (Use List::push(...) instead) Appends an object to a list.
+       * @deprecated (Use List::push(...) instead) Appends an object to a list.
        */
       public: static T_OBJECT* append(T_OBJECT* list, T_OBJECT* obj);
 
