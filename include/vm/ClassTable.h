@@ -14,7 +14,7 @@ namespace NS_VM
    /**
     * A list of all classes declared internally.
     *
-    * @TODO: Make that a Bn-Tree
+    * @todo Make that a Bn-Tree
     */
    class ClassTable
    {
