@@ -8,33 +8,33 @@
 #include "t/String.h"
 #include "util/Object.h"
 
-#ifdef __ALLOW_SVM_ASSERTIONS__
-   #define __SVM_ASSERT_VARIABLE(v) DEPRECATED(); if(v->cls != NS_TYPE::tVARIABLE){FATAL("Bad type given, expected system.Variable.\n\n");abort();}
-#else
-   #define __SVM_ASSERT_VARIABLE(v) DEPRECATED();
-#endif
-
-#ifdef __ALLOW_SVM_CHECKS__
-   #define __SVM_CHECK_VARIABLE(v) DEPRECATED(); if(v->cls != NS_TYPE::tVARIABLE){WARNING("Bad type given, expected system.Variable.\n\n");}
-#else
-   #define __SVM_CHECK_VARIABLE(v) DEPRECATED();
-#endif
-
 namespace NS_TYPE
 {
    extern T_OBJECT* tVARIABLE;
 
+   /**
+    * A variable is a container for objects of a given type.
+    */
    class Variable : public T_OBJECT
    {
       public: T_OBJECT* object_type;
       public: T_OBJECT* object;
       public: std::string name;
 
+      /**
+       * Constructor.
+       */
       public: Variable();
+
+      /**
+       * Destructor.
+       */
       public: ~Variable();
 
       /**
-       * Asserts that an object is of type t::tVARIABLE.
+       * Asserts that an object is of type [t::Variable].
+       *
+       * @param obj An object to check.
        */
       public: inline static void assert(T_OBJECT* obj)
       {
@@ -42,17 +42,27 @@ namespace NS_TYPE
       }
 
       /**
-       * Creates a t::Variable of type <type>.
+       * Creates a t::Variable of type [type].
+       *
+       * @param type The type of the value.
+       * @return A new t::Variable.
        */
       public: static T_OBJECT* build(T_OBJECT* type);
 
       /**
-       * Creates a t::Variable of type <type> and name <name>.
+       * Creates a t::Variable of type [type] and name [name].
+       *
+       * @param type The type of the value.
+       * @param name The name of the variable.
+       * @return A new t::Variable.
        */
       public: static T_OBJECT* build(T_OBJECT* type, std::string name);
 
       /*
        * Checks if an object is of type t::tVARIABLE.
+       *
+       * @param obj An object to check.
+       * @return true if [obj] is of type [t::Variable].
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -61,11 +71,17 @@ namespace NS_TYPE
 
       /**
        * Sets the object of a t::Variable.
+       *
+       * @param variable The variable to set.
+       * @param obj The object to assign.
+       * @return [obj] unchanged.
        */
       public: static T_OBJECT* set(T_OBJECT* variable, T_OBJECT* obj);
 
       /**
        * Sets the object type a t::Variable can contain.
+       *
+       * @param type The type of the variable.
        */
       public: void set_object_type(T_OBJECT* type);
    };
