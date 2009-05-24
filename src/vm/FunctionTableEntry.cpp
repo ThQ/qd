@@ -18,7 +18,7 @@ namespace NS_VM
    FunctionTableEntry::~FunctionTableEntry()
    {
       // @TODO: Better do a final clean-up in opcode.h maybe ??
-      // SVM_DROP_SAFE(this->function);
+      t::Object::drop_safe(this->function);
    }
 
    void
