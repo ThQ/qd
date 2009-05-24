@@ -64,7 +64,7 @@ namespace NS_TYPE
        */
       public: static T_OBJECT* cast_to_string(T_OBJECT* func);
 
-      /*
+      /**
        * Checks if an object is of type t::Function.
        *
        * @param obj An object to check.
