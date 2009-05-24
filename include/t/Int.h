@@ -17,7 +17,7 @@ namespace NS_TYPE
    /**
     * An integer used in the VM.
     */
-   class Int : Object
+   class Int : T_OBJECT
    {
       public: long int value;
 
