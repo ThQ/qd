@@ -72,7 +72,7 @@ namespace NS_TYPE
       }
 
       /**
-       * Asserts an object is of type <type>. Exits the application otherwise.
+       * Asserts an object is of type [type]. Exits the application otherwise.
        *
        * @param object An object to check.
        * @param type A type to assert.
