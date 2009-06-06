@@ -9,7 +9,7 @@ namespace NS_TYPE
    extern T_OBJECT* tMAP;
 
    /**
-    * A map is a list of key-value pairs.
+    * A map is a list of unordered key-value pairs.
     */
    class Map : public T_OBJECT
    {
@@ -30,9 +30,14 @@ namespace NS_TYPE
          T_OBJECT::assert_type(obj, NS_TYPE::tMAP);
       }
 
+      /**
+       * Builds an empty t::Map.
+       *
+       * @return A pointer to a t::Map object newly created.
+       */
       public: static T_OBJECT* build();
 
-      /*
+      /**
        * Checks if an object is of type t::Map.
        *
        * @param obj An object to check.
