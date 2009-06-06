@@ -6,4 +6,5 @@
    * vm/Engine : + attribute [unsigned long long classes_n]
    * vm/Engine : + attribute [t::Function** functions]
    * vm/Engine : + attribute [unsigned long long functions_n]
+   * vm/Engine : Change call(...) to call using an index
    * Remove vm/ClassTable, vm/ClassTableEntry, vm/FunctionTable and vm/FunctionTableEntry
