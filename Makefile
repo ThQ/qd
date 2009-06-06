@@ -35,9 +35,12 @@ help:
 clean-build:
 	rm -rf $(BUILD_DIR)/*
 
+clear-doc-source:
+	rm -r ${DOC_DIR}/*
+
 doc: doc-source doc-opcodes
 
-doc-source:
+doc-source: clear-doc-source
 	doxygen Doxyfile
 
 doc-opcodes:
