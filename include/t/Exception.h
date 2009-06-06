@@ -43,7 +43,7 @@ namespace NS_TYPE
       public: static T_OBJECT* build();
 
       /**
-       * Builds an exception with message <message>.
+       * Builds an exception with message [message].
        *
        * @param message Error message
        * @return A t::Exception with a message
@@ -51,7 +51,7 @@ namespace NS_TYPE
       public: static T_OBJECT* build(T_OBJECT* message);
 
       /**
-       * Builds a string from an exception <error>.
+       * Builds a string from an exception [error].
        *
        * @param error The exception from which to build a string
        * @return a t::String representing the exception
@@ -62,7 +62,7 @@ namespace NS_TYPE
        * Checks if an object is of type t::Exception.
        *
        * @param obj An object to be checked.
-       * @return true if <obj> is of type t::Exception
+       * @return true if [obj] is of type t::Exception
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -70,14 +70,14 @@ namespace NS_TYPE
       }
 
       /**
-       * Builds a string from exception <error> and prints it to the console.
+       * Builds a string from exception [error] and prints it to the console.
        *
        * @param error An exception that will be converted to string so as to be printed
        */
       public: static void print(T_OBJECT* error);
 
       /**
-       * Sets the message of exception <error> to <message>.
+       * Sets the message of exception [error] to [message].
        *
        * @param error The exception to set the message to
        * @param message The message to use
@@ -86,7 +86,7 @@ namespace NS_TYPE
       public: static T_OBJECT* set_message(T_OBJECT* error, T_OBJECT* message);
 
       /**
-       * Sets the stack trace of exception <exception> to <stack_trace>.
+       * Sets the stack trace of exception [exception] to [stack_trace].
        *
        * @param exception The exception to set the stack trace to
        * @param stack_trace The stack trace to use
