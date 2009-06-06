@@ -31,6 +31,8 @@ namespace NS_TYPE
 
       /**
        * Asserts that an object is of type t::Array
+       *
+       * @param obj The object to check.
        */
       public: inline static void assert(T_OBJECT* obj)
       {
@@ -39,33 +41,33 @@ namespace NS_TYPE
 
       /**
        * Creates a t::Array object of type [type] and length [len].
-       * @param type A pointer to a t::Class to use a array type.
-       * @param len A pointer to a t::Int representing the length of the array to create.
+       * @param array_type A pointer to a t::Class to use a array type.
+       * @param array_length A pointer to a t::Int representing the length of the array to create.
        * @return A pointer to a t::Array newly created.
        */
-      public: static Object* build(T_OBJECT* type, T_OBJECT* len);
+      public: static Object* build(T_OBJECT* array_type, T_OBJECT* array_length);
 
       /**
        * Creates a t::Array object of type [type] and length [len].
        *
-       * @param type A pointer to a t::Class to use a array type.
-       * @param len The length of the array to create.
+       * @param array_type A pointer to a t::Class to use a array type.
+       * @param array_length The length of the array to create.
        * @return A pointer to a t::Array newly created.
        */
-      public: static Object* build(T_OBJECT* type, ULong len);
+      public: static Object* build(T_OBJECT* array_type, ULong array_length);
 
       /**
-       * Creates a t::Array object of type [type] and length [len]
-       * and who contains [items].
+       * Creates a t::Array object of type [array_type] and length
+       * [array_length] and who contains [array_items].
        *
-       * Take care: [len] must be the length of objects in [items].
+       * Take care: [array_length] must be the length of objects in [items].
        *
-       * @param type A pointer to a t::Class to use a array type.
-       * @param len The length of the array to create.
-       * @param items An array of t::Object's to populate the new array.
+       * @param array_type A pointer to a t::Class to use a array type.
+       * @param array_length The length of the array to create.
+       * @param array_items An array of t::Object's to populate the new array.
        * @return A pointer to a t::Array newly created.
        */
-      public: static Object* build(T_OBJECT* type, ULong len, T_OBJECT** items);
+      public: static Object* build(T_OBJECT* array_type, ULong array_length, T_OBJECT** array_items);
 
       /*
        * Checks if an object is of type t::Array.
@@ -79,37 +81,90 @@ namespace NS_TYPE
       }
 
       /**
+       * Replaces each item with t::gNULL.
+       */
+      public: void clear();
+
+      /**
        * Replaces each item of a t::Array with t::gNULL.
        *
        * @param arr A pointer to a t::Array to clear.
        */
-      public: static void clear(T_OBJECT* arr);
+      public: inline static void clear (T_OBJECT* arr)
+      {
+         Array::assert(arr);
+         ((Array*)arr)->clear();
+      }
 
       /**
        * Replaces an item of a t::Array with t::gNULL.
        *
-       * @param arr A pointer to a t::Array to clear.
-       * @param at The index of the item to replace with t::gNULL.
+       * @param item_index The index of the item to replace with t::gNULL.
        */
-      public: inline static void clear_item(T_OBJECT* arr, ULong at);
+      public: void clear_item (ULong item_index);
+
+      /**
+       * Replaces an item of a t::Array with t::gNULL.
+       *
+       * @param array A pointer to a t::Array to clear.
+       * @param item_index The index of the item to replace with t::gNULL.
+       */
+      public: inline static void clear_item (T_OBJECT* array, ULong item_index)
+      {
+         Array::assert(array);
+         ((Array*)array)->clear_item(item_index);
+      }
+
+      /**
+       * Replaces a range of items (from [range_start] to [range_end]) with t::gNULL.
+       *
+       * @param range_start The index at which to start clearing.
+       * @param range_end The index at which to stop clearing.
+       */
+      public: void clear_range(ULong range_start, ULong range_end);
 
       /**
        * Replaces a range of items (from [start] to [end]) with t::gNULL.
        *
-       * @param arr A pointer to a t::Array to clear.
+       * @param array A pointer to a t::Array to clear.
        * @param start The index at which to start clearing.
        * @param end The index at which to stop clearing.
        */
-      public: static void clear_range(T_OBJECT* arr, ULong start, ULong end);
+      public: inline static void clear_range(T_OBJECT* array, ULong start, ULong end)
+      {
+         Array::assert(array);
+         ((Array*)array)->clear_range(start, end);
+      }
 
       /**
-       * Replaces the item at [at] in [array] with [obj].
+       * Replaces the item at [item_index] with [new_item].
+       *
+       * @param item_index The index of the item to set.
+       * @param new_item A pointer to an t::Object to use as a replacement.
+       */
+      public: void set_item(ULong item_index, Object* new_item);
+
+      /**
+       * Replaces the item at [item_index] in [array] with [new_item].
        *
        * @param array A pointer to a t::Array to set an item to.
-       * @param at The index of the item to set.
-       * @param obj A pointer to an t::Object to use as a replacement.
+       * @param item_index The index of the item to set.
+       * @param new_item A pointer to an t::Object to use as a replacement.
        */
-      public: static void set_item(T_OBJECT* array, ULong at, Object* obj);
+      public: static void set_item(T_OBJECT* array, ULong item_index, Object* new_item)
+      {
+         Array::assert(array);
+         T_OBJECT::assert_not_null(new_item);
+         ((Array*)array)->set_item(item_index, new_item);
+      }
+
+      /**
+       * Sets the type of the objects that can possibly be stored in a
+       * t::Array.
+       *
+       * @param type A pointer to a t::Class to use a type.
+       */
+      public: void set_type(T_CLASS* type);
 
       /**
        * Sets the type of the objects that can possibly be stored in a
@@ -118,7 +173,20 @@ namespace NS_TYPE
        * @param array A pointer to a t::Array to set the type.
        * @param type A pointer to a t::Class to use a type.
        */
-      public: static void set_type(T_OBJECT* array, T_OBJECT* type);
+      public: inline static void set_type(T_OBJECT* array, T_OBJECT* type)
+      {
+         Array::assert(array);
+         T_CLASS::assert(type);
+         ((Array*)array)->set_type((T_CLASS*)type);
+      }
+
+      /**
+       * Allocates memory for [array_size] items in array [this->items] and
+       * fills each dimension with t::gNULL.
+       *
+       * @param array_size The size of the array.
+       */
+      public: void size (ULong array_size);
    };
 }
 
