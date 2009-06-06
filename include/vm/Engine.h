@@ -59,15 +59,81 @@ namespace NS_VM
       public: Heap heap;
       public: Stack stack;
 
+      /**
+       * Constructor.
+       */
       public: Engine();
+
+      /**
+       * Destructor.
+       */
       public: ~Engine();
+
+      /**
+       * Appends a pointer to a t::Block to [blocks].
+       *
+       * @param block The block to append.
+       */
       public: void append_block(t::Block* block);
+
+      /**
+       * Creates a t::List containing a traceback.
+       *
+       * @return A pointer to a t::List containing the traceback.
+       */
       public: t::Object* build_traceback();
+
+      /**
+       * Calls a function.
+       *
+       * @param method_name Name of the function.
+       * @param argc Number of arguments passed.
+       * @param argv An array of pointers to t::Object's which are the arguments passed.
+       * @return A pointer to a t::Object returned by the function.
+       */
       public: t::Object* call(std::string method_name, UInt argc, t::Object**& argv);
+
+      /**
+       * Calls an instance method.
+       *
+       * @param method_name Name of the instance method.
+       * @param argc Number of arguments passed.
+       * @param argv An array of pointers to t::Object's which are the arguments passed. The first one being the object to call.
+       * @return A pointer to a t::Object returned by the function.
+       */
       public: t::Object* call_object(std::string method_name, UInt argc, t::Object**& argv);
+
+      /**
+       * Checks if an array of t::Object's matches the list of arguments needed by a function.
+       *
+       * @param f A pointer to a t::Function to check against.
+       * @param argc The number of arguments to check.
+       * @param argv The arguments to check.
+       * @return true if argv matches f.
+       */
       public: bool check_arguments(t::Function* f, UInt argc, t::Object**& argv);
+
+      /**
+       * Checks if a list of t::Object's are of type of a list of t::Class's
+       *
+       * @example my_engine_ptr->check_arguments(4, my_int_obj, t::tINT, my_string_obj, t::tSTRING) == true
+       * @example my_engine_ptr->check_arguments(2, my_bool_obj, t::tINT) == false
+       * @param argc A number of pairs (object, type) to check.
+       * @return true if each pair matches.
+       */
       public: bool check_arguments(int argc, ...);
+
+      /**
+       * Replaces [argc] arguments of [argv] with NULL.
+       *
+       * @param argc How many arguments to clear.
+       * @param argv An array of pointer to t::Object's to clear.
+       */
       public: void clear_arguments(UInt& argc, t::Object**& argv);
+
+      /**
+       * Clears [blocks].
+       */
       public: void clear_blocks();
 
       /**
@@ -78,24 +144,30 @@ namespace NS_VM
       /**
        * Going up the stack from the current frame to find an exception handler.
       *
-      * \return An exception handler block if found, NULL otherwise.
+      * @return An exception handler block if found, NULL otherwise.
       */
       public: t::Block* find_nearest_exception_handler();
 
       /**
-       * Get the block associated with the name <name>.
+       * Get the block associated with the name [name].
        *
-       * \return The block if found, NULL otherwise.
+       * @param name The block's name to search.
+       * @return The block if found, NULL otherwise.
        */
       public: t::Block* get_block(std::string name);
 
       /**
        * Imports the swap content into a block's stack.
+       *
+       * @param block A pointer to a t::Block that is importing the swap.
        */
       public: void import_swap(t::Block* block);
 
       /**
-       * Makes an empty array of t::Object's of length <count>.
+       * Makes an empty array of t::Object's of length [count].
+       *
+       * @param obj An array of pointer to t::Object's.
+       * @param count The length of the new array.
        */
       public: static void make_empty_object_array(t::Object**& obj, UInt count);
 
@@ -105,18 +177,25 @@ namespace NS_VM
       public: static void print_version();
 
       /**
-       * Runs each opcode of a <block>.
+       * Runs each opcode of a [block].
+       *
+       * @param block The block to run.
+       * @param add_to_stack Wether add this block to the call stack.
        */
       public: void run_block(t::Block* block, bool add_to_stack = true);
       // [!opcodes:prototypes]
 
       /**
-       * Reads the file at <file_path>, parses it and runs its opcodes.
+       * Reads the file at [file_path], parses it and runs its opcodes.
+       *
+       * @param file_path The path to the file to run.
        */
       public: void run_file(const char* file_path);
 
       /**
        * Throws a t::Exception.
+       *
+       * @param exception The exception to throw.
        */
       public: void throw_exception(t::Object* exception);
    };

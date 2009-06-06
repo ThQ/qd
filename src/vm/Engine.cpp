@@ -54,6 +54,7 @@ namespace NS_VM
       for (UInt i = 0 ; i < argc ; ++ i)
       {
          t::Object::drop_safe(argv[i]);
+         argv[i] = NULL;
       }
       // @TODO: Free / delete / something ?
       argv = 0;
