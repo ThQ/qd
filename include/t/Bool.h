@@ -40,7 +40,7 @@ namespace NS_TYPE
       /**
        * Creates a t::Bool from a C integer.
        *
-       * @param b A c integer.
+       * @param i A c integer.
        * @return t::gFALSE if i==0, t::gTRUE otherwise.
        */
       public: static T_OBJECT* build(int i);
@@ -56,7 +56,8 @@ namespace NS_TYPE
       /*
        * Checks if an object is of type t::Bool.
        *
-       * @param obj A t::Object to be checked.
+       * @param obj A pointer to a t::Object to be checked.
+       * @return true if obj is a pointer to a t::Bool.
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -66,7 +67,7 @@ namespace NS_TYPE
       /**
        * Creates a new t::Bool with the same value as [base_bool].
        *
-       * @param b A t::Bool to be copied.
+       * @param base_bool A t::Bool to be copied.
        * @return A new t::Bool with the same value as [base_bool].
        */
       public: static T_OBJECT* copy(T_OBJECT* base_bool);
