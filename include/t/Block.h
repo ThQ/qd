@@ -41,7 +41,7 @@ namespace NS_TYPE
       public: ULong count();
 
       /**
-       * Returns the opcode at <index>.
+       * Returns the opcode at [index].
        */
       public: vm::OpCode* get(ULong index);
 
