@@ -19,7 +19,14 @@ namespace NS_TYPE
       public: Object** items;
       public: ULong item_count;
 
+      /**
+       * Constructor.
+       */
       public: Array();
+
+      /**
+       * Destructor.
+       */
       public: ~Array();
 
       /**
@@ -31,20 +38,20 @@ namespace NS_TYPE
       }
 
       /**
-       * Creates a t::Array object of type <type> and length <len>.
+       * Creates a t::Array object of type [type] and length [len].
        */
       public: static Object* build(T_OBJECT* type, T_OBJECT* len);
 
       /**
-       * Creates a t::Array object of type <type> and length <len>.
+       * Creates a t::Array object of type [type] and length [len].
        */
       public: static Object* build(T_OBJECT* type, ULong len);
 
       /**
-       * Creates a t::Array object of type <type> and length <len>
-       * and who contains <items>.
+       * Creates a t::Array object of type [type] and length [len]
+       * and who contains [items].
        *
-       * Take care: <len> must be the length of objects in <items>.
+       * Take care: [len] must be the length of objects in [items].
        */
       public: static Object* build(T_OBJECT* type, ULong len, T_OBJECT** items);
 
@@ -57,22 +64,22 @@ namespace NS_TYPE
       }
 
       /**
-       * Replaces each item of a t::Array with svm::Null.
+       * Replaces each item of a t::Array with t::gNULL.
        */
       public: static void clear(T_OBJECT* arr);
 
       /**
-       * Replaces an item of a t::Array with svm::Null.
+       * Replaces an item of a t::Array with t::gNULL.
        */
       public: static void clear_item(T_OBJECT* arr, ULong at);
 
       /**
-       * Replaces a range of items (from <start> to <end>) with svm::Null.
+       * Replaces a range of items (from [start] to [end]) with t::gNULL.
        */
       public: static void clear_range(T_OBJECT* arr, ULong start, ULong end);
 
       /**
-       * Replaces the item at <at> in <arr> with <obj>.
+       * Replaces the item at [at] in [arr] with [obj].
        */
       public: static void set_item(T_OBJECT* array, ULong at, Object* obj);
 
