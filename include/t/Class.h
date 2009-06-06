@@ -49,7 +49,7 @@ namespace NS_TYPE
       public: static T_OBJECT* build();
 
       /**
-       * Builds a class named <name>.
+       * Builds a class named [name].
        *
        * @param name The name of the class to create.
        * @return A t::Class named [name].
@@ -57,7 +57,7 @@ namespace NS_TYPE
       public: static T_OBJECT* build(std::string name);
 
       /**
-       * Builds a class named <name>.
+       * Builds a class named [name].
        *
        * @param name The name of the class to create.
        * @return A t::Class named [name].
@@ -65,16 +65,16 @@ namespace NS_TYPE
       public: static T_OBJECT* build(const char* name);
 
       /**
-       * Builds a class named <name>, and whose parent class is <parent_class>.
+       * Builds a class named [name], and whose parent class is [parent_class].
        *
        * @param name The name of the class to create.
        * @param parent_class The parent class of the class to create.
-       * @return A new t::Class named [name], child of [parent_class].]
+       * @return A new t::Class named [name], child of [parent_class].
        */
       public: static T_OBJECT* build(const char* name, T_OBJECT* parent_class);
 
       /**
-       * Builds a class named <name>, and whose parent class is <parent_class>.
+       * Builds a class named [name], and whose parent class is [parent_class].
        *
        * @param name The name of the class to create.
        * @param parent_class The parent class of the class to create.
@@ -83,7 +83,7 @@ namespace NS_TYPE
       public: static T_OBJECT* build(std::string name, T_OBJECT* parent_class);
 
       /**
-       * Builds a class whose parent class is <parent_class>.
+       * Builds a class whose parent class is [parent_class].
        *
        * @param parent_class The parent class of the class to create.
        * @return a new t::Class whose parent is [parent_class].
