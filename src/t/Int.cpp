@@ -133,13 +133,6 @@ namespace NS_TYPE
       return result;
    }
 
-   void
-   Int::debug_id(T_OBJECT* base)
-   {
-      T_INT::assert(base);
-      printf("<int:%ld>\n", ((T_INT*)base)->value);
-   }
-
    T_OBJECT*
    Int::divide(T_OBJECT* base, T_OBJECT* divider)
    {
