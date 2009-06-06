@@ -40,7 +40,10 @@ namespace NS_TYPE
       public: Float();
 
       /**
-       * Builds a t::Float from a c long double <d>.
+       * Builds a t::Float from a c long double [d].
+       *
+       * @param d A c long double to use.
+       * @return A pointer to a t::Float newly created.
        */
       public: static T_OBJECT* build(long double d);
    };
