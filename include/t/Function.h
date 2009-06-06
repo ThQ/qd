@@ -100,7 +100,7 @@ namespace NS_TYPE
       /**
        * Sets the return type to [type].
        *
-       * @type Return type.
+       * @param type Return type.
        */
       public: void set_return_type(T_OBJECT* type);
    };
