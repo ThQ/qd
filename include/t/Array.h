@@ -69,7 +69,7 @@ namespace NS_TYPE
        */
       public: static Object* build(T_OBJECT* array_type, ULong array_length, T_OBJECT** array_items);
 
-      /*
+      /**
        * Checks if an object is of type t::Array.
        *
        * @param obj A pointer to a t::Object to check.
