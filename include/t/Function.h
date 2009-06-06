@@ -58,7 +58,7 @@ namespace NS_TYPE
       #endif
 
       /**
-       * Builds a string from a function <func>.
+       * Builds a string from a function [func].
        *
        * @param func The function to cast to string.
        */
@@ -76,7 +76,7 @@ namespace NS_TYPE
       }
 
       /**
-       * Builds a string from a function <func> and prints it to the console.
+       * Builds a string from a function [func] and prints it to the console.
        *
        * @param func The function to print.
        */
@@ -98,7 +98,7 @@ namespace NS_TYPE
       public: void set_arguments(UInt count, T_OBJECT** args);
 
       /**
-       * Sets the return type to <type>.
+       * Sets the return type to [type].
        *
        * @type Return type.
        */
