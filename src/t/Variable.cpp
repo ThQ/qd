@@ -52,7 +52,7 @@ namespace NS_TYPE
       T_OBJECT::assert_not_null(v->object);
 
       // @TODO: Replace that by an inline function, please...
-      SVM_ASSERT_SAME_TYPES(obj->cls, v->object_type);
+      // SVM_ASSERT_SAME_TYPES(obj->cls, v->object_type);
 
       T_OBJECT::drop_safe(v->object);
       v->object = obj;
