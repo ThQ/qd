@@ -82,7 +82,7 @@ namespace NS_TYPE
       public: static T_OBJECT* flatten(T_OBJECT* list);
 
       /**
-       * Gets an item at <index> from <list>.
+       * Gets an item at [index]  from [list].
        *
        * @param list A List to get an item from.
        * @param index The position at which to get an item.
@@ -91,7 +91,7 @@ namespace NS_TYPE
       public: static T_OBJECT* get_item(T_OBJECT* list, UInt index);
 
       /**
-       * Inserts an object into <list> at <index>.
+       * Inserts an object into [list] at [index].
        *
        * @param list A list to insert an item into.
        * @param index The position at which to insert an item.
@@ -101,7 +101,7 @@ namespace NS_TYPE
       public: static T_OBJECT* insert(T_OBJECT* list, UInt index, T_OBJECT* obj);
 
       /**
-       * Pops one object off <list>.
+       * Pops one object off [list].
        *
        * @param list A list from which to pop an object off.
        * @return The object popped.
@@ -109,7 +109,7 @@ namespace NS_TYPE
       public: static T_OBJECT* pop(T_OBJECT* list);
 
       /**
-       * Pops n objects off <list>.
+       * Pops n objects off [list].
        *
        * @param list A list from which to pop some objects off.
        * @param num The number of items to pop.
@@ -118,7 +118,7 @@ namespace NS_TYPE
       public: static T_OBJECT* pop(T_OBJECT* list, UInt num);
 
       /**
-       * Pushes an object onto <list>.
+       * Pushes an object onto [list].
        *
        * @param list A list to push to.
        * @param obj An object to push.
@@ -127,7 +127,7 @@ namespace NS_TYPE
       public: static T_OBJECT* push(T_OBJECT* list, T_OBJECT* obj);
 
       /**
-       * Pushes items from <push_list> into <base_list>.
+       * Pushes items from [push_list] into [base_list].
        *
        * @param base_list A list to push to.
        * @param push_list The list from which items will be pushed.
@@ -135,14 +135,14 @@ namespace NS_TYPE
       public: static void push_list(T_OBJECT* base_list, T_OBJECT* push_list);
 
       /**
-       * Removes an object at <index> from <list>.
+       * Removes an object at [index] from [list].
        * @param list A list from which to remove items.
        * @return [list].
        */
       public: static T_OBJECT* remove_item(T_OBJECT* list, UInt index);
 
       /**
-       * Creates a t::List filled with the items of <list> reverser (First becomes last, etc.).
+       * Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
        *
        * @param list The list to reverse
        * @return A new list with all objects reversed.
@@ -150,7 +150,7 @@ namespace NS_TYPE
       public: static T_OBJECT* reverse(T_OBJECT* list);
 
       /**
-       * Resizes <list> to its new <size>.
+       * Resizes [list] to its new [size].
        *
        * @param list The list to resize.
        * @param size The new size of the list.
@@ -169,7 +169,7 @@ namespace NS_TYPE
       public: static T_OBJECT* set_item(T_OBJECT* list, UInt at, T_OBJECT* obj);
 
       /**
-       * Gets a slice from <list> from <start> to <end> stepping <step>.
+       * Gets a slice from [list] from [start] to [end] stepping [step].
        *
        * @param list The list to slice.
        * @param start Slice start.
