@@ -53,7 +53,7 @@ namespace NS_TYPE
        */
       public: static T_OBJECT* build();
 
-      /*
+      /**
        * Checks if an object is of type t::List.
        *
        * @param obj An object to check.
@@ -137,6 +137,7 @@ namespace NS_TYPE
       /**
        * Removes an object at [index] from [list].
        * @param list A list from which to remove items.
+       * @param index The index of the item to remove.
        * @return [list].
        */
       public: static T_OBJECT* remove_item(T_OBJECT* list, UInt index);
