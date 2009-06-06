@@ -1,0 +1,9 @@
+2009-06-05 :
+   For classes, functions and variables, names must NOT be used. Instead they
+   must be retrieved using an index.
+
+   * vm/Engine : Retype attribute [classes] with t::Classes**
+   * vm/Engine : + attribute [unsigned long long classes_n]
+   * vm/Engine : + attribute [t::Function** functions]
+   * vm/Engine : + attribute [unsigned long long functions_n]
+   * Remove vm/ClassTable, vm/ClassTableEntry, vm/FunctionTable and vm/FunctionTableEntry
