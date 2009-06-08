@@ -23,7 +23,7 @@ namespace NS_TYPE
          //delete this->lines[i];
       }
       */
-      free(this->opcodes);
+      Memory::free(this->opcodes);
       if (this->exception != NULL) T_OBJECT::drop(this->exception);
    }
 
@@ -32,7 +32,7 @@ namespace NS_TYPE
    {
       // @TODO : Too much REALLOC
       ++ this->opcode_count;
-      this->opcodes = (vm::OpCode**)REALLOC(this->opcodes, sizeof(vm::OpCode*) * this->opcode_count);
+      this->opcodes = (vm::OpCode**)Memory::realloc(this->opcodes, sizeof(vm::OpCode*) * this->opcode_count);
       this->opcodes[this->opcode_count - 1] = opc;
    }
 
@@ -40,7 +40,8 @@ namespace NS_TYPE
    Block::clear()
    {
       this->opcode_count = 0;
-      this->opcodes = (vm::OpCode**)REALLOC(this->opcodes, 0);
+      Memory::free(this->opcodes);
+      this->opcodes = NULL;
    }
 
    ULong
