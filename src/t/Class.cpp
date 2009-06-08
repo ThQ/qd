@@ -105,13 +105,11 @@ namespace NS_TYPE
    }
 
    void
-   Class::set_parent_class(T_OBJECT* parent_class)
+   Class::set_parent_class(Class* parent_class)
    {
-      Class::assert(parent_class);
-
       T_OBJECT::drop_safe(this->parent_class);
-      this->parent_class = parent_class;
       T_OBJECT::pick(parent_class);
+      this->parent_class = (T_OBJECT*)parent_class;
    }
 }
 
