@@ -4,20 +4,20 @@
 #include "t/Int.h"
 #include "t/Object.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern Object* tARRAY;
 
    /**
     * A @cls{t::Array} is a list of @cls{t::Object}'s who can only contain elements of a
-    * predetermined type and who can never exceed a predetermined number of
+    * predetermined type and who can never exceed a predetermined (and fixed) number of
     * elements.
     */
-   class Array: public T_OBJECT
+   class Array: public Object
    {
-      public: Object* type;
-      public: Object** items;
-      public: ULong item_count;
+      public: Object* type; ///< A pointer to a @cls{t::Class} representing the class of the objects stored.
+      public: Object** items; ///< The @cls{t::Object} stored.
+      public: ULong item_count; ///< Number of item stored.
 
       /**
        * Constructor.
@@ -64,8 +64,8 @@ namespace NS_TYPE
        *
        * @param array_type A pointer to a @cls{t::Class} to use a array type.
        * @param array_length The length of the array to create.
-       * @param array_items An array of t::Object's to populate the new array.
-       * @return A pointer to a t::Array newly created.
+       * @param array_items An array of @cls{t::Object}'s to populate the new array.
+       * @return A pointer to a @cls{t::Array} newly created.
        */
       public: static Object* build(T_OBJECT* array_type, ULong array_length, T_OBJECT** array_items);
 
