@@ -7,7 +7,7 @@
 
 #include "config.h"
 #include "debug.h"
-#include "memory.h"
+#include "Memory.h"
 #include "types.h"
 
 
