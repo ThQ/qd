@@ -66,10 +66,10 @@ namespace NS_TYPE
    }
 
    void
-   Block::throw_exception(T_OBJECT* e)
+   Block::throw_exception(T_EXCEPTION* e)
    {
       T_OBJECT::drop_safe(this->exception);
       T_OBJECT::pick(e);
-      this->exception = e;
+      this->exception = (T_OBJECT*)e;
    }
 }
