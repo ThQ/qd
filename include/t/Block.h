@@ -6,21 +6,21 @@
 #include "vm/Heap.h"
 #include "vm/OpCode.h"
 
-namespace NS_TYPE
+namespace t
 {
    /**
     * A block is an executable group of opcodes.
     */
-   class Block : public T_OBJECT
+   class Block : public Object
    {
-      public: ULong argc;
-      public: T_OBJECT** argv;
-      public: T_OBJECT* exception;
-      public: Block* exception_handler;
-      public: vm::Heap heap;
-      public: vm::OpCode** opcodes;
-      public: ULong opcode_count;
-      public: std::string name;
+      public: ULong argc; ///< Number of arguments.
+      public: T_OBJECT** argv; ///< Array of @cls{t::Object}s.
+      public: T_OBJECT* exception; ///< A pointer to a @cls{t::Exception} thrown, NULL otherwise.
+      public: Block* exception_handler; ///< A pointer to @cls{t::Block} used as exception handler.
+      public: vm::Heap heap; ///< Block's heap.
+      public: vm::OpCode** opcodes; ///< AN array of @cls{vm::OpCode}s.
+      public: ULong opcode_count; ///< Number of opcodes.
+      public: std::string name; ///< BLock's name. Useless ?
 
       /**
        * Constructor.
@@ -35,7 +35,7 @@ namespace NS_TYPE
       /**
        * Appends an opcode to the block.
        *
-       * @param opc A pointer to a vm::OpCode to append.
+       * @param opc A pointer to a @cls{vm::OpCode} to append.
        */
       public: void append(vm::OpCode* opc);
 
@@ -52,10 +52,10 @@ namespace NS_TYPE
       public: ULong count();
 
       /**
-       * Returns the opcode at [index].
+       * Returns the opcode at @prm{index}.
        *
        * @param index The index at which get the opcode.
-       * @return A pointer to a vm::OpCode to get.
+       * @return A pointer to a @cls{vm::OpCode} to get.
        */
       public: vm::OpCode* get(ULong index);
 
