@@ -116,8 +116,6 @@ namespace NS_VM
       /**
        * Checks if a list of t::Object's are of type of a list of t::Class's
        *
-       * @example my_engine_ptr->check_arguments(4, my_int_obj, t::tINT, my_string_obj, t::tSTRING) == true
-       * @example my_engine_ptr->check_arguments(2, my_bool_obj, t::tINT) == false
        * @param argc A number of pairs (object, type) to check.
        * @return true if each pair matches.
        */
