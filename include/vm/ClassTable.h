@@ -10,24 +10,16 @@
 #include "t/Variable.h"
 #include "vm/ClassTableEntry.h"
 
-namespace NS_VM
+namespace vm
 {
    /**
     * A list of all classes declared internally.
     *
-    * @todo Make that a Bn-Tree
     */
    class ClassTable
    {
-      /**
-       * An pointer to an array of pointers to ClassTableEntry's.
-       */
-      public: ClassTableEntry** items;
-
-      /**
-       * How many ClassTableEntry in this ClassTable.
-       */
-      public: ULong item_count;
+      public: ClassTableEntry** items; ///< An pointer to an array of pointers to ClassTableEntry's.
+      public: ULong item_count;        ///< How many ClassTableEntry in this ClassTable.
 
       /**
        * Constructor.
@@ -61,7 +53,6 @@ namespace NS_VM
       public: void assert_validity();
       #endif
 
-
       /**
        * Return how many classes are stored in this list.
        */
@@ -70,43 +61,74 @@ namespace NS_VM
       //public: bool declare_fields(t::Class* cls, unsigned long field_count, svm::Variable** fields);
 
       /**
-       * Create a new class named [class_name] and store it in this list.
+       * Create a new class named @prm{class_name} and store it in this list.
        */
       public: t::Object* declare_class(const char* class_name);
 
       /**
-       * Create a new class named [class_name], whose parent is [parent_class],
+       * Create a new class named @prm{class_name}, whose parent is [parent_class],
        * and store it in this list.
        */
       public: t::Object* declare_class(const char* class_name, t::Object* parent_class);
 
       /**
-       * Create a new class named [class_name], whose parent name is
+       * Create a new class named @prm{class_name}, whose parent name is
        * [parent_class_name], and store it in this list.
        */
       public: t::Object* declare_class(const char* class_name, const char* parent_class_name);
-      public: t::Object* declare_method(t::Class* cls, t::CoreFunction* func);
-      public: t::Object* declare_method(t::Class* cls, t::UserFunction* func);
-      public: t::Object* declare_method(t::Class* cls, t::Object* func);
-      public: t::Object* declare_method(t::Object* cls, t::Object* func);
-      //public: t::Object* declare_function(t::Object* func);
 
       /**
-       * Finds the entry which contains [cls].
+       * Declares a method for a given class.
+       *
+       * @param cls A pointer to a @cls{t::Class}.
+       * @param func A pointer to a @cls{t::CoreFunction} to declare.
+       * @return @prm{func}.
+       */
+      public: t::Object* declare_method(t::Class* cls, t::CoreFunction* func);
+
+      /**
+       * Declares a method for a given class.
+       *
+       * @param cls A pointer to a @cls{t::Class}.
+       * @param func A pointer to a @cls{t::CoreFunction} to declare.
+       * @return @prm{func}.
+       */
+      public: t::Object* declare_method(t::Class* cls, t::UserFunction* func);
+
+       /**
+       * Declares a method for a given class.
+       *
+       * @param cls A pointer to a @cls{t::Class}.
+       * @param func A pointer to a @cls{t::CoreFunction} to declare.
+       * @return @prm{func}.
+       */
+      public: t::Object* declare_method(t::Class* cls, t::Object* func);
+
+      /**
+       * Declares a method for a given class.
+       *
+       * @param cls A pointer to a @cls{t::Class}.
+       * @param func A pointer to a @cls{t::CoreFunction} to declare.
+       * @return @prm{func}.
+       */
+      public: t::Object* declare_method(t::Object* cls, t::Object* func);
+
+      /**
+       * Finds the entry which contains @prm{cls}.
        *
        * @return The index of the entry, -1 otherwise.
        */
       public: long find(t::Class* cls);
 
       /**
-       * Finds a class named [name].
+       * Finds a class named @prm{name}.
        *
        * @return The index of the class, -1 otherwise.
        */
       public: long find(std::string name);
 
       /**
-       * Gets the t::Class object whose name is [name].
+       * Gets the t::Class object whose name is @prm{name}.
        *
        * @param name The name of the class to search.
        * @return A pointer to a t::Class object.
@@ -114,8 +136,8 @@ namespace NS_VM
       public: t::Class* get(std::string name);
 
       /**
-       * Gets a t::Function object whose name is [func_name] and which belongs
-       * to a class named [class_name].
+       * Gets a t::Function object whose name is @prm{func_name} and which belongs
+       * to a class named @prm{class_name}.
        *
        * @param class_name The name of the class to search.
        * @param func_name The name of the function to search.
@@ -124,34 +146,55 @@ namespace NS_VM
       public: t::Function* get_method(std::string class_name, std::string func_name);
 
       /**
-       * Gets a t::Function object whose name is [func_name] and which belongs
-       * to the class [cls].
+       * Gets a t::Function object whose name is @prm{func_name} and which belongs
+       * to the class @prm{cls}.
        *
-       * @param class A pointer to the t::Class object to search.
+       * @param cls A pointer to the t::Class object to search.
        * @param func_name The name of the function to search.
        * @return A pointer to a t::Function object.
        */
       public: t::Function* get_method(t::Class* cls, std::string func_name);
 
       /**
-       * Checks if the ClassTable contains a class named [name].
+       * Checks if the ClassTable contains a class named @prm{name}.
        *
        * @param name The name of the class to search.
-       * @return true if a class named [name] is contained in this ClassTable.
+       * @return true if a class named @prm{name} is contained in this ClassTable.
        */
       public: bool has(std::string name);
 
       /**
-       * Checks if the ClassTable contains a class [cls].
+       * Checks if the ClassTable contains a class @prm{cls}.
        *
-       * @param name The name of the class to search.
-       * @return true if a class named [name] is contained in this ClassTable.
+       * @param cls The class to search.
+       * @return true if a class named @prm{name} is contained in this ClassTable.
        */
       public: bool has(t::Class* cls);
-      public: bool has_method(t::Class* cls, std::string name);
-      public: bool has_method(t::Class* cls, t::Function* func);
+
+      /**
+       * Checks if a class has a method.
+       *
+       * @param cls The class to check.
+       * @param method_name The name of the method to look for.
+       * @return true if @prm{cls} has a method named @prm{method_name}.
+       */
+      public: bool has_method(t::Class* cls, std::string method_name);
+
+      /**
+       * Checks if a class has a method.
+       *
+       * @param cls The class to check.
+       * @param method The name of the method to look for.
+       * @return true if @prm{cls} has a method named @prm{method_name}.
+       */
+      public: bool has_method(t::Class* cls, t::Function* method);
 
       #ifdef _DEBUG_
+      /**
+       * Prints to the screen a list of all classes and functions.
+       *
+       * @param show_functions Whether or not to print functions.
+       */
       public: void list(bool show_functions);
       #endif
    };
