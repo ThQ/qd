@@ -23,6 +23,7 @@ $dRoot/src/t/Array.cpp \
 $dRoot/src/t/Block.cpp \
 $dRoot/src/t/Bool.cpp \
 $dRoot/src/t/Class.cpp \
+$dRoot/src/t/Collection.cpp \
 $dRoot/src/t/CoreFunction.cpp \
 $dRoot/src/t/Exception.cpp \
 $dRoot/src/t/File.cpp \
