@@ -97,5 +97,8 @@ sizeof:
 	[ -f `which perl` ] && du -skD `which perl`
 	[ -f `which svm` ] && du -skD `which svm`
 
+tar-source:
+	tar --gzip -cf '${BUILD_DIR}/qd-'`cat VERSION`'.tar.gz' bin/* include/* modules/* src/* script/* tools/* translaters/*
+
 update-version-number:
 	$(xSH) $(script_dir)/update-version $(srcdir)/VERSION
