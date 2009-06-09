@@ -24,13 +24,13 @@ namespace t
     */
    class Object
    {
-      public: Object* cls;
-      public: Object** fields;
-      public: ULong field_count;
-      public: ULong field_rooms;
-      public: int references;
-      public: int id;
-      public: bool is_abstract;
+      public: Object* cls;          ///< Object's class.
+      public: Object** fields;      ///< Object's fields, to store attributes. A @cls{t::Variable} array.
+      public: ULong field_count;    ///< Number of fields.
+      public: ULong field_rooms;    ///< Size of [fields] array.
+      public: ULong references;     ///< Number of references to this object.
+      //public: int id;             ///< WTF ?
+      //public: bool is_abstract;   ///< WTF ?
 
       public: Object();
 
