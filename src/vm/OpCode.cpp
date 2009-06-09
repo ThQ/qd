@@ -1,6 +1,6 @@
 #include "vm/OpCode.h"
 
-namespace NS_VM
+namespace vm
 {
    OpCode::OpCode()
    {
