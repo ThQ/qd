@@ -2,7 +2,7 @@
 #define T_ARRAY t::Array
 
 #include "t/Int.h"
-#include "t/Object.h"
+#include "t/Collection.h"
 
 namespace t
 {
@@ -13,10 +13,11 @@ namespace t
     * predetermined type and who can never exceed a predetermined (and fixed) number of
     * elements.
     */
-   class Array: public Object
+   class Array: public Collection
    {
       public: Object* type; ///< A pointer to a @cls{t::Class} representing the class of the objects stored.
       public: Object** items; ///< The @cls{t::Object} stored.
+      /// @todo attribute [length] is from t::Collection, remove [item_count].
       public: ULong item_count; ///< Number of item stored.
 
       /**

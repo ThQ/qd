@@ -1,6 +1,6 @@
 #include "t/List.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tLIST = NULL;
 

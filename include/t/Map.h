@@ -1,21 +1,20 @@
 #ifndef T_MAP
 #define T_MAP t::Map
 
-#include "t/Object.h"
+#include "t/Collection.h"
 #include "t/String.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern T_OBJECT* tMAP;
 
    /**
     * A map is a list of unordered key-value pairs.
     */
-   class Map : public T_OBJECT
+   class Map : public Collection
    {
-      public: int length;
-      public: T_OBJECT** keys;
-      public: T_OBJECT** items;
+      public: T_OBJECT** keys;   ///< An array of keys.
+      public: T_OBJECT** items;  ///< An array of items.
 
       public: Map();
 

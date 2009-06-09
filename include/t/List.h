@@ -4,10 +4,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "t/Object.h"
+#include "t/Collection.h"
 #include "t/String.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern T_OBJECT* tLIST;
 
@@ -16,10 +16,9 @@ namespace NS_TYPE
     *
     * If you want a fixed size collection, use t::Array.
     */
-   class List : T_OBJECT
+   class List : public Collection
    {
-      public: UInt length;
-      public: T_OBJECT** items;
+      public: T_OBJECT** items; ///< An array of @cls{t::Object}s.
 
       /**
        * Constructor

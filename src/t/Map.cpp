@@ -1,6 +1,6 @@
 #include "t/Map.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tMAP = NULL;
 

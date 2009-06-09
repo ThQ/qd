@@ -1,6 +1,6 @@
 #include "t/Array.h"
 
-namespace NS_TYPE
+namespace t
 {
    Array::Array ()
    {
