@@ -3,13 +3,13 @@
 
 #include "t/Function.h"
 
-namespace NS_TYPE
+namespace t
 {
    /**
     * An internal function created internally.
     */
 
-   class CoreFunction : public T_FUNCTION
+   class CoreFunction : public t::Function
    {
       public: ULong function_pointer; ///< A pointer to a C function to call.
 
