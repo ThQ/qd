@@ -4,13 +4,25 @@
 #include "t/Block.h"
 #include "t/Function.h"
 
-namespace NS_TYPE
+namespace t
 {
-   class UserFunction : public T_FUNCTION
+   /**
+    * A function created by the user.
+    */
+   class UserFunction : public Function
    {
-      public: T_BLOCK* block;
+      public: T_BLOCK* block; ///< A block of opcodes to run.
 
+      /**
+       * Constructor.
+       */
       public: UserFunction();
+
+      /**
+       * Sets the block of opcodes to run.
+       *
+       * @param block A block of opcodes.
+       */
       public: void set_block(T_BLOCK* block);
    };
 }

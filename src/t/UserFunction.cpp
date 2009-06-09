@@ -1,6 +1,6 @@
 #include "t/UserFunction.h"
 
-namespace NS_TYPE
+namespace t
 {
    UserFunction::UserFunction()
    {
