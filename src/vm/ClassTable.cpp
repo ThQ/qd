@@ -1,6 +1,6 @@
 #include "vm/ClassTable.h"
 
-namespace NS_VM
+namespace vm
 {
    ClassTable::ClassTable()
    {
