@@ -11,7 +11,7 @@ namespace NS_TYPE
 
    class CoreFunction : public T_FUNCTION
    {
-      public: ULong function_pointer;
+      public: ULong function_pointer; ///< A pointer to a C function to call.
 
       /**
        * Creates a t::CoreFunction object whose name is [name] and return type

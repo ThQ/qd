@@ -1,6 +1,6 @@
 #include "t/Function.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tFUNCTION = NULL;
    T_OBJECT* tBAD_ARGUMENT_TYPE_EXCEPTION = NULL;

@@ -62,14 +62,14 @@ namespace t
       /**
        * Sets the exception handler for the block.
        *
-       * @param block A pointer to a @class{t::Block} to use as an exception handler.
+       * @param block A pointer to a @cls{t::Block} to use as an exception handler.
        */
       public: void set_exception_handler(Block* block);
 
       /**
        * Throws an exception inside the block.
        *
-       * @param exception A pointer to a @class{t::Object} that is a @class{t::Exception} to throw.
+       * @param exception A pointer to a @cls{t::Object} that is a @cls{t::Exception} to throw.
        */
       public: inline void throw_exception(T_OBJECT* exception)
       {
@@ -80,7 +80,7 @@ namespace t
       /**
        * Throws an exception inside the block.
        *
-       * @param exception A pointer to a @class{t::Exception} to throw.
+       * @param exception A pointer to a @cls{t::Exception} to throw.
        */
       public: void throw_exception(T_EXCEPTION* exception);
 

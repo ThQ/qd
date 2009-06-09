@@ -1,6 +1,6 @@
 #include "t/Bool.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tBOOL;
    T_OBJECT* gTRUE = NULL;

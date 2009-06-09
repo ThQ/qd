@@ -1,6 +1,6 @@
 #include "t/HeapObject.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tHEAP_OBJECT = NULL;
 

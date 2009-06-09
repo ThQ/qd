@@ -3,7 +3,7 @@
 
 #include "t/Object.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern T_OBJECT* tHEAP_OBJECT;
 
@@ -13,10 +13,10 @@ namespace NS_TYPE
     * An heap object is replaced by the object pointed just before an opcode
     * call.
     */
-   class HeapObject : public T_OBJECT
+   class HeapObject : public Object
    {
-      public: bool local;
-      public: long position;
+      public: bool local;     ///< Whether from local heap or not.
+      public: long position;  ///< Position in the heap.
 
       /**
        * Constructor.
@@ -24,11 +24,11 @@ namespace NS_TYPE
       public: HeapObject();
 
       /**
-       * Creates a t::HeapObject.
+       * Creates a @cls{t::HeapObject}.
        *
        * @param local Whether the object is from the local heap or not.
-       * @param position The position from the heap.
-       * @return A new t::HeapObject.
+       * @param position The position in the heap.
+       * @return A new @cls{t::HeapObject}.
        */
       public: static T_OBJECT* build(bool local, long position);
    };

@@ -1,6 +1,6 @@
 #include "t/Float.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tFLOAT = NULL;
 

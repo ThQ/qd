@@ -1,6 +1,6 @@
 #include "t/Class.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tCLASS_NOT_FOUND_EXCEPTION = NULL;
    T_OBJECT* tBAD_TYPE_EXCEPTION = NULL;

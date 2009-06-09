@@ -1,6 +1,6 @@
 #include "t/Exception.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tEXCEPTION = NULL;
    T_OBJECT* tRUNTIME_EXCEPTION = NULL;

@@ -1,6 +1,6 @@
 #include "t/Block.h"
 
-namespace NS_TYPE
+namespace t
 {
    Block::Block()
    {

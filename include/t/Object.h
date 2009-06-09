@@ -10,38 +10,15 @@
 #include "Memory.h"
 #include "types.h"
 
-
-#define SVM_PICK(o) \
-   DEPRECATED(); \
-   ASSERT_NOT_NULL(o); \
-   GC("Picking <T_OBJECT(@%lu)>...", (ULong)(o)); \
-   T_OBJECT::pick(o);\
-   GC_APD(" OK"); \
-   if(o != NULL){GC_APD(" [references_now=%d]", (o)->references);} \
-   GC_APD("\n");
-
-#define SVM_PICK_SAFE(o) DEPRECATED(); if ((o) != NULL) {SVM_PICK((o));}
-
-#define SVM_DROP(o) \
-   DEPRECATED(); \
-   ASSERT_NOT_NULL(o); \
-   GC("Dropping <T_OBJECT(@%lu)>...", (ULong)(o)); \
-   T_OBJECT::drop(o); \
-   GC_APD(" OK"); \
-   if(o != NULL){GC_APD(" [references_now=%d]", (o)->references);} \
-   GC_APD("\n");
-
-#define SVM_DROP_SAFE(o) DEPRECATED(); if ((o) != NULL) {SVM_DROP(o);}
-
 #define SVM_ASSERT_REF_COUNT(object, ref_count) \
+   DEPRECATED(); \
    if (((Object*)object)->references != ref_count) \
    { FATAL("<Object*(@%lu)>.references must be <%d>, not <%d>.", (ULong)object, ref_count, ((Object*)object)->references); abort(); }
 
 #define SVM_OBJECT_FIELDS_STEP 5
 
-namespace NS_TYPE
+namespace t
 {
-
    /**
     * Objects for the VM.
     */

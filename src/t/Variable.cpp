@@ -1,6 +1,6 @@
 #include "t/Variable.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tVARIABLE = NULL;
 

@@ -1,6 +1,6 @@
 #include "t/Object.h"
 
-namespace NS_TYPE
+namespace t
 {
    Object* tOBJECT = NULL;
    Object* tNULL = NULL;

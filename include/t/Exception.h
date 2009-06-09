@@ -6,7 +6,7 @@
 #include "t/Object.h"
 #include "t/String.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern T_OBJECT* tEXCEPTION;
    extern T_OBJECT* tRUNTIME_EXCEPTION;
@@ -15,10 +15,10 @@ namespace NS_TYPE
    /**
     * An exception signaling an error in a program flow.
     */
-   class Exception : public T_OBJECT
+   class Exception : public Object
    {
-      public: T_OBJECT* message;
-      public: T_OBJECT* stack_trace;
+      public: T_OBJECT* message;       ///< Error message.
+      public: T_OBJECT* stack_trace;   ///< A representation of the stack trace when the exception was thrown.
 
       /**
        * Constructor.
@@ -26,9 +26,9 @@ namespace NS_TYPE
       public: Exception();
 
       /**
-       * Asserts that an object is of type t::Exception.
+       * Asserts that an object is of type @cls{t::Exception}.
        *
-       * @param obj Object to test
+       * @param obj Object to test.
        */
       public: inline static void assert(T_OBJECT* obj)
       {
@@ -38,31 +38,31 @@ namespace NS_TYPE
       /**
        * Builds an empty exception.
        *
-       * @return An emtpy t::Exception
+       * @return An emtpy @cls{t::Exception}
        */
       public: static T_OBJECT* build();
 
       /**
-       * Builds an exception with message [message].
+       * Builds an exception with message @prm{message}.
        *
-       * @param message Error message
-       * @return A t::Exception with a message
+       * @param message Error message.
+       * @return A @cls{t::Exception} with a message.
        */
       public: static T_OBJECT* build(T_OBJECT* message);
 
       /**
-       * Builds a string from an exception [error].
+       * Builds a string from an exception @prm{error}.
        *
-       * @param error The exception from which to build a string
-       * @return a t::String representing the exception
+       * @param error The exception from which to build a string.
+       * @return A @cls{t::String} representing the exception.
        */
       public: static T_OBJECT* cast_to_string(T_OBJECT* error);
 
-      /*
-       * Checks if an object is of type t::Exception.
+      /**
+       * Checks if an object is of type @cls{t::Exception}.
        *
        * @param obj An object to be checked.
-       * @return true if [obj] is of type t::Exception
+       * @return true if @prm{obj} is of type @cls{t::Exception}.
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -70,14 +70,14 @@ namespace NS_TYPE
       }
 
       /**
-       * Builds a string from exception [error] and prints it to the console.
+       * Builds a string from exception @prm{error} and prints it to the console.
        *
        * @param error An exception that will be converted to string so as to be printed
        */
       public: static void print(T_OBJECT* error);
 
       /**
-       * Sets the message of exception [error] to [message].
+       * Sets the message of exception @prm{error} to @prm{message}.
        *
        * @param error The exception to set the message to
        * @param message The message to use
@@ -86,7 +86,7 @@ namespace NS_TYPE
       public: static T_OBJECT* set_message(T_OBJECT* error, T_OBJECT* message);
 
       /**
-       * Sets the stack trace of exception [exception] to [stack_trace].
+       * Sets the stack trace of exception @prm{exception} to @prm{stack_trace}.
        *
        * @param exception The exception to set the stack trace to
        * @param stack_trace The stack trace to use

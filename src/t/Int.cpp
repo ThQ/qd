@@ -1,6 +1,6 @@
 #include "t/Int.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tINT = NULL;
 

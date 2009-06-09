@@ -8,18 +8,18 @@
 #include "t/String.h"
 #include "util/Object.h"
 
-namespace NS_TYPE
+namespace t
 {
    extern T_OBJECT* tVARIABLE;
 
    /**
     * A variable is a container for objects of a given type.
     */
-   class Variable : public T_OBJECT
+   class Variable : public Object
    {
-      public: T_OBJECT* object_type;
-      public: T_OBJECT* object;
-      public: std::string name;
+      public: T_OBJECT* object_type;   ///< Class of objects allowed in this variable.
+      public: T_OBJECT* object;        ///< Object stored in this variable.
+      public: std::string name;        ///< Name of this variable.
 
       /**
        * Constructor.
@@ -32,7 +32,7 @@ namespace NS_TYPE
       public: ~Variable();
 
       /**
-       * Asserts that an object is of type [t::Variable].
+       * Asserts that an object is of type @cls{t::Variable}.
        *
        * @param obj An object to check.
        */
@@ -42,27 +42,27 @@ namespace NS_TYPE
       }
 
       /**
-       * Creates a t::Variable of type [type].
+       * Creates a t::Variable of type @prm{type}.
        *
        * @param type The type of the value.
-       * @return A new t::Variable.
+       * @return A new @cls{t::Variable}.
        */
       public: static T_OBJECT* build(T_OBJECT* type);
 
       /**
-       * Creates a t::Variable of type [type] and name [name].
+       * Creates a @cls{t::Variable} of type @prm{type} and name @prm{name}.
        *
        * @param type The type of the value.
        * @param name The name of the variable.
-       * @return A new t::Variable.
+       * @return A new @cls{t::Variable}.
        */
       public: static T_OBJECT* build(T_OBJECT* type, std::string name);
 
-      /*
+      /**
        * Checks if an object is of type t::tVARIABLE.
        *
        * @param obj An object to check.
-       * @return true if [obj] is of type [t::Variable].
+       * @return true if @prm{obj} is of type @cls{t::Variable}.
        */
       public: inline static bool check(T_OBJECT* obj)
       {
@@ -70,16 +70,16 @@ namespace NS_TYPE
       }
 
       /**
-       * Sets the object of a t::Variable.
+       * Sets the object of a @cls{t::Variable}.
        *
        * @param variable The variable to set.
        * @param obj The object to assign.
-       * @return [obj] unchanged.
+       * @return @prm{obj} unchanged.
        */
       public: static T_OBJECT* set(T_OBJECT* variable, T_OBJECT* obj);
 
       /**
-       * Sets the object type a t::Variable can contain.
+       * Sets the object type a @cls{t::Variable} can contain.
        *
        * @param type The type of the variable.
        */
