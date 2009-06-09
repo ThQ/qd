@@ -1,6 +1,6 @@
 #include "vm/Engine.h"
 
-namespace NS_VM
+namespace vm
 {
    Engine::Engine()
    {

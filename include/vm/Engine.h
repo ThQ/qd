@@ -47,17 +47,23 @@
    e->set_class(t::tINDEX_OUT_OF_RANGE_EXCEPTION); \
    engine->throw_exception(e);
 
-namespace NS_VM
+namespace vm
 {
+
+   /**
+    * The Real Virtual Machine.
+    *
+    * It contains all the classes, the functions, the blocks, etc.
+    */
    class Engine
    {
-      public: t::Block** blocks;
-      public: UInt block_count;
-      public: ClassTable classes;
-      public: t::Block* current_block;
-      public: FunctionTable functions;
-      public: Heap heap;
-      public: Stack stack;
+      public: t::Block** blocks;       ///< An array of @cls{t::Block}.
+      public: UInt block_count;        ///< The number of blocks.
+      public: ClassTable classes;      ///< A class table.
+      public: t::Block* current_block; ///< The block being currently run.
+      public: FunctionTable functions; ///< A function table.
+      public: Heap heap;               ///< Global heap, also called the swap.
+      public: Stack stack;             ///< Call stack.
 
       /**
        * Constructor.
