@@ -1,6 +1,6 @@
 #include "t/CoreFunction.h"
 
-namespace NS_TYPE
+namespace t
 {
    CoreFunction*
    CoreFunction::build(const char* name, ULong pointer, Object* return_type)
