@@ -9,7 +9,7 @@ namespace t
    Object::Object()
    {
       this->cls = NULL;
-      this->is_abstract = false;
+      //this->is_abstract = false;
       this->references = 0;
       this->fields = 0;
       this->field_count = 0;
