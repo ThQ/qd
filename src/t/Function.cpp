@@ -11,7 +11,7 @@ namespace t
       this->return_type = NULL;
       this->arguments = NULL;
       this->arguments_count = 0;
-      this->is_abstract = false;
+      //this->is_abstract = false;
       this->is_static = true;
       this->is_user = false;
    }
