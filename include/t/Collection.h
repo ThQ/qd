@@ -5,6 +5,9 @@
 
 namespace t
 {
+   /**
+    * A base class for any kind of collection (array, list, map, set, etc).
+    */
    class Collection : public Object
    {
       public: ULong length; ///< Number of items in the collection.

@@ -5,6 +5,9 @@
 #define MALLOC(size) malloc((size))
 #define REALLOC(pointer, new_size) realloc((pointer), (new_size))
 
+/**
+ * A way of abstracting memory management.
+ */
 class Memory
 {
    public: inline static void* free(void* ptr)

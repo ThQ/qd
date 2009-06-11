@@ -3,9 +3,12 @@
 
 #include "t/Object.h"
 
-namespace NS_TYPE
+namespace t
 {
-   class UserObject: public T_OBJECT
+   /**
+    * An object created by the user.
+    */
+   class UserObject: public Object
    {
 
    };
