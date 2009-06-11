@@ -1,6 +1,6 @@
 #include "util/String.h"
 
-namespace NS_UTIL
+namespace util
 {
    t::Object*
    String::format(t::Object* format_str, ULong argc, t::Object** argv)
@@ -10,7 +10,7 @@ namespace NS_UTIL
       ULong arg = 0;
       t::String* result = (t::String*)t::String::build();
 
-      // Traversing characters for a sequence like %[b|i|s%]
+      // Traversing characters for a sequence like %[b|i|s|%]
       for (ULong i = 0 ; i < len ; ++i)
       {
          if (s->value[i] == '%' && i + 1 <= len)

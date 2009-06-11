@@ -1,6 +1,6 @@
 #include "util/List.h"
 
-namespace NS_UTIL
+namespace util
 {
    void
    List::print(t::List* list)

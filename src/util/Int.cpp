@@ -1,6 +1,6 @@
 #include "util/Int.h"
 
-namespace NS_UTIL
+namespace util
 {
    t::Object*
    Int::list_to_iii(t::Object* src, t::Object* dest, t::Object* step)

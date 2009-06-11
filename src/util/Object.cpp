@@ -1,6 +1,6 @@
 #include "util/Object.h"
 
-namespace NS_UTIL
+namespace util
 {
    void
    Object::assert_type(t::Object* object, t::Object* type)

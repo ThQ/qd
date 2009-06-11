@@ -1,6 +1,6 @@
 #include "util/Class.h"
 
-namespace NS_UTIL
+namespace util
 {
    void
    Class::declare_field(t::Object* cls, t::Object* type, std::string name)
