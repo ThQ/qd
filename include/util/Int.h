@@ -4,11 +4,21 @@
 #include "t/Int.h"
 #include "t/List.h"
 
-namespace NS_UTIL
+namespace util
 {
+   /**
+    * Utilities for @cls{t::Int}.
+    */
    class Int
    {
-      // @TODO : WTH is that function name ??
+      /**
+       * Creates a @cls{t::List}} filled with @cls{t::Int}'s in a given range.
+       *
+       * @param src Range start.
+       * @param dest Range end.
+       * @param step Range step.
+       * @todo WTH is that function name ??
+       */
       public: static t::Object* list_to_iii(t::Object* src, t::Object* dest, t::Object* step);
    };
 }

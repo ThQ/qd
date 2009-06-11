@@ -6,10 +6,18 @@
 #include "t/List.h"
 #include "t/String.h"
 
-namespace NS_UTIL
+namespace util
 {
+   /**
+    * Utilities for @cls{t::List}.
+    */
    class List
    {
+      /**
+       * Prints a list to the console.
+       *
+       * @param list The list to print.
+       */
       public: static void print(t::List* list);
    };
 }
