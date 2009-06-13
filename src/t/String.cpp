@@ -1,6 +1,6 @@
 #include "t/String.h"
 
-namespace NS_TYPE
+namespace t
 {
    T_OBJECT* tSTRING = NULL;
 
@@ -9,6 +9,7 @@ namespace NS_TYPE
       this->set_class(tSTRING);
    }
 
+   /**
    T_OBJECT*
    String::append(T_OBJECT* base, T_OBJECT* s)
    {
@@ -40,6 +41,7 @@ namespace NS_TYPE
       result->value.append(1, c);
       return (T_OBJECT*)result;
    }
+   */
 
    T_OBJECT*
    String::build()
@@ -48,12 +50,10 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::build(T_OBJECT* s)
+   String::build(String* s)
    {
-      String::assert(s);
-
       String* result = new String();
-      result->value = ((String*)s)->value;
+      result->value = s->value;
       return (T_OBJECT*)result;
    }
 
@@ -81,12 +81,6 @@ namespace NS_TYPE
       String* result = new String();
       result->value = s;
       return (T_OBJECT*)result;
-   }
-
-   T_OBJECT*
-   String::cast_to_string(T_OBJECT* s)
-   {
-      return s;
    }
 
    T_OBJECT*
@@ -179,10 +173,8 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::copy(T_OBJECT* self)
+   String::copy(String* self)
    {
-      String::assert(self);
-
       String* result = new String();
       result->value = ((String*)self)->value;
 
@@ -191,20 +183,18 @@ namespace NS_TYPE
 
 
    T_OBJECT*
-   String::cut_after(T_OBJECT* base, T_OBJECT* search)
+   String::cut_after(String* base_str, String* sub_str)
    {
-      String::assert(base);
-      String::assert(search);
       T_OBJECT* result;
 
-      long pos = ((Int*)String::find(base, search, T_INT::build((float)0)))->value;
-      if (pos != -1)
+      long sub_str_pos = ((Int*)String::find(base_str, sub_str, T_INT::build((long)0)))->value;
+      if (sub_str_pos != -1)
       {
-         result = String::cut_at(base, T_INT::build((long)pos));
+         result = String::cut_at(base_str, T_INT::build((long)pos));
       }
       else
       {
-         result = base;
+         result = String::copy(base_str);
       }
       return result;
    }
@@ -293,55 +283,79 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::insert(T_OBJECT* s, T_OBJECT* sub, ULong at)
+   String::get_character(String* base_str, Int* char_index)
    {
-      String::assert(s);
-      String::assert(sub);
+      ASSERT(
+            (ULong)char_index->value < base_str->value.length(),
+            "%s(...) : %lu is outside of range [0:%lu]",
+            __FUNCTION__, (ULong)char_index->value,
+            (ULong)base_str->value.length()
+      );
 
-      ULong l1 = ((String*)s)->value.length();
-      ULong l2 = ((String*)sub)->value.length();
-      ULong new_length = l1 + l2;
+      char* tmp = new char[2];
+      tmp[0] = base_str->value[char_index];
+      tmp[1] = 0;
 
-      char* tmp = new char[new_length + 1];
+      T_OBJECT* s = String::build(tmp);
+      delete[] tmp;
+      return s;
+   }
 
-      for (ULong i = 0 ; i < at ; ++i)
+   T_OBJECT*
+   String::get_length(String* base_str)
+   {
+      return T_INT::build(((long)base_str)->value.length());
+   }
+
+   T_OBJECT*
+   String::insert(ULong at_index, String* splice_str)
+   {
+      ULong this_len = this->value.length();
+      ULong splice_str_len = splice_str->value.length();
+      ULong joined_len = this_len + splice_str_len;
+
+      char* joined_str_arr = new char[joined_len + 1];
+
+      // Copies the first portion (before @prm{at_index})
+      for (ULong char_index = 0 ; char_index < at_index ; ++char_index)
       {
-         tmp[i] = ((String*)s)->value[i];
+         joined_str_arr[char_index] = this->value[char_index];
       }
 
-      for (ULong i = 0 ; i < l2 ; ++ i)
+      // Copies the splice string
+      for (ULong char_index = 0 ; char_index < splice_str_len ; ++ char_index)
       {
-         tmp[at + i] = ((String*)sub)->value[i];
+         joined_str_arr[at_index + char_index] = splice_str->value[char_index];
       }
 
-      for (ULong i = at ; i < l1 ; ++i)
+      // Copies the second portion (after @prm{at_index})
+      ULong second_portion_at = at_index + splice_str_len;
+      for (ULong char_index = at ; i < this_len ; ++char_index)
       {
-         tmp[i + l2] = ((String*)s)->value[i];
+         joined_str_arr[second_portion_at + char_index] = this->value[char_index];
       }
-      tmp[new_length] = 0;
+
+      joined_str_arr[joined_len] = 0;
 
       T_OBJECT* result = String::build(tmp);
-      delete tmp;
+      delete joined_str_arr;
 
       return result;
    }
 
    T_OBJECT*
-   String::is_alphabetic(T_OBJECT* str)
+   String::is_alphabetic()
    {
-      String::assert(str);
-
-      String* s = (String*)str;
-      ULong l = s->value.length();
+      ULong str_len = this->value.length();
       T_OBJECT* result;
 
-      if (l > 0)
+      if (str_len > 0)
       {
          result = NS_TYPE::gTRUE;
 
-         for(ULong i = 0 ; i < l ; ++i)
+         for(ULong char_index = 0 ; char_index < str_len ; ++char_index)
          {
-            if (s->value[i] < 'A' || (s->value[i] > 'Z' && s->value[i] < 'a') || s->value[i] > 'z')
+            if (this->value[char_index] < 'A' || (this->value[char_index] > 'Z' && this->value[char_index] < 'a') || this->value[char_index] > 'z')
             {
                result = NS_TYPE::gFALSE;
                break;
@@ -359,30 +373,27 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::is_digit(T_OBJECT* str)
+   String::is_digit()
    {
-      String::assert(str);
-
-      String* s = (String*)str;
-      ULong l = s->value.length();
+      ULong str_len = this->value.length();
       T_OBJECT* result;
 
-      if (l > 0)
+      if (str_len > 0)
       {
-         result = NS_TYPE::gTRUE;
+         result = t::gTRUE;
 
-         for(ULong i = 0 ; i < l ; ++i)
+         for(ULong char_index = 0 ; char_index < str_len ; ++char_index)
          {
-            if (s->value[i] < '0' || s->value[i] > '9')
+            if (this->value[char_index] < '0' || this->value[char_index] > '9')
             {
-               result = NS_TYPE::gFALSE;
+               result = t::gFALSE;
                break;
             }
          }
       }
       else
       {
-         result = NS_TYPE::gFALSE;
+         result = t::gFALSE;
       }
 
       T_OBJECT::assert_not_null(result);
@@ -391,241 +402,205 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::is_lowercase(T_OBJECT* str)
+   String::is_lowercase()
    {
-      String::assert(str);
-
-      String* s = (String*)str;
-      ULong l1 = s->value.length();
+      ULong str_len = this->value.length();
 
       bool is_lowercase = true;
-      for (ULong i = 0 ; i < l1 ; ++i)
+      for (ULong char_index = 0 ; char_index < str_len ; ++char_index)
       {
-         if (s->value[i] >= 'A' && s->value[i] <= 'Z')
+         if (this->value[char_index] >= 'A' && this->value[char_index] <= 'Z')
          {
             is_lowercase = false;
             break;
          }
       }
 
-      T_OBJECT* result;
-      if (is_lowercase)
-      {
-         result = NS_TYPE::gTRUE;
-      }
-      else
-      {
-         result = NS_TYPE::gFALSE;
-      }
-      return result;
+      return is_lowercase ? t::gTRUE : t::gFALSE;
    }
 
    T_OBJECT*
-   String::is_space(T_OBJECT* str)
+   String::is_space()
    {
-      String::assert(str);
-
-      String* s = (String*)str;
-      ULong l = s->value.length();
+      ULong this_len = this->value.length();
       T_OBJECT* result;
 
-      if (l > 0)
+      if (this_len > 0)
       {
-          result = NS_TYPE::gTRUE;
+          result = t::gTRUE;
 
-         for (ULong i = 0 ; i < l ; ++i)
+         for (ULong char_index = 0 ; char_index < this_len ; ++char_index)
          {
-            if (s->value[i] > ' ')
+            if (this->value[char_index] > ' ')
             {
-               result = NS_TYPE::gFALSE;
+               result = t::gFALSE;
                break;
             }
          }
       }
       else
       {
-         result = NS_TYPE::gFALSE;
+         result = t::gFALSE;
       }
 
-      T_OBJECT::assert_not_null(result);
+      Object::assert_not_null(result);
 
       return result;
    }
 
    T_OBJECT*
-   String::is_uppercase(T_OBJECT* str)
+   String::is_uppercase()
    {
-      String::assert(str);
-
-      String* s = (String*)str;
-      ULong l1 = s->value.length();
+      ULong this_len = this->value.length();
 
       bool is_uppercase = true;
-      for (ULong i = 0 ; i < l1 ; ++i)
+      for (ULong char_index = 0 ; char_index < this_len ; ++char_index)
       {
-         if (s->value[i] >= 'a' && s->value[i] <= 'z')
+         if (this->value[char_index] >= 'a' && this->value[char_index] <= 'z')
          {
             is_uppercase = false;
             break;
          }
       }
 
-      T_OBJECT* result;
-      if (is_uppercase)
-      {
-         result = NS_TYPE::gTRUE;
-      }
-      else
-      {
-         result = NS_TYPE::gFALSE;
-      }
-      return result;
+       return is_uppercase ? t::gTRUE : t::gFALSE;;
    }
 
    T_OBJECT*
-   String::join(T_OBJECT* s1, T_OBJECT* s2)
+   String::join(String* str1, String* str2)
    {
-      String::assert(s1);
-      String::assert(s2);
+      ULong str1_len = str1->value.length();
+      ULong str2_len = str2->value.length();
+      ULong joined_size = str1_len + str2_len;
+      char* joined_string_arr = new char[joined_len + 1]; // +1 for NULL character
 
-      ULong l1 = ((String*)s1)->value.length();
-      ULong l2 = ((String*)s2)->value.length();
-      ULong new_size = l1 + l2;
-      char* tmp = new char[new_size + 1];
-
-
-      for (ULong i = 0 ; i < l1 ; ++i)
+      // Copy first string
+      for (ULong char_index = 0 ; char_index < str1_len ; ++char_index)
       {
-         tmp[i] = ((String*)s1)->value[i];
+         joined_string_arr[char_index] = str1->value[char_index];
       }
 
-      for (ULong i = 0 ; i < l2 ; ++i)
+      // Copy second string
+      for (ULong char_index = 0 ; char_index < str2_len; ++char_index)
       {
-         tmp[l1 + i] = ((String*)s2)->value[i];
+         joined_string_arr[str1_len + char_index] = str2->value[char_index];
       }
 
-      tmp[new_size] = 0;
+      joined_string_arr[joined_size] = 0;
 
-      T_OBJECT* result = String::build(tmp);
-      delete tmp;
+      T_OBJECT* result_string = String::build(joined_string_arr);
+      delete joined_string_arr;
 
-      return result;
+      return result_string;
    }
 
    T_OBJECT*
-   String::lower(T_OBJECT* self)
+   String::lower_case()
    {
-      String::assert(self);
+      ULong lower_case_str_len = this->value.length();
+      char* lower_case_str_arr = new char[lower_case_str_len + 1];
 
-      String* s = (String*)self;
-      ULong len = s->value.length();
-      char* tmp = new char[len + 1];
-
-      for (ULong i = 0 ; i < len ; ++i)
+      for (ULong char_index = 0 ; char_index < lower_case_str_len ; ++char_index)
       {
-         if (s->value[i] >= 'A' && s->value[i] <= 'Z')
+         if (this->value[char_index] >= 'A' && this->value[char_index] <= 'Z')
          {
-            tmp[i] = s->value[i] + 32;
+            lower_case_str_arr[char_index] = this->value[char_index] + 32;
          }
          else
          {
-            tmp[i] = s->value[i];
+            lower_case_str_arr[char_index] = this->value[char_index];
          }
       }
-      tmp[len] = 0;
+      lower_case_str_arr[len] = 0;
 
       T_OBJECT* result = String::build(tmp);
+      delete lower_case_str_arr;
+      return result;
+   }
+
+   T_OBJECT*
+   String::multiply(Int* times)
+   {
+      ULong n_times = times->value;
+      ULong result_str_len = this->value.length() * n_times;
+      char* result_str_arr = new char[result_str_len + 1];
+
+      for (ULong x_times = 1 ; x_times < n_times ; ++x_times)
+      {
+
+         for (ULong char_index = 0 ; char_index < this->value.length() ; ++char_index)
+         {
+            result_str_arr[(x_times - 1) * this->value.length() + char_index] = this->value[char_index];
+         }
+      }
+      result_str_arr[result_str_arr] = 0;
+
+      T_OBJECT* result = String::build(result_str_arr);
       delete tmp;
       return result;
    }
 
    T_OBJECT*
-   String::multiply(T_OBJECT* self, T_OBJECT* times)
+   String::pad(ULong padded_str_final_len, String* pad_str)
    {
-      String::assert(self);
-      T_INT::assert(times);
+      char* padded_str_arr = new char[padded_str_final_len];
+      ULong padded_str_current_len = 0;
+      ULong this_len = this->value.length();
+      ULong pad_str_len = pad_str->value.length();
 
-      int t = ((Int*)times)->value;
-      ULong new_length = (((String*)self)->value.length() * (ULong)t);
-      char* tmp = new char[new_length + 1];
-
-      for (int i = 1 ; i < t ; ++i)
+      // Copies [this] into the array.
+      for (ULong char_index = 0 ; char_index < this_len ; ++ char_index)
       {
-         for (ULong j = 0 ; j < ((String*)self)->value.length() ; ++j)
+         padded_str_arr[char_index] = this->value[char_index];
+      }
+
+      // As long as the array is not filled...
+      while (padded_str_current_len < padded_str_final_len)
+      {
+         // ... copies another [pad_str] into the array.
+         for (char_index = 0 ; char_index < pad_str_len && padded_str_current_len < padded_str_final_len; ++i)
          {
-            tmp[i + j] = ((String*)self)->value[j];
+            padded_str_arr[padded_str_current_len] = pad_str->value[char_index];
+            ++ padded_str_current_len;
          }
       }
-      tmp[new_length] = 0;
 
-      T_OBJECT* result = String::build(tmp);
-      delete tmp;
-      return result;
-   }
+      ASSERT(padded_str_current_len == padded_str_final_len, "We did not feel the array completely, what's wrong ?");
 
-   T_OBJECT*
-   String::pad(T_OBJECT* base, ULong len, T_OBJECT* spad)
-   {
-      String::assert(base);
-      String::assert(spad);
-
-      std::string dest = ((String*)base)->value;
-      std::string padstr = ((String*)spad)->value;
-      ULong i = 0;
-      while (dest.length() != len)
-      {
-         for (i = 0 ; i < padstr.length() && dest.length() != len ; ++i)
-         {
-            dest.push_back((char)padstr[i]);
-         }
-      }
+      Object* result = String::build(padded_str_arr);
+      delete padded_str_arr;
       return String::build(dest);
    }
 
    T_OBJECT*
-   String::lpad(T_OBJECT* base, ULong len, T_OBJECT* spad)
+   String::lpad(ULong dest_str_final_len, String* pad_str)
    {
-      String::assert(base);
-      String::assert(spad);
+      char* dest_str = new char[dest_str_final_len + 1];
+      ULong this_len = this->value.length();
+      ULong pad_str_len = pad_str->value.length();
+      ULong dest_str_current_len = 0;
 
-      std::string dest = ((String*)base)->value;
-      std::string padstr = ((String*)spad)->value;
-      ULong i = 0;
-      while (dest.length() != len)
+      // Copies [this] at the end of the array.
+      for (ULong char_index = 0 ; char_index < this_len ; ++ char_index)
       {
-         for (i = 0 ; i < padstr.length() && dest.length() != len ; ++i)
+         dest_str[dest_str_final_len - this_len + char_index] = this->value[char_index];
+      }
+
+      // As long as we did not feel the array...
+      while (dest_str_current_len < dest_str_final_len)
+      {
+         // ... copies another time pad_str, backwardly.
+         for (ULong char_index = pad_str_len - 1 ; char_index >= 0  && dest_str_current_len < dest_str_final_len ; --char_index)
          {
-            dest.insert(0, 1, padstr[i]);
+            dest_str[dest_str_final_len - dest_str_current_len] = pad_str->value[char_index];
+            ++ dest_str_current_len;
          }
       }
-      return String::build(dest);
-   }
+      ASSERT(dest_str_current_len == dest_str_final_len, "We did not feel the array completely, what's wrong ?");
 
-   T_OBJECT*
-   String::prepend(T_OBJECT* s1, T_OBJECT* s2)
-   {
-      String::assert(s1);
-      String::assert(s2);
-
-      ULong l1 = ((String*)s1)->value.length();
-      ULong l2 = ((String*)s2)->value.length();
-      ULong new_size = l1 + l2;
-      char* tmp = new char[new_size + 1];
-
-      for (ULong i = 0 ; i < l2 ; ++i)
-      {
-         tmp[i] = ((String*)s2)->value[i];
-      }
-
-      for (ULong i = 0 ; i < l1 ; ++i)
-      {
-         tmp[i + l2] = ((String*)s1)->value[i];
-      }
-
-      tmp[new_size] = 0;
-
-      T_OBJECT* result = String::build(tmp);
-      delete tmp;
+      dest_str[dest_str_final_len] = 0;
+      Object* result = String::build(dest_str);
+      delete dest_str;
 
       return result;
    }
@@ -642,36 +617,6 @@ namespace NS_TYPE
    {
       String::assert(s);
       printf("%s\n", ((String*)s)->value.c_str());
-   }
-
-   T_OBJECT*
-   String::get_character(T_OBJECT* self, T_OBJECT* pos)
-   {
-      String::assert(self);
-      T_INT::assert(pos);
-
-      ASSERT(
-            (ULong)((T_INT*)pos)->value < ((String*)self)->value.length(),
-            "%s(...) : %lu is outside of range [0:%lu]",
-            __FUNCTION__, (ULong)((T_INT*)pos)->value,
-            (ULong)((String*)self)->value.length()
-      );
-
-      char* tmp = new char[2];
-      tmp[0] = ((String*)self)->value[((T_INT*)pos)->value];
-      tmp[1] = 0;
-
-      T_OBJECT* s = String::build(tmp);
-      delete[] tmp;
-      return s;
-   }
-
-   T_OBJECT*
-   String::get_length(T_OBJECT* s)
-   {
-      String::assert(s);
-
-      return T_INT::build((long)((String*)s)->value.length());
    }
 
    T_OBJECT*
@@ -768,24 +713,20 @@ namespace NS_TYPE
    }
 
    T_OBJECT*
-   String::upper(T_OBJECT* self)
+   String::upper_case()
    {
-      String::assert(self);
-
-      String* s = (String*)self;
-      ULong len = (ULong)s->value.length();
+      ULong len = (ULong)this->value.length();
       char* tmp = new char[len + 1];
-
 
       for (ULong i = 0 ; i < len ; ++i)
       {
-         if (s->value[i] >= 'a' && s->value[i] <= 'z')
+         if (this->value[i] >= 'a' && this->value[i] <= 'z')
          {
-            tmp[i] = s->value[i] - 32;
+            tmp[i] = this->value[i] - 32;
          }
          else
          {
-            tmp[i] = s->value[i];
+            tmp[i] = this->value[i];
          }
       }
       tmp[len] = 0;
