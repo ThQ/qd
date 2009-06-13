@@ -1,6 +1,6 @@
 #include "vm/Parser.h"
 
-namespace NS_VM
+namespace vm
 {
    // TODO: Stop intensive REALLOC'ing
    UInt
