@@ -156,14 +156,11 @@ namespace t
    }
 
    T_OBJECT*
-   Int::multiply(T_INT* base, T_INT* item)
+   Int::multiply(Int<_IntSize>* base, Int<_IntSize>* item)
    {
-      T_INT::assert(base);
-      T_INT::assert(item);
+      _IntSize result = (_IntSize)(base->value * item->value);
 
-      long int i = (long int)(((T_INT*)base)->value * ((T_INT*)item)->value);
-
-      return T_INT::build(i);
+      return new Int<_IntSize>(result);
    }
 
    T_OBJECT*

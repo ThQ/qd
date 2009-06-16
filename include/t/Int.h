@@ -2,6 +2,7 @@
 #define T_INT t::Int
 #define T_INTEGER T_INT
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -17,9 +18,9 @@ namespace t
    /**
     * An integer used in the VM.
     */
-   class Int : Object
+   template <class _IntSize> class Int : Object
    {
-      public: long int value; ///< Int value.
+      public: long value; ///< Int value.
 
       /**
        * Constructor.
@@ -145,7 +146,7 @@ namespace t
        * @param item A @cls{t::Int} used as multiplier.
        * @return The result.
        */
-      public: static T_OBJECT* multiply(T_INT* base, T_INT* item);
+      public: static T_OBJECT* multiply(Int<_IntSize>* base, Int<_IntSize>* item);
 
       /**
        * Multiply an @cls{t::Int} by another one, in place.
