@@ -10,7 +10,7 @@ namespace t
     */
    class Collection : public Object
    {
-      public: ULong length; ///< Number of items in the collection.
+      public: uint64_t length; ///< Number of items in the collection.
    };
 }
 
