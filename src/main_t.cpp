@@ -4,7 +4,6 @@
 #include "t/Class.h"
 #include "t/CoreFunction.h"
 #include "t/Exception.h"
-#include "t/File.h"
 #include "t/Float.h"
 #include "t/Function.h"
 #include "t/Int.h"
