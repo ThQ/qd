@@ -10,6 +10,8 @@ namespace t
 
    /**
     * A map is a list of unordered key-value pairs.
+    *
+    * @todo Make it a tree.
     */
    class Map : public Collection
    {
@@ -53,46 +55,46 @@ namespace t
        * @param map The map to clear.
        * @return [map].
        */
-      public: static T_OBJECT* clear(T_OBJECT* map);
+      public: void clear();
 
       /**
        * Finds the position of a key in a map.
        *
-       * @param map The map to search.
        * @param key The key to look for.
-       * @return If found, the position of the key, otherwise -1.
+       * @param dwPos Will receive the index of the key, if found.
+       * @return true if the key is found.
        */
-      public: static int find_key(Map* map, T_OBJECT* key);
+      public: bool find_key(Object* pKey, UInt64& dwPos);
+
+      /**
+       * Tests if it contains a key.
+       *
+       * @param key The key to look for.
+       * @return true if the key is found.
+       */
+      public: bool has_key(Object* pKey);
 
       /**
        * Sets an item in a map.
        *
-       * @param map The map to set an item to.
        * @param key The key to set.
        * @param value The value to use.
-       * @return [value].
+       * @return true if item has been set.
+       * @todo Make it way more realloc intensive.
        */
-      public: static T_OBJECT* set_item(T_OBJECT* map, T_OBJECT* key, T_OBJECT* value);
+      public: bool set_item(Object* key, Object* value);
 
       /**
        * Sets an item in a map.
        *
-       * @param map The map to set an item to.
        * @param key The key to set.
        * @param value The value to use.
-       * @return [value].
+       * @return true if item has been set.
        */
-      public: static T_OBJECT* set_item(T_OBJECT* map, std::string key, std::string value);
-
-      /**
-       * Slices a map from [key1] to [key2].
-       *
-       * @param map The map to slice.
-       * @param key1 Slice start
-       * @param key2 Slice end.
-       * @deprecated Maps are not supposed to be ordered, no slicing should be possible.
-       */
-      public: static T_OBJECT* slice(T_OBJECT* map, T_OBJECT* key1, T_OBJECT* key2);
+      public: inline bool set_item(std::string key, std::string value)
+      {
+         return this->set_item((Object*)new String(key), (Object*)new String(value));
+      }
    };
 }
 
