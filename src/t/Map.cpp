@@ -2,7 +2,7 @@
 
 namespace t
 {
-   T_OBJECT* tMAP = NULL;
+   // T_OBJECT* tMAP = NULL;
 
    Map::Map()
    {

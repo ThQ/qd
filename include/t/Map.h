@@ -6,7 +6,7 @@
 
 namespace t
 {
-   extern T_OBJECT* tMAP;
+   //extern T_OBJECT* tMAP;
 
    /**
     * A map is a list of unordered key-value pairs.
@@ -27,16 +27,8 @@ namespace t
        */
       public: inline static void assert(T_OBJECT* obj)
       {
-         ASSERT_NOT_NULL(NS_TYPE::tMAP);
-         T_OBJECT::assert_type(obj, NS_TYPE::tMAP);
+         obj->assert_type(t::MAP_TYPE);
       }
-
-      /**
-       * Builds an empty t::Map.
-       *
-       * @return A pointer to a t::Map object newly created.
-       */
-      public: static T_OBJECT* build();
 
       /**
        * Checks if an object is of type t::Map.
@@ -46,7 +38,7 @@ namespace t
        */
       public: inline static bool check(T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::tMAP);
+         return obj->check_type(t::MAP_TYPE);
       }
 
       /**
