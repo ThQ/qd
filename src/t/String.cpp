@@ -122,16 +122,7 @@ namespace t
    Short
    String::compare_to(String* pCompareStr)
    {
-      Short nResult;
-      if (this == pCompareStr)
-      {
-         nResult = 0;
-      }
-      else
-      {
-         nResult = (Short)this->value.compare(pCompareStr->value);
-      }
-      return nResult;
+      return (this == pCompareStr) ? 0 : (Short)this->value.compare(pCompareStr->value);
    }
 
    String*
