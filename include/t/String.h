@@ -3,287 +3,311 @@
 
 #include <stdlib.h>
 #include <stdio.h>
-#include <string.h>
+#include <string>
 
 #include "t/Bool.h"
+#include "t/Collection.h"
 #include "t/Int.h"
-#include "t/Object.h"
 
 namespace t
 {
-   extern T_OBJECT* tSTRING;
+   // extern T_OBJECT* tSTRING;
 
    /**
     * A string of characters.
     *
     * @todo Create method [cut_before]
     */
-   class String : public Object
+   class String : public Collection
    {
       public: std::string value; ///< The content of the string.
 
       /**
-       * Constructor.
+       * @brief Constructor.
        */
-      public: String();
+      public: String ();
 
       /**
-      public: static T_OBJECT* append(T_OBJECT* base, T_OBJECT* s);
-
-
-      public: static T_OBJECT* append(T_OBJECT* base, ULong i);
-      public: static T_OBJECT* append(T_OBJECT* base, char c);
-      */
+       * @brief Creates a new string with a char.
+       *
+       * @param chr The character to base the new string on.
+       */
+      public: String (char chr);
 
       /**
-       * Asserts that an object is of type t::String.
+       * @brief Creates a new string based on a character array.
+       *
+       * @param string_arr The character array to be used as value.
        */
-      public: inline static void assert(T_OBJECT* obj)
+      public: String (const char* string_arr);
+
+      /**
+       * @brief Creates a new string based on a character array.
+       *
+       * @param string_arr The character array to be used as value.
+       */
+      public: String (char* string_arr);
+
+      /**
+       * @brief Creates a new string based on a character array.
+       *
+       * @param string_arr The character array to be used as value.
+       * @param string_arr_len The length of the character array.
+       */
+      public: String (char* string_arr, UInt64 string_arr_len);
+
+      /**
+       * @brief Creates a new string based on another one.
+       *
+       * @param str The string to copy.
+       */
+      public: String (String* str);
+
+      /**
+       * @brief Creates a new string based on another one.
+       *
+       * @param str The string to copy.
+       */
+      public: String (std::string str);
+
+      /**
+       * @brief Initializes a string object.
+       */
+      protected: inline void _init ()
       {
-         ASSERT_NOT_NULL(NS_TYPE::tSTRING);
-         T_OBJECT::assert_type(obj, NS_TYPE::tSTRING);
+         this->type = t::STRING_TYPE;
+      }
+      /**
+       * @brief Asserts that an object is of type t::String.
+       */
+      public: inline static void assert (T_OBJECT* obj)
+      {
+         obj->assert_type(t::STRING_TYPE);
       }
 
       /**
-       * Creates a new empty @cls{t::String}.
+       * @brief Centers a string on a given length with a given string.
        *
-       * @return A pointer to a new empty @cls{t::String}.
-       */
-      public: static T_OBJECT* build();
-
-      /**
-       * Creates a @cls{t::String} by copying another one.
-       */
-      public: static T_OBJECT* build(String* s);
-
-      /**
-       * Creates a @cls{t::String} by using a C char.
-       */
-      public: static T_OBJECT* build(char c);
-
-      /**
-       * Creates a @cls{t::String} by using a C string.
-       */
-      public: static T_OBJECT* build(const char* s);
-
-      /**
-       * Creates a @cls{t::String} by using a std::string.
-       */
-      public: static T_OBJECT* build(std::string s);
-
-      /**
-       * Centers a string on a given length with a given string.
-       *
-       * @param str_base The base string to center.
        * @param centered_length The length of the new string centered.
        * @param pad_str The string to use as padding (left and right).
        * @return A pointer to a new @cls{t::String} which content is the one of @prm{str_base} centered on @prm{centered_length} using @prm{pad_str}.
+       * @todo Break this into functions: left padding and right padding in place.
        */
-      public: static T_OBJECT* center(T_OBJECT* str_base, T_OBJECT* centered_length, T_OBJECT* pad_str);
+      public: String* center (t::UInt64 centered_length, String* pad_str);
 
       /**
-       * Checks if an object is of type t::String.
+       * @brief Checks if an object is of type t::String.
        *
        * @param obj The object to check.
        * @return true if @prm{obj} is of type t::tSTRING, false otherwise.
        */
-      public: inline static bool check(T_OBJECT* obj)
+      public: inline static bool check (T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::tSTRING);
+         return obj->check_type(t::STRING_TYPE);
       }
 
       /**
-       * Compares the contents of two @cls{t::String}.
+       * @brief Compares the contents of two @cls{t::String}.
        *
-       * @param str1 The first string.
-       * @param str2 The second string.
+       * @param pCompareStr The string to compare two.
        * @return 0 if str1==str2, what otherwise ?? (see std::string.compare)
        * @todo Document properly.
        */
-      public: static Short compare_to(T_OBJECT* str1, T_OBJECT* str2);
+      public: Short compare_to(String* pCompareStr);
 
       /**
-       * Creates a new @cls{t::String} whose content is the same as another one.
+       * @brief Copies the content in another newly created @cls{t::String}.
        *
-       * @param base_str The base string to copy.
        * @return A pointer to a new @cls{t::String} with the same content as @prm{base_str}.
        */
-      public: static T_OBJECT* copy(String* base_str);
+      public: String* copy();
 
       /**
-       * Cuts a string after a substring is found.
+       * @brief Cuts a string after a substring is found.
        *
-       * @param base_str The string to cut.
-       * @param search_str The substring to search
-       * @return A pointer to a new @cls{t::String} whose content is @prm{base_str} cut after the first occurence of @prm{search_str}.
+       * @param pSubstring The substring to search
+       * @return A pointer to a new @cls{t::String} whose content is [this] cut after the first occurence of @prm{search_str}.
        */
-      public: static T_OBJECT* cut_after(String* base_str, String* search_str);
+      public: String* cut_after(String* pSubstring);
 
       /**
-       * Cuts a string after a given index.
+       * @brief Cuts a string after a given index.
        *
-       * @param base_str The string to cut.
        * @param cut_at At which index to cut.
-       * @return A pointer to a new @cls{t::String}} whose content is @prm{base_str} from index 0 to @prm{cut_at}.
+       * @return A pointer to a new @cls{t::String} whose content is @prm{base_str} from index 0 to @prm{cut_at}.
        */
-      public: static T_OBJECT* cut_at(T_OBJECT* base_str, T_OBJECT* cut_at);
+      public: String* cut_at(UInt64 cut_at);
 
       /**
-       * Checks if two strings have the same content.
-       */
-      public: static T_OBJECT* equals(T_OBJECT* s1, T_OBJECT* s2);
-
-      /**
-       * Finds a t::String substring in another t::String, starting from
-       * @prm{start_at}.
-       */
-      public: static T_OBJECT* find(T_OBJECT* s, T_OBJECT* search, T_OBJECT* start_at);
-
-      /**
-       * Returns the character at @prm{char_index} in @prm{base_str} as a @cls{t::String}.
+       * @brief Decreases the reference count by one.
        *
-       * @param base_str The string to get a character from.
+       * @return true if everything went well.
+       */
+      public: inline bool drop()
+      {
+         return Object::drop((Object*)this);
+      }
+      /**
+       * @brief Checks if two strings have the same content.
+       *
+       * @param compare_str The string to compare to.
+       * @return true if it has the same content.
+       */
+      public: bool equals(String* compare_str);
+
+      /**
+       * @brief Finds a substring starting at @prm{start_at}.
+       *
+       * @param sub_str The substring to look for.
+       * @param start_at The index at which to start looking for.
+       * @param found_at A pointer that will receive the index at which
+       * the substring was found (points to UInt64(0) if not found).
+       * @return true if the substring was found.
+       */
+      public: inline bool find (String* sub_str, UInt64 start_at, UInt64& found_at)
+      {
+         return this->find(sub_str, start_at, this->value.length(), found_at);
+      }
+
+      /**
+       * @brief Finds a substring starting at @prm{start_at}.
+       *
+       * @param sub_str The substring to look for.
+       * @param start_at The index at which to start looking for.
+       * @param end_at The index at which to end looking for.
+       * @param found_at A pointer that will receive the index at which
+       * the substring was found (points to UInt64(0) if not found).
+       * @return true if the substring was found.
+       */
+      public: bool find (String* sub_str, UInt64 start_at, UInt64 end_at, UInt64& found_at);
+
+      /**
+       * @brief Gets a character.
+       *
        * @param char_index The index of the character to get.
        * @return A pointer to a new @cls{t::String} only containing the character to get.
        */
-      public: static T_OBJECT* get_character(String* base_str, Int* char_index);
+      public: String* get_character(UInt64 char_index);
 
       /**
-       * Returns the length of a @cls{t::String}.
+       * @brief Returns the length of a @cls{t::String}.
        *
        * @return A pointer to a @cls{t::Int} containing the length of the string.
        */
-      public: T_OBJECT* get_length();
+      public: UInt64 get_length ();
 
       /**
-       * Inserts a string into another one.
+       * @brief Inserts a string into another one.
        *
        * @param at_index At which position to insert.
        * @param splice_str The string to insert.
        * @return A pointer to a new @cls{t::String} which content is the same as [this] with the substring inserted.
        */
-      public: static T_OBJECT* insert(ULong at_index, String* splice_str);
+      public: String* insert (UInt64 at_index, String* splice_str);
 
       /**
-       * Tests if a string only contains letter.
+       * @brief Tests if a string only contains letter.
        *
-       * @return t::gTRUE if the string only contains letter, t::gFALSE otherwise.
+       * @return true if the string only contains letter.
        */
-      public: T_OBJECT* is_alphabetic();
+      public: bool is_alphabetic ();
 
       /**
-       * Tests if a string only contains digits.
+       * @brief Tests if a string only contains digits.
        *
-       * @return t::gTRUE if the string only contains digits, t::gFALSE otherwise.
+       * @return true if the string only contains digits.
        */
-      public: T_OBJECT* is_digit();
+      public: bool is_digit ();
 
       /**
-       * Tests if a string is lowercased.
+       * @brief Tests if a string is lowercased.
        *
-       * @return t::gTRUE if the string is lowercased, t::gFALSE otherwise.
+       * @return true if the string is lowercased.
        */
-      public: T_OBJECT* is_lowercase();
+      public: bool is_lowercase ();
 
       /**
-       * Tests if it only contains space characters.
+       * @brief Tests if it only contains space characters.
        *
-       * @return t::gTRUE if it only contains space characters.
+       * @return true if it only contains space characters.
        * @todo Make this take into account tabs, EOL, etc.
        */
-      public: T_OBJECT* is_space();
+      public: bool is_space ();
 
       /**
-       * Tests if all letters are upper case.
+       * @brief Tests if all letters are upper case.
        *
-       * @return t::gTRUE if all characters are uppercased, t::gFALSE otherwise.
+       * @return true if all characters are uppercased.
        */
-      public: T_OBJECT* is_uppercase();
+      public: bool is_uppercase ();
 
       /**
-       * Tests if all letters contained in a @cls{t::String} are upper case.
+       * @brief Copies this string and converts all characters to lower case.
        *
-       * @return t::gTRUE if all characters are uppercased, t::gFALSE otherwise.
-       */
-      public: inline static T_OBJECT* is_uppercase(T_OBJECT* str)
-      {
-         String::assert(str);
-         return ((String*)str)->is_uppercase();
-      }
-
-      /**
-       * Creates a @cls{t::String} by joining two other strings.
-       *
-       * @param str1 First string.
-       * @param str2 First string.
-       * @return A pointer to a @cls{t::String} whose value = str1 + str2.
-       */
-      public: static T_OBJECT* join(String* str1, String* str2);
-
-      /**
-       * Copies this string and converts all characters to lower case.
        * @return A pointer to a new @cls{t::String} which is a copy of @prm{base_string} all lowercased.
        */
-      public: T_OBJECT* lower_case();
+      public: String* lower_case ();
 
       /**
-       * Creates a @cls{t::String} which is a copy of a base string left padded to a certain length.
+       * @brief Creates a @cls{t::String} which is a copy of a base string left padded to a certain length.
        *
        * @param pad_len The length of the padded string.
        * @param pad_str The string to be used as padding.
        * @return A pointer to a new @cls{t::String} whose value is [this] padded to @prm{pad_len} using @prm{pad_str}.
        */
-      public: static T_OBJECT* lpad(ULong pad_len, String* pad_str);
+      public: String* lpad (UInt64 pad_len, String* pad_str);
 
       /**
-       * Creates a @cls{t::String} whose content is the one of @prm{self} multiplied n times.
+       * @brief Creates a @cls{t::String} whose content is the one of @prm{self} multiplied n times.
        *
        * @param times The number of times to multiply the base string.
        * @return A pointer to a @cls{t::String} whose value is @prm{base_str} concatenated n times.
        */
-      public: static T_OBJECT* multiply(Int* times);
+      public: String* multiply (UInt8 times);
 
       /**
-       * Creates a @cls{t::String} which is a copy of a base string right padded to a certain length.
+       * @brief Creates a @cls{t::String} which is a copy of a base string right padded to a certain length.
        *
        * @param pad_len The length of the padded string.
        * @param pad_str The string to be used as padding.
        * @return A pointer to a new @cls{t::String} whose value is @prm{base_str} padded to @prm{pad_len} using @prm{pad_str}.
        */
-      public: static T_OBJECT* pad(ULong pad_len, String* pad_str);
+      public: String* pad (UInt64 pad_len, String* pad_str);
 
       /**
-       * Prints the content of a t::String.
+       * @brief Prints the content.
        */
-      public: static void print(T_OBJECT* s);
+      public: void print ();
 
       /**
-       * Prints the content of a t::String on a new line.
+       * @brief Prints the content on a new line.
        */
-      public: static void print_line(T_OBJECT* s);
+      public: void print_line ();
 
       /**
-       * Reverses the characters of a t::String.
+       * @brief Reverses the characters.
        */
-      public: static T_OBJECT* reverse(T_OBJECT* self);
+      public: String* reverse ();
 
       /**
-       * Strips white characters off a t::String <self.>
+       * @brief Strips white characters off a t::String <self.>
+       *
+       * @todo Make this work
        */
-      public: static T_OBJECT* strip(T_OBJECT* self, T_OBJECT* characters, T_OBJECT* start_at, T_OBJECT* end_at);
+      public: String* strip (String* characters, UInt64 start_at, UInt64 end_at);
 
       /**
-       * Changes all lowercased characters to upper case, and all uppercased
+       * @brief Changes all lowercased characters to upper case, and all uppercased
        * characters to lower case.
        */
-      public: static T_OBJECT* swap_case(T_OBJECT* self);
+      public: String* swap_case ();
 
       /**
-       * Converts all lower case letters to upper case.
+       * @brief Converts all lower case letters to upper case.
        *
        * @return A pointer to a new @cls{t::String} which content is the same as this but with all letters uppercased.
        */
-      public: T_OBJECT* upper_case();
+      public: String* upper_case();
    };
 }
 
