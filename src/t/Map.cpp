@@ -10,13 +10,7 @@ namespace t
       this->keys = 0;
       this->items = 0;
       this->references = 0;
-      this->set_class(NS_TYPE::tMAP);
-   }
-
-   T_OBJECT*
-   Map::build()
-   {
-      return (T_OBJECT*)new Map();
+      this->type = t::MAP_TYPE;
    }
 
    void
@@ -78,10 +72,10 @@ namespace t
       }
       else
       {
-         UInt64 new_size = ++ this->length * sizeof(Object*);
+         UInt64 dwNewSize = ++ this->length * sizeof(Object*);
 
-         this->keys = (Object**) Memory::realloc(this->keys, new_size);
-         this->items = (Object**) Memory::realloc(this->items, new_size);
+         this->keys = (Object**) Memory::realloc(this->keys, dwNewSize);
+         this->items = (Object**) Memory::realloc(this->items, dwNewSize);
 
          this->items[this->length - 1] = pValue;
          pValue->pick();
