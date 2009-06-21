@@ -91,8 +91,7 @@ svm_introspection_OUTPUT="$svm_OUTPUT"
 svm_t_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
 svm_t_OUTPUT="$svm_OUTPUT"
 
-t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp )
-
+t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_array.cpp )
 t_array_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
 t_array_OUTPUT="$svm_OUTPUT"
 
