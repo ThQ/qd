@@ -131,7 +131,6 @@ namespace t
       return new String(this);
    }
 
-
    String*
    String::cut_after(String* pSubstr)
    {
@@ -139,11 +138,11 @@ namespace t
       String* pCutStr = NULL;
       if (this->find(pSubstr, (UInt64)0, pSubstrFoundAt))
       {
-         pCutStr = this->cut_at(pSubstrFoundAt);
+         pCutStr = this->cut_at(pSubstrFoundAt + pSubstr->value.length());
       }
       else
       {
-      pCutStr = this->copy();
+         pCutStr = this->copy();
       }
 
       ASSERT_NOT_NULL(pCutStr);
@@ -152,7 +151,7 @@ namespace t
    }
 
    String*
-   String::cut_at(UInt64 dwCutStrLen)
+   String::cut_at (UInt64 dwCutStrLen)
    {
       String* pCutStr = NULL;
       char* psCutStr= new char[dwCutStrLen];
@@ -170,6 +169,25 @@ namespace t
       {
          pCutStr = this->copy();
       }
+
+      return pCutStr;
+   }
+
+   String*
+   String::cut_before (String* pSubstr)
+   {
+      UInt64 pSubstrFoundAt;
+      String* pCutStr = NULL;
+      if (this->find(pSubstr, (UInt64)0, pSubstrFoundAt))
+      {
+         pCutStr = this->cut_at(pSubstrFoundAt);
+      }
+      else
+      {
+         pCutStr = this->copy();
+      }
+
+      ASSERT_NOT_NULL(pCutStr);
 
       return pCutStr;
    }
@@ -224,7 +242,7 @@ namespace t
    }
 
    String*
-   String::get_character(UInt64 char_index)
+   String::get_character (UInt64 char_index)
    {
       ASSERT(
             char_index < this->value.length(),
@@ -238,13 +256,13 @@ namespace t
    }
 
    UInt64
-   String::get_length()
+   String::get_length ()
    {
       return (UInt64)this->value.length();
    }
 
    String*
-   String::insert(UInt64 at_index, String* splice_str)
+   String::insert (UInt64 at_index, String* splice_str)
    {
       UInt64 this_len = this->value.length();
       UInt64 splice_str_len = splice_str->value.length();
@@ -278,7 +296,7 @@ namespace t
    }
 
    bool
-   String::is_alphabetic()
+   String::is_alphabetic ()
    {
       UInt64 str_len = this->value.length();
       bool is_alphabetic = false;
@@ -305,7 +323,7 @@ namespace t
    }
 
    bool
-   String::is_digit()
+   String::is_digit ()
    {
       UInt64 str_len = this->value.length();
       bool is_digit = false;
@@ -332,7 +350,7 @@ namespace t
    }
 
    bool
-   String::is_lowercase()
+   String::is_lowercase ()
    {
       UInt64 str_len = this->value.length();
       bool is_lowercase = true;
@@ -350,7 +368,7 @@ namespace t
    }
 
    bool
-   String::is_space()
+   String::is_space ()
    {
       ULong this_len = this->value.length();
       bool is_space = false;
@@ -377,7 +395,7 @@ namespace t
    }
 
    bool
-   String::is_uppercase()
+   String::is_uppercase ()
    {
       UInt64 this_len = this->value.length();
       bool is_uppercase = true;
@@ -395,7 +413,7 @@ namespace t
    }
 
    String*
-   String::lower_case()
+   String::lower_case ()
    {
       UInt64 lower_case_str_len = this->value.length();
       char* lower_case_str_arr = new char[lower_case_str_len];

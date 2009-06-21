@@ -126,7 +126,7 @@ namespace t
        * @brief Cuts a string after a substring is found.
        *
        * @param pSubstring The substring to search
-       * @return A pointer to a new @cls{t::String} whose content is [this] cut after the first occurence of @prm{search_str}.
+       * @return A pointer to a new @cls{t::String} whose content is [this] cut after the first occurence of @prm{pSubstring}.
        */
       public: String* cut_after(String* pSubstring);
 
@@ -137,6 +137,14 @@ namespace t
        * @return A pointer to a new @cls{t::String} whose content is @prm{base_str} from index 0 to @prm{cut_at}.
        */
       public: String* cut_at(UInt64 cut_at);
+
+      /**
+       * @brief Cuts a string before a substring is found.
+       *
+       * @param pSubstring The substring to search
+       * @return A pointer to a new @cls{t::String} whose content is [this] cut before the first occurence of @prm{pSubString}.
+       */
+      public: String* cut_before (String* pSubstring);
 
       /**
        * @brief Decreases the reference count by one.
