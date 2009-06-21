@@ -29,6 +29,7 @@ help:
 	@echo "   make build-internal :      Builds Qd with complete logging (errors + all internal intformations)."
 	@echo ""
 	@echo " * Documentation"
+	@echo "   make doc-source :          Generate C API documentation in $(OPCODES_DOC_DIR)/api/."
 	@echo "   make doc-opcodes :         Generate opcode documentation in $(OPCODES_DOC_DIR)/."
 	@echo ""
 
@@ -62,8 +63,11 @@ build-introspection: prepare-modules update-version-number
 build-release: prepare-modules update-version-number
 	$(xCOMPILE) release
 
-build-t:
+t:
 	$(xCOMPILE) t
+
+t-array:
+	$(xCOMPILE) t_array
 
 prepare-modules:
 	mkdir -p $(BUILD_DIR)/include/vm

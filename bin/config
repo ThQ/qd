@@ -65,7 +65,9 @@ $dRoot/src/util/String.cpp \
 
 release_SOURCES=( ${base_SOURCES_TYPES[@]} ${base_utils_SOURCES[@]} ${base_SOURCES[@]} $dRoot/src/main.cpp )
 
+
 t_SOURCES=( ${base_SOURCES_TYPES[@]} $dRoot/src/main_t.cpp $dRoot/src/vm/Heap.cpp )
+
 
 debug_SOURCES=( ${release_SOURCES[@]} )
 
@@ -88,4 +90,9 @@ svm_introspection_OUTPUT="$svm_OUTPUT"
 
 svm_t_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
 svm_t_OUTPUT="$svm_OUTPUT"
+
+t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp )
+
+t_array_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
+t_array_OUTPUT="$svm_OUTPUT"
 
