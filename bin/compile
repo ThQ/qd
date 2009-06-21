@@ -66,6 +66,9 @@ elif [ "$1" == "t_array" ] ; then
 elif [ "$1" == "t_map" ] ; then
    compile_project "$t_map_CXX" "${t_map_SOURCES[*]}" "$t_map_OUTPUT" "$dTmp"
 
+elif [ "$1" == "t_string" ] ; then
+   compile_project "$t_string_CXX" "${t_string_SOURCES[*]}" "$t_string_OUTPUT" "$dTmp"
+
 else
    echo "Can't find item [${1}] to compile."
 fi

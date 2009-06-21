@@ -72,6 +72,9 @@ t-array:
 t-map:
 	$(xCOMPILE) t_map
 
+t-string:
+	$(xCOMPILE) t_string
+
 prepare-modules:
 	mkdir -p $(BUILD_DIR)/include/vm
 	mkdir -p $(BUILD_DIR)/src/vm
