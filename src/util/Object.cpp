@@ -6,9 +6,27 @@ namespace util
    Object::assert_type(t::Object* object, t::Object* type)
    {
       #ifdef __ALLOW_SVM_ASSERTIONS__
-      ASSERT(object != NULL, "util::Object::assert_type(@%lu, @%lu) : object <t::Object @%lu> must NOT be NULL.", (ULong)object, (ULong)type, (ULong)object);
-      ASSERT(type != NULL, "util::Object::assert_type(@%lu, @%lu) : type <t::Object @%lu> must NOT be NULL.", (ULong)object, (ULong)type, (ULong)type);
-      ASSERT(object->cls != NULL, "util::Object::assert_type(@%lu, @%lu) : object's class <t::Object @%lu> must NOT be NULL.", (ULong)object, (ULong)type, (ULong)object->cls);
+      ASSERT(
+            object != NULL,
+            "util::Object::assert_type(@%lu, @%lu) : object <t::Object @%lu> must NOT be NULL.",
+            (ULong)object,
+            (ULong)type,
+            (ULong)object
+      );
+      ASSERT(
+            type != NULL,
+            "util::Object::assert_type(@%lu, @%lu) : type <t::Object @%lu> must NOT be NULL.",
+            (ULong)object,
+            (ULong)type,
+            (ULong)type
+      );
+      ASSERT(
+            object->cls != NULL,
+            "util::Object::assert_type(@%lu, @%lu) : object's class <t::Object @%lu> must NOT be NULL.",
+            (ULong)object,
+            (ULong)type,
+            (ULong)object->cls
+      );
 
       if (object->cls != type)
       {
@@ -25,36 +43,37 @@ namespace util
       #endif
    }
 
-   void
-   Object::drop (Object* pObject)
+   bool
+   Object::drop (t::Object* pObject)
    {
-      ASSERT_NOT_NULL(o);
+      ASSERT_NOT_NULL(pObject);
 
       #ifdef _SHOW_GC_
       INTERNAL(
             "<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n",
-            t::cast_type_to_string(o->type),
-            (uint)o, o->references,
-            o->references - 1
+            t::cast_type_to_string(pObject->type),
+            (uint)pObject,
+            pObject->references,
+            pObject->references - 1
       );
       #endif
 
-      --o->references;
+      --pObject->references;
 
       #ifdef _DEBUG_
-      if (o->references < 0)
+      if (pObject->references < 0)
       {
          WARNING(
                "<%s @%x> NEGATIVE_REFERENCE_COUNT\n",
-               t::cast_type_to_string(o->type),
-               (uint)o
+               t::cast_type_to_string(pObject->type),
+               (uint)pObject
          );
       }
       #endif
 
-      if (o->references <= 0)
+      if (pObject->references <= 0)
       {
-         DELETE(o);
+         DELETE(pObject);
       }
 
       ++ Stats.dwDrops;
@@ -63,39 +82,36 @@ namespace util
       return true;
    }
 
-   }
-
    bool
-   Object::pick (Object* pObject)
+   Object::pick (t::Object* pObject)
    {
-      ASSERT_NOT_NULL(o);
+      ASSERT_NOT_NULL(pObject);
 
       #ifdef _SHOW_GC_
       INTERNAL(
             "<%s @%x> INCR_REF_COUNT (.from %ld, .to %ld)\n",
-            t::cast_type_to_string(o->type),
-            (uint)o, o->references,
-            o->references + 1
+            t::cast_type_to_string(pObject->type),
+            (uint)pObject,
+            pObject->references,
+            pObject->references + 1
       );
       #endif
 
       #ifdef _SHOW_GC_
-      if (o->references < 0)
+      if (pObject->references < 0)
       {
          WARNING(
                "<%s @%x)> NEGATIVE_REFERENCE_COUNT\n",
-               t::cast_type_to_string(o->type),
-               (uint)o
+               t::cast_type_to_string(pObject->type),
+               (uint)pObject
          );
       }
       #endif
-      ++ o->references;
+      ++ pObject->references;
 
       ++ Stats.dwPicks;
       ++ Stats.dwReferences;
 
       return true;
-   }
-
    }
 }

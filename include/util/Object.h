@@ -3,6 +3,7 @@
 
 #include "t/Class.h"
 #include "t/Object.h"
+#include "Stats.h"
 
 namespace util
 {
