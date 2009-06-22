@@ -23,10 +23,10 @@ help:
 	@echo ""
 	@echo ""
 	@echo " * Build"
-	@echo "   make build :               Builds Qd and installs it."
-	@echo "   make build-debug :         Builds Qd with debug outputs (errors)."
-	@echo "   make build-introspection : Builds Qd with partial logging (errors + some internal informations)."
-	@echo "   make build-internal :      Builds Qd with complete logging (errors + all internal intformations)."
+	@echo "   make vm :                  Builds Qd."
+	@echo "   make vm-debug :            Builds Qd with debug outputs (errors)."
+	@echo "   make vm-introspection :    Builds Qd with partial logging (errors + some internal informations)."
+	@echo "   make vm-internal :         Builds Qd with complete logging (errors + all internal intformations)."
 	@echo ""
 	@echo " * Documentation"
 	@echo "   make doc-source :          Generate C API documentation in $(OPCODES_DOC_DIR)/api/."
@@ -48,31 +48,33 @@ doc-opcodes:
 	rm $(OPCODES_DOC_DIR)/*
 	cd $(script_dir) ; export DJANGO_SETTINGS_MODULE=doc-settings ; $(PYTHON) opcodes-doc-make.py
 
-build: prepare-modules update-version-number
-	$(xCOMPILE) introspection
+vm: vm-release
 
-build-debug: prepare-modules update-version-number
+vm-debug: prepare-modules update-version-number
 	$(xCOMPILE) debug
 
-build-internal: prepare-modules update-version-number
+vm-internal: prepare-modules update-version-number
 	$(xCOMPILE) internal
 
-build-introspection: prepare-modules update-version-number
+vm-introspection: prepare-modules update-version-number
 	$(xCOMPILE) introspection
 
-build-release: prepare-modules update-version-number
+vm-release: prepare-modules update-version-number
 	$(xCOMPILE) release
 
-t:
+t: update-version-number
 	$(xCOMPILE) t
 
-t-array:
+t-array: update-version-number
 	$(xCOMPILE) t_array
 
-t-map:
+t-map: update-version-number
 	$(xCOMPILE) t_map
 
-t-string:
+t-object: update-version-number
+	$(xCOMPILE) t_object
+
+t-string: update-version-number
 	$(xCOMPILE) t_string
 
 prepare-modules:

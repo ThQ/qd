@@ -50,24 +50,31 @@ function compile_project() {
 }
 
 echo "Qd-compile [$1]"
-if [ "$1" == "t" ] ; then
-   compile_project "$svm_t_CXX" "${t_SOURCES[*]}" "$svm_t_OUTPUT" "$dTmp"
-elif [ "$1" == "debug" ] ; then
-   compile_project "$debug_CXX" "${debug_SOURCES[*]}" "$debug_OUTPUT" "$dTmp"
-elif [ "$1" == "introspection" ] ; then
-   compile_project "$svm_introspection_CXX" "${release_SOURCES[*]}" "$svm_introspection_OUTPUT" "$dTmp"
+if ["$1" == "vm" ]; then
+   compile_project "$vm_CXX $CXX_RELEASE_FLAGS" "${vm_SOURCES[*]}" "$vm_OUTPUT" "$dTmp"
+elif [ "$1" == "vm-debug" ] ; then
+   compile_project "$vm_CXX $CXX_DEBUG_FLAGS" "${vm_SOURCES[*]}" "$vm_OUTPUT" "$dTmp"
+elif [ "$1" == "vm-introspection" ] ; then
+   compile_project "$vm_CXX $CXX_INTROSPECTION_FLAGS" "${vm_SOURCES[*]}" "$vm_OUTPUT" "$dTmp"
+elif [ "$1" == "vm-internal" ] ; then
+   compile_project "$vm_CXX $CXX_INTERNAL_FLAGS" "${vm_SOURCES[*]}" "$vm_OUTPUT" "$dTmp"
 
 # --------------
 #     TYPES
 # --------------
+elif [ "$1" == "t" ] ; then
+   compile_project "$t_CXX $CXX_INTERNAL_FLAGS" "${t_SOURCES[*]}" "$t_OUTPUT" "$dTmp"
 elif [ "$1" == "t_array" ] ; then
-   compile_project "$t_array_CXX" "${t_array_SOURCES[*]}" "$t_array_OUTPUT" "$dTmp"
+   compile_project "$t_array_CXX $CXX_INTERNAL_FLAGS" "${t_array_SOURCES[*]}" "$t_array_OUTPUT" "$dTmp"
 
 elif [ "$1" == "t_map" ] ; then
-   compile_project "$t_map_CXX" "${t_map_SOURCES[*]}" "$t_map_OUTPUT" "$dTmp"
+   compile_project "$t_map_CXX $CXX_INTERNAL_FLAGS" "${t_map_SOURCES[*]}" "$t_map_OUTPUT" "$dTmp"
+
+elif [ "$1" == "t_object" ] ; then
+   compile_project "$t_object_CXX $CXX_INTERNAL_FLAGS" "${t_object_SOURCES[*]}" "$t_object_OUTPUT" "$dTmp"
 
 elif [ "$1" == "t_string" ] ; then
-   compile_project "$t_string_CXX" "${t_string_SOURCES[*]}" "$t_string_OUTPUT" "$dTmp"
+   compile_project "$t_string_CXX $CXX_INTERNAL_FLAGS" "${t_string_SOURCES[*]}" "$t_string_OUTPUT" "$dTmp"
 
 else
    echo "Can't find item [${1}] to compile."

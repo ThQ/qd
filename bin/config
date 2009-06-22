@@ -18,6 +18,11 @@ xPython="python"
 xReplace="${xPython} ${dScript}/replace.py"
 xSh="bash"
 
+CXX_DEBUG_FLAGS=" -pg -O0 -D __DEBUG__=1 -D USE_COLORS=1"
+CXX_INTERNAL_FLAGS=" -pg -O0 -D __INTERNAL__=1"
+CXX_INTROSPECTION_FLAGS=" -pg -O0 -D __INTROSPECTION__=1"
+CXX_RELEASE_FLAGS=" -pg -O0 -D __RELEASE__=1"
+
 base_SOURCES_TYPES=( \
 $dRoot/src/t/Array.cpp \
 $dRoot/src/t/Block.cpp \
@@ -63,46 +68,38 @@ $dRoot/src/util/Object.cpp \
 $dRoot/src/util/String.cpp \
 )
 
-release_SOURCES=( ${base_SOURCES_TYPES[@]} ${base_utils_SOURCES[@]} ${base_SOURCES[@]} $dRoot/src/main.cpp )
+vm_SOURCES=( ${base_SOURCES_TYPES[@]} ${base_utils_SOURCES[@]} ${base_SOURCES[@]} $dRoot/src/main.cpp )
 
 
 t_SOURCES=( ${base_SOURCES_TYPES[@]} $dRoot/src/main_t.cpp $dRoot/src/vm/Heap.cpp )
 
 
-debug_SOURCES=( ${release_SOURCES[@]} )
+bin_PROGRAMS="vm"
 
-bin_PROGRAMS="svm"
+vm_CXXFLAGS="-I$dBuild/include -I$dRoot/include -Wall"
+vm_LDADD="-licui18n -licuuc -licudata"
+vm_CXX="g++ $vm_CXXFLAGS $vm_LDADD -DPACKAGE_NAME=\"Qd\" -DPACKAGE_AUTHOR_NAME=\"ThomasQuemard\" -DPACKAGE_VERSION=\""`cat $dRoot/VERSION`"\""
+vm_OUTPUT="$dBuild/qd"
 
-svm_SOURCES=($dRoot/src/main.cpp ${base_SOURCES[*]})
-svm_CXXFLAGS="-I$dBuild/include -I$dRoot/include -Wall"
-svm_LDADD="-licui18n -licuuc -licudata"
-svm_CXX="g++ $svm_CXXFLAGS $svm_LDADD -DPACKAGE_NAME=\"Qd\" -DPACKAGE_AUTHOR_NAME=\"ThomasQuemard\" -DPACKAGE_VERSION=\""`cat $dRoot/VERSION`"\""
-svm_OUTPUT="$dBuild/svm"
-
-debug_CXX="$svm_CXX -pg -O0 -D __DEBUG__=1 -D USE_COLORS=1"
-debug_OUTPUT="$svm_OUTPUT"
-
-svm_internal_CXX="$svm_CXX -pg -O0 -D __INTERNAL__=1 -D USE_COLORS=1"
-svm_internal_OUTPUT="$svm_OUTPUT"
-
-svm_introspection_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
-svm_introspection_OUTPUT="$svm_OUTPUT"
-
-svm_t_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
-svm_t_OUTPUT="$svm_OUTPUT"
+t_CXX="$vm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
+t_OUTPUT="$vm_OUTPUT"
 
 # ---------------
 # TYPES
 # ---------------
+t_object_SOURCES=( $dRoot/src/t/Object.cpp $dRoot/src/main_t_object.cpp )
+t_object_CXX="$vm_CXX"
+t_object_OUTPUT="${vm_OUTPUT}-t-object"
+
 t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_array.cpp )
-t_array_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
-t_array_OUTPUT="$svm_OUTPUT"
+t_array_CXX="$vm_CXX"
+t_array_OUTPUT="${vm_OUTPUT}-t-array"
 
 t_map_SOURCES=( $dRoot/src/t/Map.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_map.cpp )
-t_map_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
-t_map_OUTPUT="$svm_OUTPUT"
+t_map_CXX="$vm_CXX"
+t_map_OUTPUT="$vm_OUTPUT"
 
 t_string_SOURCES=( $dRoot/src/t/String.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_string.cpp )
-t_string_CXX="$svm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
-t_string_OUTPUT="$svm_OUTPUT"
+t_string_CXX="$vm_CXX"
+t_string_OUTPUT="${vm_OUTPUT}-t-string"
 
