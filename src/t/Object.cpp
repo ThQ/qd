@@ -50,7 +50,7 @@ namespace t
    bool
    Object::drop(Object* o)
    {
-      Object::assert_not_null(o);
+      ASSERT_NOT_NULL(o);
 
       #ifdef _SHOW_GC_
       INTERNAL("<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references - 1);
@@ -65,11 +65,15 @@ namespace t
       }
       #endif
 
+      /*
       if (o->references <= 0)
       {
-         DELETE(o);
+         //DELETE(o);
       }
+      */
 
+      ++ Stats.dwDrops;
+      -- Stats.dwReferences;
       return true;
    }
 
@@ -97,7 +101,7 @@ namespace t
    bool
    Object::pick(Object* o)
    {
-      Object::assert_not_null(o);
+      ASSERT_NOT_NULL(o);
 
       #ifdef _SHOW_GC_
       INTERNAL(
@@ -119,6 +123,9 @@ namespace t
       }
       #endif
       ++ o->references;
+
+      ++ Stats.dwPicks;
+      ++ Stats.dwReferences;
 
       return true;
    }
@@ -176,7 +183,7 @@ namespace t
    void
    Object::set_class(Object* type)
    {
-      T_OBJECT::assert_not_null(type);
+      ASSERT_NOT_NULL(type);
 
       Object::drop_safe(this->cls);
       this->cls = type;

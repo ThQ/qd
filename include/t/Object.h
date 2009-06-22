@@ -9,6 +9,7 @@
 #include "config.h"
 #include "debug.h"
 #include "Memory.h"
+#include "Stats.h"
 #include "types.h"
 #include "util.h"
 
