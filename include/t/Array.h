@@ -82,7 +82,7 @@ namespace t
        */
       public: inline static bool check(T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, t::ARRAY_TYPE);
+         return obj->check_type(t::ARRAY_TYPE);
       }
 
       /**
