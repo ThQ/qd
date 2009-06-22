@@ -24,4 +24,78 @@ namespace util
       }
       #endif
    }
+
+   void
+   Object::drop (Object* pObject)
+   {
+      ASSERT_NOT_NULL(o);
+
+      #ifdef _SHOW_GC_
+      INTERNAL(
+            "<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n",
+            t::cast_type_to_string(o->type),
+            (uint)o, o->references,
+            o->references - 1
+      );
+      #endif
+
+      --o->references;
+
+      #ifdef _DEBUG_
+      if (o->references < 0)
+      {
+         WARNING(
+               "<%s @%x> NEGATIVE_REFERENCE_COUNT\n",
+               t::cast_type_to_string(o->type),
+               (uint)o
+         );
+      }
+      #endif
+
+      if (o->references <= 0)
+      {
+         DELETE(o);
+      }
+
+      ++ Stats.dwDrops;
+      -- Stats.dwReferences;
+
+      return true;
+   }
+
+   }
+
+   bool
+   Object::pick (Object* pObject)
+   {
+      ASSERT_NOT_NULL(o);
+
+      #ifdef _SHOW_GC_
+      INTERNAL(
+            "<%s @%x> INCR_REF_COUNT (.from %ld, .to %ld)\n",
+            t::cast_type_to_string(o->type),
+            (uint)o, o->references,
+            o->references + 1
+      );
+      #endif
+
+      #ifdef _SHOW_GC_
+      if (o->references < 0)
+      {
+         WARNING(
+               "<%s @%x)> NEGATIVE_REFERENCE_COUNT\n",
+               t::cast_type_to_string(o->type),
+               (uint)o
+         );
+      }
+      #endif
+      ++ o->references;
+
+      ++ Stats.dwPicks;
+      ++ Stats.dwReferences;
+
+      return true;
+   }
+
+   }
 }
