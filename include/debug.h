@@ -48,9 +48,9 @@
 
 #ifdef _SHOW_INTERNAL_
    #ifdef USE_COLORS
-      #define INTERNAL(args ...)  printf(";; \033[00;37mINTRN\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define INTERNAL(args ...)  printf("## \033[00;37mINTRN\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
    #else
-      #define INTERNAL(args ...)  printf(";; INTRN [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define INTERNAL(args ...)  printf("## INTRN [%s:%d] ", __FILE__, __LINE__);printf(args);
    #endif
    #define INTERNAL_APD(args ...) printf(args);
 #else
@@ -66,16 +66,16 @@
 
 #ifdef _SHOW_WARNING_
    #ifdef USE_COLORS
-      #define WARNING(args ...)  printf(";; \033[41;1;37mWARNG\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define WARNING(args ...)  printf("## \033[41;1;37mWARNG\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
    #else
-      #define WARNING(args ...)  printf(";; WARNG [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define WARNING(args ...)  printf("## WARNG [%s:%d] ", __FILE__, __LINE__);printf(args);
    #endif
 #else
    #define WARNING(args...)
 #endif
 
 #ifdef _SHOW_DEBUG_
-   #define DEBUG(args ...)  printf(";; DEBUG [%s:%d] ", __FILE__, __LINE__);printf(args);
+   #define DEBUG(args ...)  printf("## DEBUG [%s:%d] ", __FILE__, __LINE__);printf(args);
    #define DEBUG_APD(args ...) printf(args);
 #else
    #define DEBUG(args...)
@@ -83,7 +83,7 @@
 #endif
 
 #ifdef _SHOW_GC_
-   #define GC(args ...)  printf(";; GCOLL [%s:%d] ", __FILE__, __LINE__);printf(args);
+   #define GC(args ...)  printf("## GCOLL [%s:%d] ", __FILE__, __LINE__);printf(args);
    #define GC_APD(args ...) printf(args);
 #else
    #define GC(args...)
