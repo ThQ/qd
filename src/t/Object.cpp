@@ -53,7 +53,7 @@ namespace t
       Object::assert_not_null(o);
 
       #ifdef _SHOW_GC_
-      INTERNAL("<%s @%x> DEC_REF_COUNT (From %ld to %ld).\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references - 1);
+      INTERNAL("<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references - 1);
       #endif
 
       --o->references;
@@ -61,7 +61,7 @@ namespace t
       #ifdef _DEBUG_
       if (o->references < 0)
       {
-         WARNING("<%s @%x> negative reference count.\n", t::cast_type_to_string(o->type), (uint)o);
+         WARNING("<%s @%x> NEGATIVE_REFERENCE_COUNT\n", t::cast_type_to_string(o->type), (uint)o);
       }
       #endif
 
@@ -100,15 +100,21 @@ namespace t
       Object::assert_not_null(o);
 
       #ifdef _SHOW_GC_
-      INTERNAL("<%s @%x> INCR_REF_COUNT (From %ld to %ld).\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references + 1);
+      INTERNAL(
+            "<%s @%x> INCR_REF_COUNT (.from %ld, .to %ld)\n",
+            t::cast_type_to_string(o->type),
+            (uint)o, o->references,
+            o->references + 1
+      );
       #endif
 
       #ifdef _SHOW_GC_
       if (o->references < 0)
       {
          WARNING(
-               "<svm::Object(@%lu)> has a negative reference count.\n",
-               (ULong)o
+               "<%s @%x)> NEGATIVE_REFERENCE_COUNT\n",
+               t::cast_type_to_string(o->type),
+               (uint)o
          );
       }
       #endif
@@ -120,13 +126,13 @@ namespace t
    void
    Object::print(Object* o)
    {
-      printf("<system.Object:%lu>", (ULong)o);
+      printf("<%s @%x>", t::cast_type_to_string(o->type), (uint)o);
    }
 
    void
    Object::print_line(Object* o)
    {
-      printf("<system.Object:%lu>\n", (ULong)o);
+      printf("<%s @%x>\n", t::cast_type_to_string(o->type), (uint)o);
    }
 
    void
