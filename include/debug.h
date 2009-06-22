@@ -103,6 +103,7 @@
 #endif
 
 #define DELETE(p) INTERNAL("<%s @%x> DELETE.\n", t::cast_type_to_string((p)->type), (uint)(p)); delete p; p = NULL; ASSERT_DELETE(p);
+#define DELETE_THIS() INTERNAL("<%s @%x> DELETE.\n", t::cast_type_to_string(this->type), (uint)this);
 
 #ifdef __ALLOW_ASSERTIONS__
 #  define ASSERT(b,args...) if((b)!=true) {FATAL(args);abort();}
