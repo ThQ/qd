@@ -102,7 +102,7 @@
    #define SVM_CHECK_NOT_NULL(v)
 #endif
 
-#define DELETE(p) INTERNAL("<c::delete> on object @%lu...", (long unsigned)p); delete p; p = NULL; ASSERT_DELETE(p); INTERNAL_APD(" OK\n");
+#define DELETE(p) INTERNAL("<@%x> DELETE.\n", (uint)(p)); delete p; p = NULL; ASSERT_DELETE(p);
 
 #ifdef __ALLOW_ASSERTIONS__
 #  define ASSERT(b,args...) if((b)!=true) {FATAL(args);abort();}
