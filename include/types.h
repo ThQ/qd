@@ -58,6 +58,38 @@ namespace t
    const ushort STRING_TYPE = 18;
    const ushort UNICODE_STRING_TYPE = 19;
    const ushort USER_OBJECT_TYPE = 20;
+
+   inline const char* cast_type_to_string(ushort type)
+   {
+      const char* pszCasted;
+
+      switch (type)
+      {
+         case NULL_TYPE: pszCasted = "Null"; break;
+         case UNDEFINED_TYPE: pszCasted = "Undefined"; break;
+         case BOOL_TYPE: pszCasted = "Bool"; break;
+         case INT8_TYPE: pszCasted = "Int8";
+         case INT16_TYPE: pszCasted = "Int16";
+         case INT32_TYPE: pszCasted = "Int32";
+         case INT64_TYPE: pszCasted = "Int64";
+         case UINT8_TYPE: pszCasted = "UInt8";
+         case UINT16_TYPE: pszCasted = "UInt16";
+         case UINT32_TYPE: pszCasted = "UInt32";
+         case UINT64_TYPE: pszCasted = "UInt64";
+         case ARRAY_TYPE: pszCasted = "Array";
+         case LIST_TYPE: pszCasted = "List";
+         case BLOCK_TYPE: pszCasted = "Block";
+         case CLASS_TYPE: pszCasted = "Class";
+         case EXCEPTION_TYPE: pszCasted = "Exception";
+         case FUNCTION_TYPE: pszCasted = "Function";
+         case MAP_TYPE: pszCasted = "Map";
+         case STRING_TYPE: pszCasted = "String";
+         case UNICODE_STRING_TYPE: pszCasted = "UnicodeString";
+         case USER_OBJECT_TYPE: pszCasted = "UserObject";
+         default: FATAL("Unknown type %d.\n", type); abort();
+      }
+      return pszCasted;
+   }
 }
 
 
