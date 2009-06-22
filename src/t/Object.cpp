@@ -51,17 +51,12 @@ namespace t
    Object::drop(Object* o)
    {
       Object::assert_not_null(o);
-      --o->references;
 
       #ifdef _SHOW_GC_
-      // @todo Determine what's that.
-      /**
-      if (o == NS_TYPE::tOBJECT)
-      {
-         printf(" [svm::object_type@%lu] ", (ULong)NS_TYPE::tOBECT);
-      }
-      */
+      INTERNAL("<@%x> DEC_REF_COUNT (From %ld to %ld).\n", (uint)o, o->references, o->references - 1);
       #endif
+
+      --o->references;
 
       #ifdef _DEBUG_
       if (o->references < 0)
@@ -73,9 +68,6 @@ namespace t
       if (o->references <= 0)
       {
          DELETE(o);
-         #ifdef _SHOW_GC_
-         printf(" (to death MOUHAHAHA)");
-         #endif
       }
 
       return true;
@@ -108,12 +100,7 @@ namespace t
       Object::assert_not_null(o);
 
       #ifdef _SHOW_GC_
-      /**
-      if (o == NS_TYPE::tOBJECT)
-      {
-         printf(" [svm::object_type@%lu] ", (ULong)NS_TYPE::tOBJECT);
-      }
-      */
+      INTERNAL("<@%x> INCR_REF_COUNT (From %ld to %ld).\n", (uint)o, o->references, o->references + 1);
       #endif
 
       #ifdef _SHOW_GC_
