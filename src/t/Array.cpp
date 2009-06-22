@@ -35,9 +35,11 @@ namespace t
    {
       LOOP_FROM_TO(UInt64, i, 0, this->item_count)
       {
-         ASSERT_NOT_NULL(this->items[i]);
-         this->items[i]->drop();
-         this->items[i] = NULL;
+         if (this->items[i] != NULL)
+         {
+            this->items[i]->drop();
+            this->items[i] = NULL;
+         }
       }
 
       if (this->item_class != NULL)
@@ -62,40 +64,44 @@ namespace t
    void
    Array::clear_item (UInt64 item_index)
    {
-      ASSERT(item_index >= this->item_count, "Index out of range.");
+      ASSERT(item_index < this->item_count, "Index [%ld] out of range [0:%ld].", (ulong)item_index, (ulong)this->item_count);
       ASSERT_NOT_NULL(this->items[item_index]);
 
-      this->items[item_index]->drop();
-      this->items[item_index] = t::gNULL;
-      t::gNULL->pick();
+      if (this->items[item_index] != NULL)
+      {
+         this->items[item_index]->drop();
+      }
+      this->items[item_index] = NULL;
    }
 
    void
    Array::clear_range (UInt64 range_start, UInt64 range_end)
    {
       ASSERT(range_start < range_end, "Start index must be lower than end index.");
-      ASSERT(range_end < this->item_count - 1, "End index must be lower than the item count.");
+      ASSERT(range_end <= this->item_count, "End index must be lower than the item count.");
 
       LOOP_FROM_TO(UInt64, item_index, range_start, range_end)
       {
          ASSERT_NOT_NULL(this->items[item_index]);
 
          this->items[item_index]->drop();
-         this->items[item_index] = t::gNULL;
-         t::gNULL->pick();
+         this->items[item_index] = NULL;
       }
    }
 
    void
-   Array::set_item (ULong item_index, T_OBJECT* new_item)
+   Array::set_item (UInt64 item_index, T_OBJECT* new_item)
    {
       ASSERT_NOT_NULL(new_item);
-      ASSERT_NOT_NULL(this->items[item_index]);
+      ASSERT(item_index < this->item_count, "Index [%ld] out of range [0:%ld].", (ulong)item_index, (ulong)this->item_count);
 
-      this->items[item_index]->drop();
+      if (this->items[item_index] != NULL)
+      {
+         this->items[item_index]->drop();
+      }
 
-      new_item->pick();
       this->items[item_index] = new_item;
+      new_item->pick();
    }
 
    void
@@ -119,12 +125,11 @@ namespace t
       ASSERT(this->item_count == 0, "Cannot size an array already sized.");
       ASSERT(this->items == NULL, "Cannot size an array that is already containing objects.");
       this->item_count = array_size;
-      this->items = (T_OBJECT**) Memory::malloc(sizeof(T_OBJECT*) * array_size);
+      this->items = (Object**) malloc(sizeof(Object*) * array_size);
 
       LOOP_FROM_TO(UInt64, i, 0, array_size)
       {
-         this->items[i] = t::gNULL;
-         t::gNULL->pick();
+         this->items[i] = NULL;
       }
    }
 

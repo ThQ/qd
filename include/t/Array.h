@@ -20,7 +20,7 @@ namespace t
       public: ushort item_type;     ///< What kind of object this items are (Bool, Array, String, UserObject).
       public: Object* item_class;   ///< A pointer to a @cls{t::Class} representing the class of the objects stored, if needed, NULL otherwise.
       public: Object** items;       ///< The @cls{t::Object} stored.
-      public: ULong item_count;     ///< Number of item stored. REPLACE THIS WITH Collection::length.
+      public: UInt64 item_count;     ///< Number of item stored. REPLACE THIS WITH Collection::length.
 
       /**
        * @brief Default constructor.
@@ -111,7 +111,7 @@ namespace t
        * @param item_index The index of the item to set.
        * @param new_item A pointer to an object to use as a replacement.
        */
-      public: void set_item(ULong item_index, T_OBJECT* new_item);
+      public: void set_item(UInt64 item_index, T_OBJECT* new_item);
 
       /**
        * Sets the type of the objects that can possibly be stored in a
