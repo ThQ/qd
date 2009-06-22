@@ -1,6 +1,7 @@
 #ifndef T_OBJECT_H
 #define T_OBJECT_H
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <cstdarg>
@@ -9,6 +10,7 @@
 #include "debug.h"
 #include "Memory.h"
 #include "types.h"
+#include "util.h"
 
 #define SVM_ASSERT_REF_COUNT(object, ref_count) \
    DEPRECATED(); \
@@ -21,10 +23,13 @@ namespace t
 {
    /**
     * Objects for the VM.
+    *
+    * @todo Remove attr [cls].
     */
    class Object
    {
-      public: Object* cls;          ///< Object's class.
+      public: ushort type;          ///< Object's type.
+      public: Object* cls;          ///< Object's class. USELESS NOW.
       public: Object** fields;      ///< Object's fields, to store attributes. A @cls{t::Variable} array.
       public: ULong field_count;    ///< Number of fields.
       public: ULong field_rooms;    ///< Size of [fields] array.
@@ -34,7 +39,7 @@ namespace t
 
       public: Object();
 
-      /**
+      /*:*
        * Asserts an object is not NULL.
        *
        * @param object An object to check.
@@ -53,6 +58,29 @@ namespace t
        *
        * @param object An object to check.
        * @param type A type to assert.
+       */
+      public: inline void assert_type(ushort type)
+      {
+         #ifdef __ALLOW_SVM_ASSERTIONS__
+         if (this->type != type)
+         {
+            FATAL(
+                  "<Object @%ld> is of type <@%d>, not <@%d> as expected.",
+                  (ulong)this,
+                  this->type,
+                  type
+            );
+            abort();
+         }
+         #endif
+      }
+
+     /**
+       * Asserts an object is of type [type]. Exits the application otherwise.
+       *
+       * @param object An object to check.
+       * @param type A type to assert.
+       * @deprecated
        */
       public: inline static void assert_type(Object* object, Object* type)
       {
@@ -93,6 +121,31 @@ namespace t
        * @param type The type to check.
        * @return true if [object] is of type [type].
        */
+      public: bool check_type(ushort type)
+      {
+         bool result = true;
+         #ifdef __ALLOW_SVM_ASSERTIONS__
+         if (this->type != type)
+         {
+            WARNING(
+                  "<Object @%lu> is of type <@%d>, not <@%d> as expected.",
+                  (ulong)this,
+                  this->type,
+                  type
+            );
+            result = false;
+         }
+         #endif
+         return result;
+      }
+
+      /**
+       * Checks if an object is of type [type].
+       * @param object An object to check.
+       * @param type The type to check.
+       * @return true if [object] is of type [type].
+       * @deprecated
+       */
       public: static bool check_type(Object* object, Object* type)
       {
          bool result = true;
@@ -109,6 +162,16 @@ namespace t
          }
          #endif
          return result;
+      }
+
+      /**
+       * Decreases the reference count of an object.
+       *
+       * @return true if everything went well.
+       */
+      public: inline bool drop()
+      {
+         return Object::drop(this);
       }
 
       /**
@@ -142,7 +205,6 @@ namespace t
        */
       public: Object* get_field(ULong at);
 
-
       /**
        * Checks if an object is null.
        *
@@ -150,6 +212,16 @@ namespace t
        * @return true if [obj] is null.
        */
       public: static bool is_null(Object* obj);
+
+      /**
+       * Increases the reference count.
+       *
+       * @return true if everything went well.
+       */
+      public: inline bool pick()
+      {
+         return Object::pick(this);
+      }
 
       /**
        * Increases the reference count of an object.
@@ -218,9 +290,9 @@ namespace t
       public: void set_field(ULong at, Object* obj);
    };
 
-   extern Object* tOBJECT;
+   //extern Object* tOBJECT;
    extern Object* gNULL;
-   extern Object* tNULL;
+   //extern Object* tNULL;
 }
 
 #define T_OBJECT NS_TYPE::Object

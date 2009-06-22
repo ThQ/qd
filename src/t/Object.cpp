@@ -2,12 +2,13 @@
 
 namespace t
 {
-   Object* tOBJECT = NULL;
-   Object* tNULL = NULL;
+   //Object* tOBJECT = NULL;
+   //Object* tNULL = NULL;
    Object* gNULL = NULL;
 
    Object::Object()
    {
+      this->type = t::UNDEFINED_TYPE;
       this->cls = NULL;
       //this->is_abstract = false;
       this->references = 0;
@@ -21,7 +22,7 @@ namespace t
    {
       va_list argv;
       va_start(argv, argc);
-      Object** array = (Object**)MALLOC(sizeof(Object**) * argc);
+      Object** array = (Object**) Memory::malloc(sizeof(Object**) * argc);
       for (int i = 0 ; i < argc ; ++i)
       {
          array[i] = va_arg(argv, Object*);
@@ -46,9 +47,6 @@ namespace t
       }
    }
 
-   /*
-    * Decreases the reference count of a t::Object*.
-    */
    bool
    Object::drop(Object* o)
    {
@@ -56,10 +54,13 @@ namespace t
       --o->references;
 
       #ifdef _SHOW_GC_
+      // @todo Determine what's that.
+      /**
       if (o == NS_TYPE::tOBJECT)
       {
          printf(" [svm::object_type@%lu] ", (ULong)NS_TYPE::tOBECT);
       }
+      */
       #endif
 
       #ifdef _DEBUG_
@@ -107,10 +108,15 @@ namespace t
       Object::assert_not_null(o);
 
       #ifdef _SHOW_GC_
+      /**
       if (o == NS_TYPE::tOBJECT)
       {
          printf(" [svm::object_type@%lu] ", (ULong)NS_TYPE::tOBJECT);
       }
+      */
+      #endif
+
+      #ifdef _SHOW_GC_
       if (o->references < 0)
       {
          WARNING(
