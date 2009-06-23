@@ -45,87 +45,47 @@ namespace t
    }
    #endif
 
-   T_OBJECT*
-   Function::cast_to_string(T_OBJECT* func)
+   String*
+   Function::cast_to_string()
    {
-      Function::assert(func);
-      /*
-
-      Function* f = (Function*)func;
-      T_OBJECT* s = String::build("");
-      String::append(s, f->name);
-      String::append(s, "(");
-
-      for (UInt i = 0 ; i < f->arguments_count ; ++ i)
-      {
-         Variable* var = (Variable*)f->arguments[i];
-         Class* cls = (Class*)var->object_type;
-         if(i > 0)
-         {
-            String::append(s, ", ");
-         }
-         String::append(s, cls->name);
-         String::append(s, " ");
-         String::append(s, var->name);
-      }
-
-      String::append(s, ") : ");
-      String::append(s, ((Class*)f->return_type)->name);
-      */
-
-      T_OBJECT* s = T_STRING::build("");
-      return (T_OBJECT*)s;
+      return new String();
    }
 
    void
-   Function::print(T_OBJECT* func)
+   Function::print()
    {
-      T_OBJECT* s = Function::cast_to_string(func);
-      if (s != NS_TYPE::gNULL)
+      String* pFunctionAsStr = this->cast_to_string();
+      pFunctionAsStr->print();
+      pFunctionAsStr->drop();
+   }
+
+   void
+   Function::set_arguments(UInt8 count, T_OBJECT** args)
+   {
+      ASSERT(this->arguments == NULL, "Arguments have already been set.");
+
+      LOOP_FROM_TO(UInt8, i, 0, count)
       {
-         T_STRING::print(s);
-         T_OBJECT::drop(s);
-      }
-      else
-      {
-         T_OBJECT::print(func);
+         ASSERT(this->arguments[i] != NULL, "Can't set arguments when an object is NULL.");
+         this->arguments[i]->pick();
       }
    }
 
    void
-   Function::set_arguments(UInt count, T_OBJECT** args)
+   Function::set_arguments(UInt8 count, ...)
    {
-      for (UInt i = 0 ; i < this->arguments_count ; ++i)
-      {
-         T_OBJECT::drop_safe(this->arguments[i]);
-      }
-
-      this->arguments = args;
-      this->arguments_count = count;
-
-      for (UInt i = 0 ; i < count ; ++i)
-      {
-         T_OBJECT::pick_safe(this->arguments[i]);
-      }
-   }
-
-   void
-   Function::set_arguments(UInt count, ...)
-   {
-      for (UInt i = 0 ; i < this->arguments_count ; ++i)
-      {
-         T_OBJECT::drop_safe(this->arguments[i]);
-      }
+      ASSERT(this->arguments == NULL, "Arguments have already been set.");
 
       this->arguments = new T_OBJECT*[count];
       this->arguments_count = count;
 
       va_list args;
       va_start(args, count);
-      for (UInt i = 0 ; i < count ; ++i)
+      LOOP_FROM_TO(UInt8, i, 0, count)
       {
          this->arguments[i] = va_arg(args, T_OBJECT*);
-         T_OBJECT::pick_safe(this->arguments[i]);
+         ASSERT(this->arguments[i] != NULL, "Can't set arguments when an object is NULL.");
+         this->arguments[i]->pick();
       }
       va_end(args);
 

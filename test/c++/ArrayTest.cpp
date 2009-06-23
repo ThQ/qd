@@ -1,14 +1,9 @@
 #include <gtest/gtest.h>
 
-#include "svm/Array.h"
-#include "svm/EngineStarter.h"
+#include "t/Array.h"
 
 TEST(test_array, test_array_build)
 {
-   svm::EngineStarter starter;
-   starter.setup();
-
-   starter.tear_down();
 }
 
 int

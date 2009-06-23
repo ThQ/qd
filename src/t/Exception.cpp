@@ -8,7 +8,7 @@ namespace t
 
    Exception::Exception()
    {
-      this->message = String::build("");
+      this->message = new String();
       this->set_class(NS_TYPE::tEXCEPTION);
       this->references = 0;
    }
@@ -48,8 +48,8 @@ namespace t
    Exception::print(T_OBJECT* error)
    {
       Exception::assert(error);
-      T_OBJECT* msg = Exception::cast_to_string(error);
-      String::print(msg);
+      String* pMessage = (String*)Exception::cast_to_string(error);
+      pMessage->print();
    }
 
    T_OBJECT*

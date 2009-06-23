@@ -79,17 +79,48 @@ namespace t
    }
 
    void
-   Map::print(Object* pMap)
+   Map::print(Object* pObject)
    {
-      Map::assert(pMap);
-      printf("[]");
+      Map::assert(pObject);
+      Map* pMap = (Map*)pObject;
+
+      printf("[");
+      LOOP_FROM_TO(UInt64, i, 0, pMap->length)
+      {
+         ASSERT_NOT_NULL(pMap->keys[i]->fpPrint);
+         ASSERT_NOT_NULL(pMap->items[i]->fpPrint);
+         if (pMap->keys[i] != NULL)
+         {
+            if (i != 0)
+            {
+               printf(", ");
+            }
+            pMap->keys[i]->fpPrint(pMap->keys[i]);
+         }
+         else
+         {
+            printf("Null");
+         }
+         printf(": ");
+         if (pMap->items[i] != NULL)
+         {
+            pMap->items[i]->fpPrint(pMap->items[i]);
+         }
+         else
+         {
+            printf("Null");
+         }
+
+      }
+      printf("]");
    }
 
    void
    Map::print_line(Object* pMap)
    {
       Map::assert(pMap);
-      printf("[]\n");
+      Map::print(pMap);
+      printf("\n");
    }
 
    bool

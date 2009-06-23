@@ -5,14 +5,18 @@
 
 #include "types.h"
 
-class Stats
-{
-   public: static ulonglong dwDrops;
-   public: static ulonglong dwPicks;
-   public: static ulonglong dwReferences;
 
-   public: static void init();
-   public: static void print_report();
-};
+class _Stats
+{
+   public: ulonglong dwDrops;
+   public: ulonglong dwPicks;
+   public: ulonglong dwReferences;
+
+   public: _Stats();
+   public: void print_report();
+} ;
+
+extern _Stats Stats;
+//_Stats Stats;
 
 #endif

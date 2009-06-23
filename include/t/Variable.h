@@ -66,7 +66,7 @@ namespace t
        */
       public: inline static bool check(T_OBJECT* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::tBOOL);
+         return T_OBJECT::check_type(obj, NS_TYPE::tVARIABLE);
       }
 
       /**

@@ -1,25 +1,28 @@
 #include "t/Map.h"
-#include "Stats.h"
+#include "util/Object.h"
 
 int
 main (int argc, char** argv)
 {
    t::Map* pBaseMap = new t::Map();
-   util::Object::pick(pBaseMap);
+   pBaseMap->pick();
 
    t::Map* pKey = new t::Map();
-   util::Object::pick(pKey);
+   pKey->pick();
 
    t::Map* pValue = new t::Map();
-   util::Object::pick(pValue);
+   pValue->pick();
 
    pBaseMap->set_item(pKey, pValue);
+   pBaseMap->set_item(pValue, pKey);
+   pBaseMap->fpPrintLine(pBaseMap);
 
-   util::Object::drop(pValue);
-   util::Object::drop(pKey);
-   util::Object::drop(pBaseMap);
+   pValue->drop();
+   pKey->drop();
+   pBaseMap->drop();
 
    Stats.print_report();
 
+   ASSERT(Stats.dwReferences == 0, "There must not be any references left.");
    return 0;
 }

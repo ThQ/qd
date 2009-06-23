@@ -66,7 +66,8 @@ elif [ "$1" == "t" ] ; then
    compile_project "$t_CXX $CXX_INTERNAL_FLAGS" "${t_SOURCES[*]}" "$t_OUTPUT" "$dTmp"
 elif [ "$1" == "t_array" ] ; then
    compile_project "$t_array_CXX $CXX_INTERNAL_FLAGS" "${t_array_SOURCES[*]}" "$t_array_OUTPUT" "$dTmp"
-
+elif [ "$1" == "t_list" ] ; then
+   compile_project "$t_list_CXX $CXX_INTERNAL_FLAGS" "${t_list_SOURCES[*]}" "$t_list_OUTPUT" "$dTmp"
 elif [ "$1" == "t_map" ] ; then
    compile_project "$t_map_CXX $CXX_INTERNAL_FLAGS" "${t_map_SOURCES[*]}" "$t_map_OUTPUT" "$dTmp"
 

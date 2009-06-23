@@ -97,6 +97,10 @@ t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/
 t_array_CXX="$vm_CXX"
 t_array_OUTPUT="${vm_OUTPUT}-t-array"
 
+t_list_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/List.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_list.cpp )
+t_list_CXX="$vm_CXX"
+t_list_OUTPUT="$vm_OUTPUT-t-list"
+
 t_map_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/Map.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_map.cpp )
 t_map_CXX="$vm_CXX"
 t_map_OUTPUT="$vm_OUTPUT-t-map"

@@ -1,8 +1,14 @@
 #ifndef TYPES_H
 #define TYPES_H
 
+#include <stdint.h>
+#include <stdlib.h>
+
+#include "debug.h"
+
 typedef short Short;
 typedef unsigned short UShort;
+typedef unsigned short ushort;
 
 //typedef int Int;
 typedef unsigned int UInt;
@@ -68,24 +74,24 @@ namespace t
          case NULL_TYPE: pszCasted = "Null"; break;
          case UNDEFINED_TYPE: pszCasted = "Undefined"; break;
          case BOOL_TYPE: pszCasted = "Bool"; break;
-         case INT8_TYPE: pszCasted = "Int8";
-         case INT16_TYPE: pszCasted = "Int16";
-         case INT32_TYPE: pszCasted = "Int32";
-         case INT64_TYPE: pszCasted = "Int64";
-         case UINT8_TYPE: pszCasted = "UInt8";
-         case UINT16_TYPE: pszCasted = "UInt16";
-         case UINT32_TYPE: pszCasted = "UInt32";
-         case UINT64_TYPE: pszCasted = "UInt64";
-         case ARRAY_TYPE: pszCasted = "Array";
-         case LIST_TYPE: pszCasted = "List";
-         case BLOCK_TYPE: pszCasted = "Block";
-         case CLASS_TYPE: pszCasted = "Class";
-         case EXCEPTION_TYPE: pszCasted = "Exception";
-         case FUNCTION_TYPE: pszCasted = "Function";
-         case MAP_TYPE: pszCasted = "Map";
-         case STRING_TYPE: pszCasted = "String";
-         case UNICODE_STRING_TYPE: pszCasted = "UnicodeString";
-         case USER_OBJECT_TYPE: pszCasted = "UserObject";
+         case INT8_TYPE: pszCasted = "Int8"; break;
+         case INT16_TYPE: pszCasted = "Int16"; break;
+         case INT32_TYPE: pszCasted = "Int32"; break;
+         case INT64_TYPE: pszCasted = "Int64"; break;
+         case UINT8_TYPE: pszCasted = "UInt8"; break;
+         case UINT16_TYPE: pszCasted = "UInt16"; break;
+         case UINT32_TYPE: pszCasted = "UInt32"; break;
+         case UINT64_TYPE: pszCasted = "UInt64"; break;
+         case ARRAY_TYPE: pszCasted = "Array"; break;
+         case LIST_TYPE: pszCasted = "List"; break;
+         case BLOCK_TYPE: pszCasted = "Block"; break;
+         case CLASS_TYPE: pszCasted = "Class"; break;
+         case EXCEPTION_TYPE: pszCasted = "Exception"; break;
+         case FUNCTION_TYPE: pszCasted = "Function"; break;
+         case MAP_TYPE: pszCasted = "Map"; break;
+         case STRING_TYPE: pszCasted = "String"; break;
+         case UNICODE_STRING_TYPE: pszCasted = "UnicodeString"; break;
+         case USER_OBJECT_TYPE: pszCasted = "UserObject"; break;
          default: FATAL("Unknown type %d.\n", type); abort();
       }
       return pszCasted;

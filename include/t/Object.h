@@ -176,7 +176,7 @@ namespace t
        */
       public: inline bool drop()
       {
-         return Object::drop(this);
+         return Object::drop((Object*)this);
       }
 
       /**
@@ -254,11 +254,21 @@ namespace t
       }
 
       /**
+       * Prints its string represantion in the console.
+       */
+      public: void print();
+
+      /**
        * Prints the string representation of an object.
        *
        * @param o An object to print.
        */
       public: static void print(Object* o);
+
+      /**
+       * Prints on a new line its string representation.
+       */
+      public: void print_line();
 
       /**
        * Prints on a new line the string representation of an object.

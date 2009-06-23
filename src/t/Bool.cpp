@@ -2,9 +2,10 @@
 
 namespace t
 {
-   T_OBJECT* tBOOL;
    T_OBJECT* gTRUE = NULL;
    T_OBJECT* gFALSE = NULL;
+   /**
+   T_OBJECT* tBOOL;
 
    Bool::Bool()
    {
@@ -79,4 +80,5 @@ namespace t
    {
       return b == NS_TYPE::gTRUE ? NS_TYPE::gFALSE : NS_TYPE::gTRUE;
    }
+   */
 }

@@ -62,7 +62,7 @@ namespace t
        *
        * @param func The function to cast to string.
        */
-      public: static T_OBJECT* cast_to_string(T_OBJECT* func);
+      public: String* cast_to_string();
 
       /**
        * Checks if an object is of type @cls{t::Function}.
@@ -80,14 +80,14 @@ namespace t
        *
        * @param func The function to print.
        */
-      public: static void print(T_OBJECT* func);
+      public: void print();
 
       /**
        * Sets the arguments.
        *
        * @param count How many arguments are passed.
        */
-      public: void set_arguments(UInt count, ...);
+      public: void set_arguments(UInt8 count, ...);
 
       /**
        * Sets the arguments.
@@ -95,7 +95,7 @@ namespace t
        * @param count How many arguments are passed.
        * @param args Arguments to set.
        */
-      public: void set_arguments(UInt count, T_OBJECT** args);
+      public: void set_arguments(UInt8 count, T_OBJECT** args);
 
       /**
        * Sets the return type to @prm{type}.

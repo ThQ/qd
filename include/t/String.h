@@ -151,7 +151,7 @@ namespace t
        *
        * @return true if everything went well.
        */
-      public: inline bool drop()
+      public: inline bool drop ()
       {
          return Object::drop((Object*)this);
       }
@@ -161,7 +161,7 @@ namespace t
        * @param compare_str The string to compare to.
        * @return true if it has the same content.
        */
-      public: bool equals(String* compare_str);
+      public: bool equals (String* compare_str);
 
       /**
        * @brief Finds a substring starting at @prm{start_at}.
@@ -195,7 +195,7 @@ namespace t
        * @param char_index The index of the character to get.
        * @return A pointer to a new @cls{t::String} only containing the character to get.
        */
-      public: String* get_character(UInt64 char_index);
+      public: String* get_character (UInt64 char_index);
 
       /**
        * @brief Returns the length of a @cls{t::String}.
@@ -315,7 +315,7 @@ namespace t
        *
        * @return A pointer to a new @cls{t::String} which content is the same as this but with all letters uppercased.
        */
-      public: String* upper_case();
+      public: String* upper_case ();
    };
 }
 

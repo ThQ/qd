@@ -15,7 +15,7 @@ namespace modules { namespace system {
       public: static SVM_CLASS_METHOD(compare_to)
       {
          Short s = t::Object::compare_to(argv[0], argv[1]);
-         return t::Int::build((Long)s);
+         return new Int8(s);
       }
 
       public: static void declare_methods(vm::Engine& engine)

@@ -136,9 +136,21 @@ namespace t
    }
 
    void
+   Object::print()
+   {
+      this->fpPrint((Object*)this);
+   }
+
+   void
    Object::print(Object* o)
    {
       printf("<%s @%x>", t::cast_type_to_string(o->type), (uint)o);
+   }
+
+   void
+   Object::print_line()
+   {
+      this->fpPrintLine(this);
    }
 
    void
