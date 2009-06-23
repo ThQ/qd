@@ -48,9 +48,9 @@
 
 #ifdef _SHOW_INTERNAL_
    #ifdef USE_COLORS
-      #define INTERNAL(args ...)  printf("## \033[00;37mINTRN\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define INTERNAL(args ...)  printf("## \033[00;37mINTRN\033[00m [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #else
-      #define INTERNAL(args ...)  printf("## INTRN [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define INTERNAL(args ...)  printf("## INTRN [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #endif
    #define INTERNAL_APD(args ...) printf(args);
 #else
@@ -59,23 +59,23 @@
 #endif
 
 #ifdef _SHOW_FATAL_
-   #define FATAL(args ...)  printf("\n\n{{ FATAL ERROR }} %s:%d | ", __FILE__, __LINE__);printf(args);printf("\n\n");
+   #define FATAL(args ...)  printf("\n\n## FATAL [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);printf("\n\n");
 #else
    #define FATAL(args...)
 #endif
 
 #ifdef _SHOW_WARNING_
    #ifdef USE_COLORS
-      #define WARNING(args ...)  printf("## \033[41;1;37mWARNG\033[00m [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define WARNING(args ...)  printf("## \033[41;1;37mWARNG\033[00m [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #else
-      #define WARNING(args ...)  printf("## WARNG [%s:%d] ", __FILE__, __LINE__);printf(args);
+      #define WARNING(args ...)  printf("## WARNG [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #endif
 #else
    #define WARNING(args...)
 #endif
 
 #ifdef _SHOW_DEBUG_
-   #define DEBUG(args ...)  printf("## DEBUG [%s:%d] ", __FILE__, __LINE__);printf(args);
+   #define DEBUG(args ...)  printf("## DEBUG [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #define DEBUG_APD(args ...) printf(args);
 #else
    #define DEBUG(args...)
@@ -83,7 +83,7 @@
 #endif
 
 #ifdef _SHOW_GC_
-   #define GC(args ...)  printf("## GCOLL [%s:%d] ", __FILE__, __LINE__);printf(args);
+   #define GC(args ...)  printf("## GCOLL [%s:%d#%s] ", __FILE__, __LINE__, __FUNCTION__);printf(args);
    #define GC_APD(args ...) printf(args);
 #else
    #define GC(args...)
@@ -109,7 +109,7 @@
 #  define ASSERT(b,args...) if((b)!=true) {FATAL(args);abort();}
 #  define ASSERT_DELETE(p) if (p != NULL) {FATAL("delete failed @%lu.\n", (long unsigned)p);}
 #  define ASSERT_MALLOC(p) if(p == NULL) {FATAL("Malloc failed.");abort();}
-#  define ASSERT_NOT_NULL(p) if((p) == NULL) {FATAL("@%lu must not be <NULL>.\n", (ULong)(p));abort();}
+#  define ASSERT_NOT_NULL(p) if((p) == NULL) {FATAL("ASSERTION FAILED : @%x must not be <NULL>.\n", (uint)(p)); abort();}
 #  define ASSERT_NULL(p) if((p) != NULL) {FATAL("@%lu must be <NULL>.\n", (ULong)(p)); abort();}
 #  define ASSERT_REALLOC(p) if(p == NULL) {FATAL("Realloc failed."); abort();}
 #else
