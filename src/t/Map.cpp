@@ -11,6 +11,15 @@ namespace t
       this->items = 0;
       this->references = 0;
       this->type = t::MAP_TYPE;
+
+      this->fpDestroy = t::Map::destroy;
+      this->fpPrint = t::Map::print;
+      this->fpPrintLine = t::Map::print_line;
+   }
+
+   Map::~Map()
+   {
+      this->clear();
    }
 
    void
@@ -25,9 +34,17 @@ namespace t
          this->keys[i] = NULL;
       }
 
-      this->items = (Object**) Memory::realloc(this->items, 0);
-      this->keys = (Object**) Memory::realloc(this->keys, 0);
+      this->items = (Object**) realloc(this->items, 0);
+      this->keys = (Object**) realloc(this->keys, 0);
       this->length = 0;
+   }
+
+   bool
+   Map::destroy(Object* pObject)
+   {
+      Map::assert(pObject);
+      ((Map*)pObject)->clear();
+      return true;
    }
 
    bool
@@ -61,6 +78,20 @@ namespace t
       return bKeyFound;
    }
 
+   void
+   Map::print(Object* pMap)
+   {
+      Map::assert(pMap);
+      printf("[]");
+   }
+
+   void
+   Map::print_line(Object* pMap)
+   {
+      Map::assert(pMap);
+      printf("[]\n");
+   }
+
    bool
    Map::set_item(Object* pKey, Object* pValue)
    {
@@ -74,8 +105,8 @@ namespace t
       {
          UInt64 dwNewSize = ++ this->length * sizeof(Object*);
 
-         this->keys = (Object**) Memory::realloc(this->keys, dwNewSize);
-         this->items = (Object**) Memory::realloc(this->items, dwNewSize);
+         this->keys = (Object**) realloc(this->keys, dwNewSize);
+         this->items = (Object**) realloc(this->items, dwNewSize);
 
          this->items[this->length - 1] = pValue;
          pValue->pick();

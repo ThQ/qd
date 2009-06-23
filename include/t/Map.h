@@ -19,6 +19,7 @@ namespace t
       public: T_OBJECT** items;  ///< An array of items.
 
       public: Map();
+      public: ~Map();
 
       /**
        * Asserts that an object is of type t::Map.
@@ -50,6 +51,14 @@ namespace t
       public: void clear();
 
       /**
+       * Destroys a @cls{t::Map}.
+       *
+       * @param pObject A pointer to a @cls{t::Map} to destroy.
+       * @return true if everything went well.
+       */
+      public: static bool destroy(Object* pObject);
+
+      /**
        * Finds the position of a key in a map.
        *
        * @param key The key to look for.
@@ -66,6 +75,19 @@ namespace t
        */
       public: bool has_key(Object* pKey);
 
+      /**
+       * Prints a string representation of a map in the console.
+       *
+       * @param pMap A pointer to a @cls{t::Map}.
+       */
+      public: static void print(Object* pMap);
+
+      /**
+       * Prints a string representation of a map in the console on a new line.
+       *
+       * @param pMap A pointer to a @cls{t::Map}.
+       */
+      public: static void print_line(Object* pMap);
       /**
        * Sets an item in a map.
        *
