@@ -8,6 +8,10 @@ namespace t
 
    Object::Object()
    {
+      this->fpPrint = t::Object::print;
+      this->fpPrintLine = t::Object::print_line;
+      this->fpDestroy = NULL;
+
       this->type = t::UNDEFINED_TYPE;
       this->cls = NULL;
       //this->is_abstract = false;
@@ -51,12 +55,13 @@ namespace t
    Object::drop(Object* o)
    {
       ASSERT_NOT_NULL(o);
+      ASSERT_NOT_NULL(o->fpDestroy);
 
       #ifdef _SHOW_GC_
       INTERNAL("<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references - 1);
       #endif
 
-      --o->references;
+      -- o->references;
 
       #ifdef _DEBUG_
       if (o->references < 0)
@@ -65,15 +70,15 @@ namespace t
       }
       #endif
 
-      /*
-      if (o->references <= 0)
+      if (o->references == 0)
       {
-         //DELETE(o);
+         o->fpDestroy(o);
+         DELETE(o);
       }
-      */
 
       ++ Stats.dwDrops;
       -- Stats.dwReferences;
+
       return true;
    }
 

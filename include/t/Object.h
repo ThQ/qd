@@ -29,6 +29,10 @@ namespace t
     */
    class Object
    {
+      public: bool (*fpDestroy)(Object* pObject);
+      public: void (*fpPrint)(Object* pObject);
+      public: void (*fpPrintLine)(Object* pObject);
+
       public: ushort type;          ///< Object's type.
       public: Object* cls;          ///< Object's class. USELESS NOW.
       public: Object** fields;      ///< Object's fields, to store attributes. A @cls{t::Variable} array.
