@@ -36,23 +36,6 @@ namespace t
       }
 
       /**
-       * Appends an item to a list
-       *
-       * @param list A list to append to.
-       * @param obj An object to append.
-       * @return [list]
-       * @deprecated (Use List::push(...) instead) Appends an object to a list.
-       */
-      public: static T_OBJECT* append(T_OBJECT* list, T_OBJECT* obj);
-
-      /**
-       * Creates an empty t::List.
-       *
-       * @return An empty list.
-       */
-      public: static T_OBJECT* build();
-
-      /**
        * Checks if an object is of type t::List.
        *
        * @param obj An object to check.
@@ -64,12 +47,19 @@ namespace t
       }
 
       /**
-       * Replaces each item of a list with t::gNULL.
+       * Replaces each item of a list with NULL.
        *
        * @param list The list to clear.
-       * @return Cleared [list]
        */
-      public: static T_OBJECT* clear(T_OBJECT* list);
+      public: void clear();
+
+      /**
+       * Destroys a @cls{t::List}.
+       *
+       * @param pList A pointer to a @cls{t::List} to destroy.
+       * @return true if everything went OK.
+       */
+      public: static bool destroy(Object* pList);
 
       /**
        * If a list contains other lists, recursively replaces those lists
@@ -78,52 +68,57 @@ namespace t
        * @param list A list to flatten.
        * @return A new list with all elements from [list] flattened.
        */
-      public: static T_OBJECT* flatten(T_OBJECT* list);
+      public: List* flatten();
 
       /**
        * Gets an item at [index]  from [list].
        *
-       * @param list A List to get an item from.
        * @param index The position at which to get an item.
        * @return An object from [list] at [index].
        */
-      public: static T_OBJECT* get_item(T_OBJECT* list, UInt index);
+      public: Object* get_item(UInt64 index);
 
       /**
        * Inserts an object into [list] at [index].
        *
-       * @param list A list to insert an item into.
        * @param index The position at which to insert an item.
-       * @param obj The object to insert.
-       * @return [list].
        */
-      public: static T_OBJECT* insert(T_OBJECT* list, UInt index, T_OBJECT* obj);
+      public: void insert(UInt64 index, Object* obj);
 
       /**
        * Pops one object off [list].
        *
-       * @param list A list from which to pop an object off.
-       * @return The object popped.
+       * @todo Make it less REALLOC intensive.
        */
-      public: static T_OBJECT* pop(T_OBJECT* list);
+      public: void pop();
 
       /**
        * Pops n objects off [list].
        *
-       * @param list A list from which to pop some objects off.
        * @param num The number of items to pop.
-       * @return The last item of list before popping.
        */
-      public: static T_OBJECT* pop(T_OBJECT* list, UInt num);
+      public: void pop(UInt64 num);
+
+      /**
+       * Prints a string represention in the console.
+       *
+       * @param pList The list to print.
+       */
+      public: static void print(Object* pList);
+
+      /**
+       * Prints a string represention on a new line in the console.
+       *
+       * @param pList The list to print.
+       */
+      public: static void print_line(Object* pList);
 
       /**
        * Pushes an object onto [list].
        *
-       * @param list A list to push to.
        * @param obj An object to push.
-       * @return [list].
        */
-      public: static T_OBJECT* push(T_OBJECT* list, T_OBJECT* obj);
+      public: void push(Object* obj);
 
       /**
        * Pushes items from [push_list] into [base_list].
@@ -131,42 +126,37 @@ namespace t
        * @param base_list A list to push to.
        * @param push_list The list from which items will be pushed.
        */
-      public: static void push_list(T_OBJECT* base_list, T_OBJECT* push_list);
+      public: void push_list(List* push_list);
 
       /**
        * Removes an object at [index] from [list].
-       * @param list A list from which to remove items.
+       *
        * @param index The index of the item to remove.
-       * @return [list].
        */
-      public: static T_OBJECT* remove_item(T_OBJECT* list, UInt index);
+      public: void remove_item(UInt64 index);
 
       /**
        * Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
        *
-       * @param list The list to reverse
        * @return A new list with all objects reversed.
        */
-      public: static T_OBJECT* reverse(T_OBJECT* list);
+      public: Object* reverse();
 
       /**
        * Resizes [list] to its new [size].
        *
-       * @param list The list to resize.
        * @param size The new size of the list.
-       * @return [list].
        */
-      public: static T_OBJECT* resize(T_OBJECT* list, UInt size);
+      public: void resize(UInt64 size);
 
       /**
        * Sets the object of a list at a specified index.
        *
-       * @param list The list to set an item to.
        * @param at The position at which to set the item in [list].
        * @param obj The object to set at [at].
        * @return [list].
        */
-      public: static T_OBJECT* set_item(T_OBJECT* list, UInt at, T_OBJECT* obj);
+      public: void set_item(UInt64 at, Object* obj);
 
       /**
        * Gets a slice from [list] from [start] to [end] stepping [step].
@@ -177,7 +167,7 @@ namespace t
        * @param step Slice step.
        * @return A new list containing the slice.
        */
-      public: static T_OBJECT* slice(T_OBJECT* list, UInt start, UInt end, UInt step);
+      public: List* slice(UInt64 start, UInt64 end, UInt64 step);
    };
 }
 
