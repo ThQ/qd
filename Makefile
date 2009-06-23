@@ -68,6 +68,9 @@ t: update-version-number
 t-array: update-version-number
 	$(xCOMPILE) t_array
 
+t-list: update-version-number
+	$(xCOMPILE) t_list
+
 t-map: update-version-number
 	$(xCOMPILE) t_map
 
