@@ -9,6 +9,8 @@
 class _Stats
 {
    public: ulonglong dwDrops;
+   public: ulonglong dwFinalDrops;
+   public: ulonglong dwInitialPicks;
    public: ulonglong dwPicks;
    public: ulonglong dwReferences;
 
