@@ -1,23 +1,24 @@
-#ifndef T_CLASS
-#define T_CLASS NS_TYPE::Class
+#ifndef VM_CLASS_H
+#define VM_CLASS_H
 
 #include <string>
 
-#include "t/Object.h"
-#include "t/String.h"
+#include "types.h"
 
-namespace t
+namespace vm
 {
-   extern T_OBJECT* tCLASS_NOT_FOUND_EXCEPTION;
-   extern T_OBJECT* tBAD_TYPE_EXCEPTION;
-
    /**
     * A base type for all internal classes.
     */
-   class Class : public Object
+   class Class
    {
-      public: T_OBJECT* parent_class; ///< A parent class.
-      public: std::string name; ///< Name of the class.
+      public: Class* parent_class;     ///< A parent class.
+      public: ushort type;            ///< Type of the object.
+
+      public: bool (*cast_to_string_func)(t::Value pObject);
+      public: bool (*destroy_func)(t::Value pObject);
+      public: void (*print_func)(t::Value pObject);
+      public: void (*print_line_func)(t::Value pObject);
 
       /**
        * Constructor.
@@ -25,81 +26,24 @@ namespace t
       public: Class();
 
       /**
-       * Destructor.
+       * Constructs a class given its parent class.
+       *
+       * @param pParentClass The parent class.
        */
-      public: ~Class();
+      public: Class(vm::Class* pParentClass);
 
       /**
-       * Asserts that an object is of type @cls{t::Class}.
-       *
-       * @param obj An object to be checked.
-       * @return true if @prm{obj} is of type @cls{t::Class}, false otherwise.
-       * @todo Make this real !
+       * Initializes a class.
        */
-      public: inline static bool assert(T_OBJECT* obj)
+      protected: inline void _init()
       {
-         return true;
-      }
+         this->type = 0;
+         this->parent_class = NULL;
 
-      /**
-       * Builds an empty @cls{t::Class}.
-       *
-       * @return An empty @cls{t::Class} object.
-       */
-      public: static T_OBJECT* build();
-
-      /**
-       * Builds a class named @prm{name}.
-       *
-       * @param name The name of the class to create.
-       * @return A @cls{t::Class} named @prm{name}.
-       */
-      public: static T_OBJECT* build(std::string name);
-
-      /**
-       * Builds a class named @prm{name}.
-       *
-       * @param name The name of the class to create.
-       * @return A @cls{t::Class} named @prm{name}.
-       */
-      public: static T_OBJECT* build(const char* name);
-
-      /**
-       * Builds a class named @prm{name}, and whose parent class is @prm{parent_class}.
-       *
-       * @param name The name of the class to create.
-       * @param parent_class The parent class of the class to create.
-       * @return A pointer to a @cls{t::Class} newly created.
-       */
-      public: static T_OBJECT* build(const char* name, T_OBJECT* parent_class);
-
-      /**
-       * Builds a class named @prm{name}, and whose parent class is @prm{parent_class}.
-       *
-       * @param name The name of the class to create.
-       * @param parent_class The parent class of the class to create.
-       * @return A new @cls{t::Class} named @prm{name}, child of @prm{parent_class}.
-       */
-      public: static T_OBJECT* build(std::string name, T_OBJECT* parent_class);
-
-      /**
-       * Builds a class whose parent class is @prm{parent_class}.
-       *
-       * @param parent_class The parent class of the class to create.
-       * @return a new @cls{t::Class} whose parent is @prm{parent_class}.
-       */
-      public: static T_OBJECT* build(T_OBJECT* parent_class);
-
-      /**
-       * Checks if an object is of type @cls{t::Class}.
-       *
-       * @param obj An object to be checked.
-       * @return true if obj is of type @cls{t::Class}.
-       * @todo Make this real !
-       */
-      public: inline static bool check(T_OBJECT* obj)
-      {
-         return true;
+         this->cast_to_string_func = NULL;
+         this->destroy_func = NULL;
+         this->print_func = NULL;
+         this->print_line_func = NULL;
       }
 
       /**
@@ -109,25 +53,7 @@ namespace t
        * @param parent_class The parent parent class.
        * @return true if @prm{cls} is a child of @prm{parent_class}.
        */
-      public: static bool is_child_of(T_OBJECT* cls, T_OBJECT* parent_class);
-
-      /**
-       * Sets the parent class.
-       *
-       * @param parent_class The class to be used as a parent.
-       */
-      public: void set_parent_class(Class* parent_class);
-
-      /**
-       * Sets the parent class.
-       *
-       * @param parent_class The class to be used as a parent.
-       */
-      public: void set_parent_class(T_OBJECT* parent_class)
-      {
-         Class::assert(parent_class);
-         this->set_parent_class((Class*)parent_class);
-      }
+      public: bool is_child_of(vm::Class* pParentClass);
    };
 }
 

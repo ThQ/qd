@@ -1,115 +1,43 @@
-#include "t/Class.h"
+#include "vm/Class.h"
 
-namespace t
+namespace vm
 {
-   T_OBJECT* tCLASS_NOT_FOUND_EXCEPTION = NULL;
-   T_OBJECT* tBAD_TYPE_EXCEPTION = NULL;
-
    Class::Class()
    {
+      this->_init();
       this->parent_class = NULL;
-      this->name = "";
    }
 
-   Class::~Class()
+   Class::Class(vm::Class* pParentClass)
    {
-      T_OBJECT::drop_safe(this->parent_class);
-   }
-
-   T_OBJECT*
-   Class::build()
-   {
-      return (T_OBJECT*) new Class();
-   }
-
-   T_OBJECT*
-   Class::build(std::string name)
-   {
-      Class* c = new Class();
-      c->name = name;
-      return (T_OBJECT*)c;
-   }
-
-   T_OBJECT*
-   Class::build(T_OBJECT* parent_class)
-   {
-      Class::assert(parent_class);
-
-      Class* c = new Class();
-      c->set_parent_class(parent_class);
-      return (T_OBJECT*)c;
-   }
-
-   T_OBJECT*
-   Class::build(const char* name)
-   {
-      Class* c = new Class();
-      c->name.assign(name);
-      return (T_OBJECT*)c;
-   }
-
-   T_OBJECT*
-   Class::build(const char* name, T_OBJECT* parent_class)
-   {
-      Class::assert(parent_class);
-
-      Class* c = new Class();
-      c->name.assign(name);
-      c->set_parent_class(parent_class);
-      return (T_OBJECT*)c;
-   }
-
-   T_OBJECT*
-   Class::build(std::string name, T_OBJECT* parent_class)
-   {
-      Class::assert(parent_class);
-
-      Class* c = new Class();
-      c->name = name;
-      c->set_parent_class(parent_class);
-      return (T_OBJECT*)c;
+      this->_init();
+      this->parent_class = pParentClass;
    }
 
    bool
-   Class::is_child_of(T_OBJECT* cls, T_OBJECT* parent_class)
+   Class::is_child_of(vm::Class* pParentClass)
    {
-      Class::assert(cls);
-      Class::assert(parent_class);
+      ASSERT_NOT_NULL(pParentClass);
 
-      bool result = false;
-      if (cls == parent_class)
+      bool bResult = false;
+      if (this == pParentClass)
       {
-         result = true;
+         bResult = true;
       }
       else
       {
-         while (cls != NULL)
+         while (pParentClass != NULL)
          {
-            if (cls == parent_class)
+            if (this == pParentClass)
             {
-               result = true;
+               bResult = true;
                break;
             }
-            else if(((Class*)cls)->parent_class == NULL)
-            {
-               break;
-            }
-            T_OBJECT::drop_safe(cls);
-            cls = ((Class*)cls)->parent_class;
-            T_OBJECT::pick(cls);
+            pParentClass = pParentClass->parent_class;
          }
-         T_OBJECT::drop(cls);
       }
 
-      return result;
-   }
-
-   void
-   Class::set_parent_class(Class* parent_class)
-   {
-      T_OBJECT::drop_safe(this->parent_class);
-      T_OBJECT::pick(parent_class);
-      this->parent_class = (T_OBJECT*)parent_class;
+      return bResult;
    }
 }
 
