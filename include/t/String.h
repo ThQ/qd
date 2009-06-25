@@ -75,6 +75,9 @@ namespace t
       protected: inline void _init ()
       {
          this->type = t::STRING_TYPE;
+
+         this->fpPrint = t::String::print;
+         this->fpPrintLine = t::String::print_line;
       }
       /**
        * @brief Asserts that an object is of type t::String.

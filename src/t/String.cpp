@@ -527,13 +527,17 @@ namespace t
    void
    String::print (Object* pString)
    {
-      printf("%s", pString->value.c_str());
+      String::assert(pString);
+
+      printf("%s", ((String*)pString)->value.c_str());
    }
 
    void
    String::print_line (Object* pString)
    {
-      printf("%s\n", pString->value.c_str());
+      String::assert(pString);
+
+      printf("%s\n", ((String*)pString)->value.c_str());
    }
 
    String*
