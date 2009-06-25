@@ -8,7 +8,7 @@ namespace t
 
    Object::Object()
    {
-      this->klass = cOBJECT;
+      this->klass = &cOBJECT;
       this->references = 0;
    }
 
