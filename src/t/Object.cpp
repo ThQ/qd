@@ -79,17 +79,19 @@ namespace t
 
       -- pObject->references;
 
+      ++ Stats.dwDrops;
+      -- Stats.dwReferences;
+
       if (pObject->references == 0)
       {
+         ++ Stats.dwFinalDrops;
+
          if (pObject->fpDestroy != NULL)
          {
             pObject->fpDestroy(pObject);
          }
          DELETE(pObject);
       }
-
-      ++ Stats.dwDrops;
-      -- Stats.dwReferences;
 
       return true;
    }
@@ -139,10 +141,15 @@ namespace t
          );
       }
       #endif
-      ++ o->references;
 
+      if (o->references == 0)
+      {
+         ++ Stats.dwInitialPicks;
+      }
       ++ Stats.dwPicks;
       ++ Stats.dwReferences;
+
+      ++ o->references;
 
       return true;
    }
