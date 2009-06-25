@@ -1,5 +1,5 @@
-#ifndef T_STRING
-#define T_STRING t::String
+#ifndef T_STRING_H
+#define T_STRING_H t::String
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -7,7 +7,6 @@
 
 #include "t/Bool.h"
 #include "t/Collection.h"
-#include "t/Int.h"
 
 namespace t
 {
