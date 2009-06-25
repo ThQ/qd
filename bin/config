@@ -93,7 +93,7 @@ t_object_SOURCES=( $dRoot/src/t/Object.cpp $dRoot/src/main_t_object.cpp )
 t_object_CXX="$vm_CXX"
 t_object_OUTPUT="${vm_OUTPUT}-t-object"
 
-t_array_SOURCES=( $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_array.cpp )
+t_array_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_array.cpp )
 t_array_CXX="$vm_CXX"
 t_array_OUTPUT="${vm_OUTPUT}-t-array"
 
@@ -105,7 +105,7 @@ t_map_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/Map.cpp $dRoot/src/t/Collection
 t_map_CXX="$vm_CXX"
 t_map_OUTPUT="$vm_OUTPUT-t-map"
 
-t_string_SOURCES=( $dRoot/src/t/String.cpp $dRoot/src/t/Collection.cpp $dRoot/src/t/Object.cpp $dRoot/src/main_t_string.cpp )
+t_string_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/String.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_string.cpp )
 t_string_CXX="$vm_CXX"
 t_string_OUTPUT="${vm_OUTPUT}-t-string"
 
