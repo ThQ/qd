@@ -283,12 +283,12 @@ namespace t
       /**
        * @brief Prints the content.
        */
-      public: void print ();
+      public: static void print (Object* pString);
 
       /**
        * @brief Prints the content on a new line.
        */
-      public: void print_line ();
+      public: static void print_line (Object* pString);
 
       /**
        * @brief Reverses the characters.

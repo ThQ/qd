@@ -525,15 +525,15 @@ namespace t
    }
 
    void
-   String::print ()
+   String::print (Object* pString)
    {
-      printf("%s", this->value.c_str());
+      printf("%s", pString->value.c_str());
    }
 
    void
-   String::print_line ()
+   String::print_line (Object* pString)
    {
-      printf("%s\n", this->value.c_str());
+      printf("%s\n", pString->value.c_str());
    }
 
    String*
