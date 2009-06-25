@@ -98,9 +98,10 @@ namespace t
          LOOP_FROM_TO(UInt64, char_index, 0, right_padding_len)
          {
             UInt64 pad_char_index = 0;
+            UInt64 dwRightPaddingPos = left_padding_len + this_len;
             while (pad_char_index < pad_str_len && pad_char_index < right_padding_len)
             {
-               centered_str_arr[right_padding_len + this_len + pad_char_index] = pad_str->value[pad_char_index];
+               centered_str_arr[dwRightPaddingPos + char_index] = pad_str->value[pad_char_index];
                ++ char_index;
                ++ pad_char_index;
 

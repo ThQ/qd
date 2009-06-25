@@ -3,13 +3,13 @@
 int
 main (int argc, char** argv)
 {
-   t::String* pBaseString = new t::String("FUCK ME");
+   t::String* pBaseString = new t::String("FUCK");
    pBaseString->pick();
 
    t::String* pAString = new t::String("_-+");
    pAString->pick();
 
-   t::String* pCenteredString = pBaseString->center((t::UInt64)20, pAString);
+   t::String* pCenteredString = pBaseString->center((t::UInt64)30, pAString);
    pCenteredString->pick();
    pCenteredString->fpPrintLine(pCenteredString);
 
