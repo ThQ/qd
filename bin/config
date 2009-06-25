@@ -27,7 +27,6 @@ base_SOURCES_TYPES=( \
 $dRoot/src/t/Array.cpp \
 $dRoot/src/t/Block.cpp \
 $dRoot/src/t/Bool.cpp \
-$dRoot/src/t/Class.cpp \
 $dRoot/src/t/Collection.cpp \
 $dRoot/src/t/CoreFunction.cpp \
 $dRoot/src/t/Exception.cpp \
@@ -38,7 +37,6 @@ $dRoot/src/t/List.cpp \
 $dRoot/src/t/Map.cpp \
 $dRoot/src/t/Object.cpp \
 $dRoot/src/t/String.cpp \
-$dRoot/src/t/Int.cpp \
 $dRoot/src/t/UnicodeString.cpp \
 $dRoot/src/t/UserFunction.cpp \
 $dRoot/src/t/UserObject.cpp \
@@ -48,6 +46,7 @@ $dRoot/src/t/Variable.cpp \
 base_SOURCES=( \
 $dRoot/src/debug.cpp \
 $dRoot/src/Stats.cpp \
+$dRoot/src/vm/Class.cpp \
 $dRoot/src/vm/ClassTable.cpp \
 $dRoot/src/vm/ClassTableEntry.cpp \
 $dRoot/build/src/vm/EngineStarter.cpp \
@@ -85,11 +84,11 @@ vm_OUTPUT="$dBuild/qd"
 t_CXX="$vm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
 t_OUTPUT="$vm_OUTPUT"
 
-t_xxx_SOURCES=( $dRoot/src/t/Class.cpp $dRoot/src/t/Object.cpp $dRoot/src/util/Object.cpp $dRoot/src/Stats.cpp )
+t_xxx_SOURCES=( $dRoot/src/vm/Class.cpp $dRoot/src/t/Object.cpp $dRoot/src/util/Object.cpp $dRoot/src/Stats.cpp )
 # ---------------
 # TYPES
 # ---------------
-t_object_SOURCES=( $dRoot/src/t/Object.cpp $dRoot/src/main_t_object.cpp )
+t_object_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/main_t_object.cpp )
 t_object_CXX="$vm_CXX"
 t_object_OUTPUT="${vm_OUTPUT}-t-object"
 
