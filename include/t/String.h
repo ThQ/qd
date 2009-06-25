@@ -146,14 +146,13 @@ namespace t
       public: String* cut_before (String* pSubstring);
 
       /**
-       * @brief Decreases the reference count by one.
+       * Destroys a @cls{t::String} object.
        *
+       * @param pObject A pointer to a @cls{t::String} object to destroy.
        * @return true if everything went well.
        */
-      public: inline bool drop ()
-      {
-         return Object::drop((Object*)this);
-      }
+      public: static bool destroy(Object* pObject);
+
       /**
        * @brief Checks if two strings have the same content.
        *
