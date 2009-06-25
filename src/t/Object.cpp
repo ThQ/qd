@@ -52,28 +52,40 @@ namespace t
    }
 
    bool
-   Object::drop(Object* o)
+   Object::drop(Object* pObject)
    {
-      ASSERT_NOT_NULL(o);
-      ASSERT_NOT_NULL(o->fpDestroy);
+      ASSERT_NOT_NULL(pObject);
 
       #ifdef _SHOW_GC_
-      INTERNAL("<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n", t::cast_type_to_string(o->type), (uint)o, o->references, o->references - 1);
+      INTERNAL(
+            "<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n",
+            t::cast_type_to_string(pObject->type),
+            (uint)pObject,
+            pObject->references,
+            pObject->references - 1
+      );
       #endif
 
-      -- o->references;
-
       #ifdef _DEBUG_
-      if (o->references < 0)
+      if (pObject->references == 0)
       {
-         WARNING("<%s @%x> NEGATIVE_REFERENCE_COUNT\n", t::cast_type_to_string(o->type), (uint)o);
+         FATAL(
+               "<%s @%x> NEGATIVE_REFERENCE_COUNT\n",
+               t::cast_type_to_string(pObject->type),
+               (uint)pObject
+         );
       }
       #endif
 
-      if (o->references == 0)
+      -- pObject->references;
+
+      if (pObject->references == 0)
       {
-         o->fpDestroy(o);
-         DELETE(o);
+         if (pObject->fpDestroy != NULL)
+         {
+            pObject->fpDestroy(pObject);
+         }
+         DELETE(pObject);
       }
 
       ++ Stats.dwDrops;
