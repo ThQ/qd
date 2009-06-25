@@ -13,6 +13,12 @@
 #error "PACKAGE_AUTHOR_NAME is not defined."
 #endif
 
+#define QD__AUTHOR            "Thomas Quémard"
+#define QD__VERSION           "0.1"
+#define QD__VERSION_MAJOR     "0"
+#define QD__VERSION_MINOR     "1"
+#define QD__VM__KEEP_STATS    1
+
 // -------------------------
 // NAMESPACES
 // -------------------------
