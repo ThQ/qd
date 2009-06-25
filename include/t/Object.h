@@ -18,9 +18,10 @@
 
 namespace t
 {
+   extern vm::Class cOBJECT;
+
    /**
     * Objects for the VM.
-    *
     */
    class Object
    {

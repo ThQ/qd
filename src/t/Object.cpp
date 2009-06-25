@@ -2,11 +2,13 @@
 
 namespace t
 {
+   vm::Class cOBJECT;
+
    Object* gNULL = NULL;
 
    Object::Object()
    {
-      this->klass = NULL;
+      this->klass = cOBJECT;
       this->references = 0;
    }
 
