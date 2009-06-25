@@ -85,7 +85,7 @@ vm_OUTPUT="$dBuild/qd"
 t_CXX="$vm_CXX -pg -O0 -D __INTROSPECTION__=1 -D USE_COLORS=1"
 t_OUTPUT="$vm_OUTPUT"
 
-t_xxx_SOURCES=( $dRoot/src/t/Object.cpp $dRoot/src/util/Object.cpp $dRoot/src/Stats.cpp )
+t_xxx_SOURCES=( $dRoot/src/t/Class.cpp $dRoot/src/t/Object.cpp $dRoot/src/util/Object.cpp $dRoot/src/Stats.cpp )
 # ---------------
 # TYPES
 # ---------------
@@ -96,6 +96,10 @@ t_object_OUTPUT="${vm_OUTPUT}-t-object"
 t_array_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/Array.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_array.cpp )
 t_array_CXX="$vm_CXX"
 t_array_OUTPUT="${vm_OUTPUT}-t-array"
+
+t_exception_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/Exception.cpp $dRoot/src/t/List.cpp $dRoot/src/t/String.cpp $dRoot/src/main_t_exception.cpp )
+t_exception_CXX="$vm_CXX"
+t_exception_OUTPUT="$vm_OUTPUT-t-exception"
 
 t_list_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/List.cpp $dRoot/src/t/Collection.cpp $dRoot/src/main_t_list.cpp )
 t_list_CXX="$vm_CXX"
