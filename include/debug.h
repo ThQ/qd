@@ -109,7 +109,7 @@
 #  define ASSERT(b,args...) if((b)!=true) {FATAL(args);abort();}
 #  define ASSERT_DELETE(p) if (p != NULL) {FATAL("delete failed @%lu.\n", (long unsigned)p);}
 #  define ASSERT_MALLOC(p) if(p == NULL) {FATAL("Malloc failed.");abort();}
-#  define ASSERT_NOT_NULL(p) if((p) == NULL) {FATAL("ASSERTION FAILED : @%x must not be <NULL>.\n", (uint)(p)); abort();}
+#  define ASSERT_NOT_NULL(p) if((p) == NULL) {FATAL("ASSERTION_FAILED : <%s> must not be NULL.\n", #p); abort();}
 #  define ASSERT_NULL(p) if((p) != NULL) {FATAL("@%lu must be <NULL>.\n", (ULong)(p)); abort();}
 #  define ASSERT_REALLOC(p) if(p == NULL) {FATAL("Realloc failed."); abort();}
 #else
