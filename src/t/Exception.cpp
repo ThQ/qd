@@ -2,80 +2,91 @@
 
 namespace t
 {
-   T_OBJECT* tEXCEPTION = NULL;
-   T_OBJECT* tRUNTIME_EXCEPTION = NULL;
-   T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION = NULL;
+   ExceptionType* cEXCEPTION = NULL;
+   //T_OBJECT* tEXCEPTION = NULL;
+   //T_OBJECT* tRUNTIME_EXCEPTION = NULL;
+   //T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION = NULL;
 
    Exception::Exception()
    {
-      this->message = new String();
-      this->set_class(NS_TYPE::tEXCEPTION);
-      this->references = 0;
+      this->message = NULL;
+      this->stack_trace = NULL;
+      this->type = EXCEPTION_TYPE;
    }
 
-   T_OBJECT*
-   Exception::build()
+   Exception::Exception(String* message)
    {
-      return (T_OBJECT*) new Exception();
+      ASSERT_NOT_NULL(message);
+
+      this->message = message;
+      this->stack_trace = NULL;
+      this->type = EXCEPTION_TYPE;
    }
 
-   T_OBJECT*
-   Exception::build(T_OBJECT* message)
+   Exception::Exception(String* message, List* stack_trace)
    {
-      T_STRING::assert(message);
+      ASSERT_NOT_NULL(message);
+      ASSERT_NOT_NULL(stack_trace);
 
-      Exception* result = new Exception();
-      Exception::set_message(result, message);
-
-      return (T_OBJECT*)result;
+      this->message = message;
+      this->stack_trace = stack_trace;
+      this->type = EXCEPTION_TYPE;
    }
 
-   T_OBJECT*
-   Exception::cast_to_string(T_OBJECT* error)
+   String*
+   Exception::cast_to_string(Exception* pException)
    {
-      T_STRING::assert(error);
+      ASSERT_NOT_NULL(pException);
+      ASSERT_NOT_NULL(pException->message);
 
-      T_STRING* message = (T_STRING*)((Exception*)error)->message;
+      String* pResult = new String();
+      pResult->value.assign(pException->message->value);
+      pResult->value.append("\n");
 
-      T_STRING* result = new T_STRING();
-      result->value.append(message->value);
-      result->value.append("\n");
-
-      return (T_OBJECT*)result;
+      return pResult;
    }
 
    void
-   Exception::print(T_OBJECT* error)
+   Exception::print(Exception* pException)
    {
-      Exception::assert(error);
-      String* pMessage = (String*)Exception::cast_to_string(error);
-      pMessage->print();
+      ASSERT_NOT_NULL(pException);
+
+      String* pMessage = Exception::cast_to_string(pException);
+      String::print(pMessage);
    }
 
-   T_OBJECT*
-   Exception::set_message(T_OBJECT* error, T_OBJECT* message)
+   void
+   Exception::print_line(Exception* pException)
    {
-      T_OBJECT::assert_not_null(error);
-      T_OBJECT::assert_not_null(message);
+      ASSERT_NOT_NULL(pException);
 
-      T_OBJECT::drop_safe(((Exception*)error)->message);
-      T_OBJECT::pick(message);
-      ((Exception*)error)->message = message;
-
-      return message;
+      String* pMessage = Exception::cast_to_string(pException);
+      String::print_line(pMessage);
    }
 
-   T_OBJECT*
-   Exception::set_stack_trace(T_OBJECT* obj, T_OBJECT* stack_trace)
+   void
+   Exception::set_message(String* pMessage)
    {
-      Exception::assert(obj);
-      T_LIST::assert(stack_trace);
+      ASSERT_NOT_NULL(pMessage);
 
-      Exception* exception = (Exception*)obj;
-      T_OBJECT::drop_safe(exception->stack_trace);
-      T_OBJECT::pick(stack_trace);
-      exception->stack_trace = stack_trace;
+      if (this->message != NULL)
+      {
+         this->message->drop();
+      }
+      this->message = pMessage;
+      pMessage->pick();
+   }
 
-      return stack_trace;
+   void
+   Exception::set_stack_trace(List* pStackTrace)
+   {
+      ASSERT_NOT_NULL(pStackTrace);
+
+      if (this->stack_trace != NULL)
+      {
+         this->stack_trace->drop();
+      }
+      this->stack_trace = pStackTrace;
+      pStackTrace->pick();
    }
 }

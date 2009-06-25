@@ -1,98 +1,110 @@
 #ifndef T_EXCEPTION
 #define T_EXCEPTION t::Exception
 
-#include "t/Int.h"
+#include "t/Class.h"
 #include "t/List.h"
 #include "t/Object.h"
 #include "t/String.h"
 
 namespace t
 {
-   extern T_OBJECT* tEXCEPTION;
-   extern T_OBJECT* tRUNTIME_EXCEPTION;
-   extern T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION;
+   //extern T_OBJECT* tEXCEPTION;
+   //extern T_OBJECT* tRUNTIME_EXCEPTION;
+   //extern T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION;
+
+   class ExceptionClass : public Class
+   {
+   };
+
+   extern ExceptionClass* cEXCEPTION;
 
    /**
     * An exception signaling an error in a program flow.
     */
    class Exception : public Object
    {
-      public: T_OBJECT* message;       ///< Error message.
-      public: T_OBJECT* stack_trace;   ///< A representation of the stack trace when the exception was thrown.
+      public: String* message;     ///< Error message.
+      public: List* stack_trace;   ///< A representation of the stack trace when the exception was thrown.
 
       /**
-       * Constructor.
+       * @brief Constructor.
        */
       public: Exception();
 
       /**
-       * Asserts that an object is of type @cls{t::Exception}.
+       * @brief Constructs an exception with a message.
        *
-       * @param obj Object to test.
+       * @param pMessage The exception message.
        */
-      public: inline static void assert(T_OBJECT* obj)
+      public: Exception(String* pMessage);
+
+      /**
+       * @brief Constructs an exception with a message and a stack trace.
+       *
+       * @param pMessage The exception message.
+       * @param pStackTrace The exception stack trace.
+       */
+      public: Exception(String* pMessage, List* pStackTrace);
+
+      /**
+       * @brief Asserts that an object is of type @cls{t::Exception}.
+       *
+       * @param pObject Object to test.
+       */
+      public: inline static void assert(Object* pObject)
       {
-         return T_OBJECT::assert_type(obj, NS_TYPE::tEXCEPTION);
+         return pObject->assert_type(t::EXCEPTION_TYPE);
       }
 
       /**
-       * Builds an empty exception.
+       * @brief Builds a string from an exception @prm{error}.
        *
-       * @return An emtpy @cls{t::Exception}
-       */
-      public: static T_OBJECT* build();
-
-      /**
-       * Builds an exception with message @prm{message}.
-       *
-       * @param message Error message.
-       * @return A @cls{t::Exception} with a message.
-       */
-      public: static T_OBJECT* build(T_OBJECT* message);
-
-      /**
-       * Builds a string from an exception @prm{error}.
-       *
-       * @param error The exception from which to build a string.
+       * @param pException The exception from which to build a string.
        * @return A @cls{t::String} representing the exception.
+       * @todo Include the stack trace.
        */
-      public: static T_OBJECT* cast_to_string(T_OBJECT* error);
+      public: static String* cast_to_string(Exception* pException);
 
       /**
-       * Checks if an object is of type @cls{t::Exception}.
+       * @brief Checks if an object is of type @cls{t::Exception}.
        *
-       * @param obj An object to be checked.
+       * @param pObject An object to be checked.
        * @return true if @prm{obj} is of type @cls{t::Exception}.
        */
-      public: inline static bool check(T_OBJECT* obj)
+      public: inline static bool check(Object* pObject)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::tEXCEPTION);
+         return pObject->check_type(t::EXCEPTION_TYPE);
       }
 
       /**
-       * Builds a string from exception @prm{error} and prints it to the console.
+       * @brief Builds a string from exception @prm{error} and prints it to the
+       * console.
        *
-       * @param error An exception that will be converted to string so as to be printed
+       * @param pException An exception that will be converted to string so as to be printed
        */
-      public: static void print(T_OBJECT* error);
+      public: static void print(Exception* pException);
 
       /**
-       * Sets the message of exception @prm{error} to @prm{message}.
+       * @brief Builds a string from exception @prm{error} and prints it to the
+       * console on a new line.
        *
-       * @param error The exception to set the message to
-       * @param message The message to use
-       * @return The message (unchanged)
+       * @param pException An exception that will be converted to string so as to be printed
        */
-      public: static T_OBJECT* set_message(T_OBJECT* error, T_OBJECT* message);
+      public: static void print_line(Exception* pException);
 
       /**
-       * Sets the stack trace of exception @prm{exception} to @prm{stack_trace}.
+       * @brief Sets the message of exception @prm{error} to @prm{message}.
        *
-       * @param exception The exception to set the stack trace to
-       * @param stack_trace The stack trace to use
-       * @return The stack trace (unchanged)
+       * @param pMessage The message to use.
        */
-      public: static T_OBJECT* set_stack_trace(T_OBJECT* exception, T_OBJECT* stack_trace);
+      public: void set_message(String* pMessage);
+
+      /**
+       * @brief Sets the stack trace of exception @prm{exception} to @prm{stack_trace}.
+       *
+       * @param pStackTrace The stack trace to use
+       */
+      public: void set_stack_trace(List* stack_trace);
    };
 }
 
