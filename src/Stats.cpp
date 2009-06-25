@@ -6,7 +6,7 @@ _Stats::_Stats()
 {
    this->dwDrops = 0;
    this->dwFinalDrops = 0;
-   this->dwInitialDrops = 0;
+   this->dwInitialPicks = 0;
    this->dwPicks = 0;
    this->dwReferences = 0;
 }
