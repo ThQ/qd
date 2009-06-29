@@ -2,7 +2,7 @@
 
 namespace t
 {
-   // T_OBJECT* tSTRING = NULL;
+   VM_CLASS__NEW(cSTRING, t::String, t::STRING_TYPE, &cOBJECT);
 
    String::String ()
    {
@@ -526,18 +526,14 @@ namespace t
    }
 
    void
-   String::print (Object* pString)
+   String::print (Value pString)
    {
-      String::assert(pString);
-
       printf("%s", ((String*)pString)->value.c_str());
    }
 
    void
-   String::print_line (Object* pString)
+   String::print_line (Value pString)
    {
-      String::assert(pString);
-
       printf("%s\n", ((String*)pString)->value.c_str());
    }
 

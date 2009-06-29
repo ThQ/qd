@@ -19,6 +19,5 @@ class _Stats
 } ;
 
 extern _Stats Stats;
-//_Stats Stats;
 
 #endif

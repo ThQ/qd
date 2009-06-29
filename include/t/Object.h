@@ -96,6 +96,17 @@ namespace t
       }
 
       /**
+       * Dummy function for destroying an object.
+       *
+       * @param pObject The object to destroy.
+       * @return true if everything went well.
+       */
+      public: inline static bool destroy(Value pObject)
+      {
+         return true;
+      }
+
+      /**
        * Decreases the reference count of an object.
        *
        * @return true if everything went well.
@@ -167,7 +178,11 @@ namespace t
       /**
        * Prints its string represantion in the console.
        */
-      public: void print();
+      public: inline void print()
+      {
+         ASSERT_NOT_NULL(this->klass);
+         this->klass->print_func((Value)this);
+      }
 
       /**
        * Prints the string representation of an object.
@@ -179,7 +194,11 @@ namespace t
       /**
        * Prints on a new line its string representation.
        */
-      public: void print_line();
+      public: inline void print_line()
+      {
+         ASSERT_NOT_NULL(this->klass);
+         this->klass->print_line_func((Value)this);
+      }
 
       /**
        * Prints on a new line the string representation of an object.

@@ -57,6 +57,11 @@ namespace t
    typedef uint32_t UInt32;   ///< Unsigned integer from 0 to 4.294.967.295. (Unsigned int or I)
    typedef uint64_t UInt64;   ///< Unsigned integer from 0 to 18.446.744.073.709.551.615. (Unsigned long or L)
 
+   typedef Value (*CastToStringFunction)(Value);
+   typedef bool (*DestroyFunction)(Value);
+   typedef void (*PrintFunction)(Value);
+   typedef void (*PrintLineFunction)(Value);
+
    inline const char* cast_type_to_string(ushort type)
    {
       const char* pszCasted;

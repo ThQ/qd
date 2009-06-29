@@ -10,12 +10,10 @@
 
 namespace t
 {
-   // extern T_OBJECT* tSTRING;
+   extern vm::Class cSTRING;
 
    /**
-    * A string of characters.
-    *
-    * @todo Create method [cut_before]
+    * @brief A string of characters.
     */
    class String : public Collection
    {
@@ -74,11 +72,9 @@ namespace t
        */
       protected: inline void _init ()
       {
-         this->type = t::STRING_TYPE;
-
-         this->fpPrint = t::String::print;
-         this->fpPrintLine = t::String::print_line;
+         this->klass = &t::cSTRING;
       }
+
       /**
        * @brief Asserts that an object is of type t::String.
        */
@@ -154,7 +150,10 @@ namespace t
        * @param pObject A pointer to a @cls{t::String} object to destroy.
        * @return true if everything went well.
        */
-      public: static bool destroy(Object* pObject);
+      public: inline static bool destroy(Value pObject)
+      {
+         return t::Object::destroy(pObject);
+      }
 
       /**
        * @brief Checks if two strings have the same content.
@@ -286,12 +285,12 @@ namespace t
       /**
        * @brief Prints the content.
        */
-      public: static void print (Object* pString);
+      public: static void print (Value pString);
 
       /**
        * @brief Prints the content on a new line.
        */
-      public: static void print_line (Object* pString);
+      public: static void print_line (Value pString);
 
       /**
        * @brief Reverses the characters.

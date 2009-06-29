@@ -11,11 +11,11 @@ main (int argc, char** argv)
 
    t::String* pCenteredString = pBaseString->center((t::UInt64)30, pAString);
    pCenteredString->pick();
-   pCenteredString->fpPrintLine(pCenteredString);
+   //pCenteredString->print_line();
 
    t::String* pLowerCasedString = pBaseString->lower_case();
    pLowerCasedString->pick();
-   pLowerCasedString->fpPrintLine(pLowerCasedString);
+   //pLowerCasedString->print_line();
 
    pLowerCasedString->drop();
    pCenteredString->drop();

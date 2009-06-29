@@ -2,7 +2,7 @@
 
 namespace t
 {
-   vm::Class cOBJECT;
+   VM_CLASS__NEW(cOBJECT, t::Object, t::UNDEFINED_TYPE, NULL);
 
    Object* gNULL = NULL;
 
@@ -73,14 +73,14 @@ namespace t
 
       -- pObject->references;
 
-      #ifndef QD__VM__KEEP_STATS
+      #ifdef QD__VM__KEEP_STATS
       ++ Stats.dwDrops;
       -- Stats.dwReferences;
       #endif
 
       if (pObject->references == 0)
       {
-         #ifndef QD__VM__KEEP_STATS
+         #ifdef QD__VM__KEEP_STATS
          ++ Stats.dwFinalDrops;
          #endif
 
@@ -136,13 +136,6 @@ namespace t
    }
 
    void
-   Object::print()
-   {
-      ASSERT_NOT_NULL(this->klass);
-      this->klass->print_func((Value)this);
-   }
-
-   void
    Object::print(Value pObject)
    {
       printf(
@@ -150,13 +143,6 @@ namespace t
             t::cast_type_to_string(((Object*)pObject)->type),
             (uint)pObject
       );
-   }
-
-   void
-   Object::print_line()
-   {
-      ASSERT_NOT_NULL(this->klass);
-      this->klass->print_line_func((Value)this);
    }
 
    void

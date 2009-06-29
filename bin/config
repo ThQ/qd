@@ -3,6 +3,7 @@
 progdir=`dirname $0`
 cd $progdir
 
+echo $PWD
 dRoot="$PWD/.."
 dData="$dRoot/data"
 dBin="$dRoot/bin"
