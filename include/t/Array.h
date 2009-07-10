@@ -1,13 +1,12 @@
 #ifndef T_ARRAY
 #define T_ARRAY t::Array
 
-#include "t/Class.h"
-#include "t/Int.h"
 #include "t/Collection.h"
+#include "vm/Class.h"
 
 namespace t
 {
-   //extern Object* tARRAY;
+   extern vm::Class cARRAY;
 
    /**
     * A @cls{t::Array} is a list of @cls{t::Object}'s who can only contain elements of a
@@ -17,10 +16,10 @@ namespace t
     */
    class Array: public Collection
    {
-      public: ushort item_type;     ///< What kind of object this items are (Bool, Array, String, UserObject).
-      public: Object* item_class;   ///< A pointer to a @cls{t::Class} representing the class of the objects stored, if needed, NULL otherwise.
-      public: Object** items;       ///< The @cls{t::Object} stored.
+      public: vm::Class* item_class;    ///< A pointer to a @cls{t::Class} representing the class of the objects stored, if needed, NULL otherwise.
       public: UInt64 item_count;     ///< Number of item stored. REPLACE THIS WITH Collection::length.
+      public: ushort item_type;     ///< What kind of object this items are (Bool, Array, String, UserObject).
+      public: Value* items;         ///< The values stored.
 
       /**
        * @brief Default constructor.
@@ -34,7 +33,7 @@ namespace t
        * @param pItemClass A pointer to a @cls{t::Class} to use as item type.
        * @param dwArrayLength The length of the array to create.
        */
-      public: Array (ushort nItemType, Class* pItemClass, UInt64 dwArrayLength);
+      public: Array (ushort nItemType, vm::Class* pItemClass, UInt64 dwArrayLength);
 
       /**
        * @brief Constructs an array whose type and length are known.
@@ -42,10 +41,10 @@ namespace t
        * @param nItemType A ushort describing the type of the items stored in the aray.
        * @param pItemClass A pointer to a @cls{t::Class} to use as item type.
        * @param dwArrayLength The length of the array to create.
-       * @param pItems An array of @cls{t::Object}'s to fill the array. It must
+       * @param pItems An array of @cls{t::Value}'s to fill the array. It must
        * contain at least @prm{dwArrayLength} objects.
        */
-      public: Array (ushort nItemType, Class* pItemClass, UInt64 dwArrayLength, Object** pItems);
+      public: Array (ushort nItemType, vm::Class* pItemClass, UInt64 dwArrayLength, Value* pItems);
 
       /**
        * Destructor.
@@ -57,11 +56,15 @@ namespace t
        */
       protected: inline void _init ()
       {
+         this->klass = &cARRAY;
          this->type = t::ARRAY_TYPE;
          this->item_type = t::UNDEFINED_TYPE;
          this->item_class = NULL;
          this->items = NULL;
          this->item_count = 0;
+
+         ASSERT_NOT_NULL(this->klass);
+         ASSERT(this->type != t::UNDEFINED_TYPE, "Array object must have a type");
       }
 
       /**
@@ -109,9 +112,9 @@ namespace t
        * Replaces an item with another one.
        *
        * @param item_index The index of the item to set.
-       * @param new_item A pointer to an object to use as a replacement.
+       * @param new_value A value to use a replacement
        */
-      public: void set_item(UInt64 item_index, T_OBJECT* new_item);
+      public: void set_item(UInt64 item_index, Value new_value);
 
       /**
        * Sets the type of the objects that can possibly be stored in a
@@ -119,7 +122,19 @@ namespace t
        *
        * @param type A pointer to a @cls{t::Class} to use a type.
        */
-      public: void set_type(ushort type, Class* cls);
+      public: inline void set_item_type(ushort type)
+      {
+         this->set_item_type(type, NULL);
+      }
+
+      /**
+       * Sets the type of the objects that can possibly be stored in a
+       * @cls{t::Array}.
+       *
+       * @param type A pointer to a @cls{t::Class} to use a type.
+       * @param cls The class to use.
+       */
+      public: void set_item_type(ushort type, vm::Class* cls);
 
       /**
        * Allocates memory for @prm{array_size} items in array [this->items] and
