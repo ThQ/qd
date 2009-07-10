@@ -102,11 +102,20 @@
    #define SVM_CHECK_NOT_NULL(v)
 #endif
 
-#define DELETE(p) INTERNAL("<%s @%x> DELETE.\n", t::cast_type_to_string((p)->type), (uint)(p)); delete p; p = NULL; ASSERT_DELETE(p);
+#define DELETE(p) \
+   INTERNAL(\
+         "<%s @%x> DELETE (.class_at @%x)\n", \
+         t::cast_type_to_string((p)->type), \
+         (uint)(p), \
+         (uint)((Object*)(p))->klass\
+   ); \
+   delete p; \
+   p = NULL; \
+   ASSERT_DELETE(p);
 #define DELETE_THIS() INTERNAL("<%s @%x> DELETE.\n", t::cast_type_to_string(this->type), (uint)this);
 
 #ifdef __ALLOW_ASSERTIONS__
-#  define ASSERT(b,args...) if((b)!=true) {FATAL(args);abort();}
+#  define ASSERT(b,args...) if((b)!=true) {FATAL("ASSERTION_FAILED");printf(args);printf("\n%s\n\n", #b);abort();}
 #  define ASSERT_DELETE(p) if (p != NULL) {FATAL("delete failed @%lu.\n", (long unsigned)p);}
 #  define ASSERT_MALLOC(p) if(p == NULL) {FATAL("Malloc failed.");abort();}
 #  define ASSERT_NOT_NULL(p) if((p) == NULL) {FATAL("ASSERTION_FAILED : <%s> must not be NULL.\n", #p); abort();}
