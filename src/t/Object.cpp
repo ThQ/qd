@@ -52,11 +52,11 @@ namespace t
 
       #ifdef _SHOW_GC_
       INTERNAL(
-            "<%s @%x> DEC_REF_COUNT (.from %ld, .to %ld)\n",
-            t::cast_type_to_string(pObject->klass->type),
+            "<%s @%x> DEC_REF_COUNT (.from %lu, .to %lu)\n",
+            t::cast_type_to_string(pObject->type),
             (uint)pObject,
-            pObject->references,
-            pObject->references - 1
+            (ulong)pObject->references,
+            (ulong)pObject->references - 1
       );
       #endif
 
@@ -65,7 +65,7 @@ namespace t
       {
          FATAL(
                "<%s @%x> NEGATIVE_REFERENCE_COUNT\n",
-               t::cast_type_to_string(pObject->klass->type),
+               t::cast_type_to_string(pObject->type),
                (uint)pObject
          );
       }
@@ -102,11 +102,11 @@ namespace t
 
       #ifdef _SHOW_GC_
       INTERNAL(
-            "<%s @%x> INCR_REF_COUNT (.from %ld, .to %ld)\n",
+            "<%s @%x> INCR_REF_COUNT (.from %lu, .to %lu)\n",
             t::cast_type_to_string(pObject->klass->type),
             (uint)pObject,
-            pObject->references,
-            pObject->references + 1
+            (ulong)pObject->references,
+            (ulong)pObject->references + 1
       );
       #endif
 
