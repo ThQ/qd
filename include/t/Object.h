@@ -114,6 +114,7 @@ namespace t
       public: inline bool drop()
       {
          ASSERT_NOT_NULL(this);
+         ASSERT_NOT_NULL(this->klass);
          return Object::drop((Object*)this);
       }
 
