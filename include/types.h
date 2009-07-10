@@ -7,6 +7,9 @@
 
 #include "debug.h"
 
+#define T__IS_LITERAL_TYPE(type) ((type) >= 2 && (type) <= 10)
+#define T__IS_NOT_LITERAL_TYPE(type) (type < 2 || type > 10)
+
 typedef short Short;
 typedef unsigned short UShort;
 typedef unsigned short ushort;
@@ -35,6 +38,7 @@ namespace t
    const ushort UINT16_TYPE = 8;
    const ushort UINT32_TYPE = 9;
    const ushort UINT64_TYPE = 10;
+
    const ushort ARRAY_TYPE = 11;
    const ushort LIST_TYPE = 12;
    const ushort BLOCK_TYPE = 13;
