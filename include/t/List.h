@@ -5,88 +5,135 @@
 #include <stdio.h>
 
 #include "t/Collection.h"
-#include "t/String.h"
+//#include "t/String.h"
+
+#define T__LIST__ASSERT_IN_RANGE(pList, Index) \
+   ASSERT( \
+         Index >= 0 && Index < pList->length, \
+         "Index [%lu] is out of list range [0:%lu[.", \
+         (ulong)Index, \
+         (ulong)pList->length \
+   );
 
 namespace t
 {
-   extern T_OBJECT* tLIST;
+   extern vm::Class cLIST;
 
    /**
-    * A list is an ordered and resizable collection of objects.
+    * A list is an ordered and resizable collection of values.
     *
     * If you want a fixed size collection, use t::Array.
     */
    class List : public Collection
    {
-      public: T_OBJECT** items; ///< An array of @cls{t::Object}s.
+      public: ushort item_type;        ///< The type of the values stored.
+      public: vm::Class* item_class;   ///< The class of the values stored.
+      public: Value* items;            ///< An array of values stored.
 
       /**
-       * Constructor
+       * @brief Default Constructor
        */
       public: List();
 
       /**
-       * Asserts that an object is of type t::List.
+       * @brief Initializes a list with an item type.
+       *
+       * @param ItemType The type of the items stored.
+       */
+      public: List(ushort ItemType);
+
+      /**
+       * @brief Initializes a list with an item type and class.
+       *
+       * @param ItemType The type of the items stored.
+       * @param pItemClass The class of the items stored.
+       */
+      public: List(ushort ItemType, vm::Class* pItemClass);
+
+      /**
+       * @brief Asserts that an object is of type t::List.
        *
        * @param obj Object to check.
        */
-      public: inline static void assert(T_OBJECT* obj)
+      public: inline static void assert(Object* obj)
       {
-         T_OBJECT::assert_type(obj, NS_TYPE::tLIST);
+         obj->assert_type(t::LIST_TYPE);
       }
 
       /**
-       * Checks if an object is of type t::List.
+       * @brief Checks if an object is of type t::List.
        *
        * @param obj An object to check.
        * @return true if [obj] is of type t::List.
        */
-      public: inline static bool check(T_OBJECT* obj)
+      public: inline static bool check(Object* obj)
       {
-         return T_OBJECT::check_type(obj, NS_TYPE::tLIST);
+         return obj->check_type(t::LIST_TYPE);
       }
 
       /**
-       * Replaces each item of a list with NULL.
+       * @brief Replaces each item of a list with NULL.
        *
        * @param list The list to clear.
+       * @todo Make it less REALLOC intensive.
        */
       public: void clear();
 
       /**
-       * Destroys a @cls{t::List}.
+       * @brief Copies a list.
        *
-       * @param pList A pointer to a @cls{t::List} to destroy.
-       * @return true if everything went OK.
+       * @return The list copied to another object.
        */
-      public: static bool destroy(Object* pList);
+      public: List* copy();
 
       /**
        * If a list contains other lists, recursively replaces those lists
        * with their own items.
        *
-       * @param list A list to flatten.
        * @return A new list with all elements from [list] flattened.
        */
-      public: List* flatten();
+      public: List* copy_flatten();
 
       /**
-       * Gets an item at [index]  from [list].
+       * Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
        *
-       * @param index The position at which to get an item.
-       * @return An object from [list] at [index].
+       * @return A new list with all objects reversed.
        */
-      public: Object* get_item(UInt64 index);
+      public: Object* copy_reverse();
 
       /**
-       * Inserts an object into [list] at [index].
+       * @brief Destroys a @cls{t::List}.
+       *
+       * @param pList A pointer to a @cls{t::List} to destroy.
+       * @return true if everything went OK.
+       */
+      public: static bool destroy(Value pList);
+
+      /**
+       * @brief Gets an object.
+       *
+       * @param index The position at which to get the object.
+       * @return A pointer to an object.
+       */
+      public: Value get_object_at(UInt64 index);
+
+      /**
+       * @brief Gets a value.
+       *
+       * @param index The position at which to get the value.
+       * @return A value.
+       */
+      public: Value get_value_at(UInt64 index);
+
+      /**
+       * @brief Inserts an object.
        *
        * @param index The position at which to insert an item.
        */
       public: void insert(UInt64 index, Object* obj);
 
       /**
-       * Pops one object off [list].
+       * Pops one object off.
        *
        * @todo Make it less REALLOC intensive.
        */
@@ -104,14 +151,14 @@ namespace t
        *
        * @param pList The list to print.
        */
-      public: static void print(Object* pList);
+      public: static void print(Value pList);
 
       /**
        * Prints a string represention on a new line in the console.
        *
        * @param pList The list to print.
        */
-      public: static void print_line(Object* pList);
+      public: static void print_line(Value pList);
 
       /**
        * Pushes an object onto [list].
@@ -136,13 +183,6 @@ namespace t
       public: void remove_item(UInt64 index);
 
       /**
-       * Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
-       *
-       * @return A new list with all objects reversed.
-       */
-      public: Object* reverse();
-
-      /**
        * Resizes [list] to its new [size].
        *
        * @param size The new size of the list.
@@ -159,13 +199,26 @@ namespace t
       public: void set_item(UInt64 at, Object* obj);
 
       /**
-       * Gets a slice from [list] from [start] to [end] stepping [step].
+       * Slices the list
        *
-       * @param list The list to slice.
+       * @param start Slice start.
+       * @param end Slice end.
+       * @return A new list containing the slice.
+       */
+      public: List* slice(UInt64 start, UInt64 end)
+      {
+         return this->slice(start, end, 1);
+      }
+
+      /**
+       * Slices the list
+       *
        * @param start Slice start.
        * @param end Slice end.
        * @param step Slice step.
        * @return A new list containing the slice.
+       *
+       * @todo Make some asserts (start not > end, etc)
        */
       public: List* slice(UInt64 start, UInt64 end, UInt64 step);
    };
