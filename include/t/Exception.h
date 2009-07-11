@@ -1,22 +1,14 @@
 #ifndef T_EXCEPTION
 #define T_EXCEPTION t::Exception
 
-#include "t/Class.h"
 #include "t/List.h"
 #include "t/Object.h"
 #include "t/String.h"
+#include "vm/Class.h"
 
 namespace t
 {
-   //extern T_OBJECT* tEXCEPTION;
-   //extern T_OBJECT* tRUNTIME_EXCEPTION;
-   //extern T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION;
-
-   class ExceptionClass : public Class
-   {
-   };
-
-   extern ExceptionClass* cEXCEPTION;
+   extern vm::Class cEXCEPTION;
 
    /**
     * An exception signaling an error in a program flow.
@@ -104,7 +96,7 @@ namespace t
        *
        * @param pStackTrace The stack trace to use
        */
-      public: void set_stack_trace(List* stack_trace);
+      public: void set_stack_trace(List* pStackTrace);
    };
 }
 
