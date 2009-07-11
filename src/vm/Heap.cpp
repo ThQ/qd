@@ -1,6 +1,6 @@
 #include "vm/Heap.h"
 
-namespace NS_VM
+namespace vm
 {
    Heap::Heap()
    {
@@ -13,17 +13,14 @@ namespace NS_VM
 
    Heap::~Heap()
    {
-      for (UInt i = 0 ; i < this->item_count ; ++ i)
+      LOOP_FROM_TO(uint, i, 0, this->item_count)
       {
-         T_OBJECT::drop(this->items[i]);
+         if (this->items[i] != NULL)
+         {
+            this->items[i]->drop();
+         }
       }
       free(this->items);
-   }
-
-   void
-   Heap::clear()
-   {
-      this->change_length(0);
    }
 
    void
@@ -33,186 +30,169 @@ namespace NS_VM
 
       if (this->rooms == this->item_count)
       {
-         this->resize(this->rooms + SVM_HEAP_ROOM_STEP);
+         this->resize_up();
+         //this->resize(this->rooms + SVM_HEAP_ROOM_STEP);
       }
 
       ++ this->item_count;
       ++ this->last_position;
-      T_OBJECT::pick(obj);
+      obj->pick();
       this->items[this->last_position] = obj;
    }
 
    void
-   Heap::append(UInt object_count, T_OBJECT** objects)
+   Heap::append(uint object_count, T_OBJECT** objects)
    {
-      for (UInt i = 0 ; i < object_count ; ++ i)
+      LOOP_FROM_TO(uint, i, 0, object_count)
       {
          this->append(objects[i]);
       }
    }
 
    void
-   Heap::change_length(ULong length)
+   Heap::clear()
    {
-      if (length > this->item_count)
+      LOOP_FROM_TO(uint, i, 0, this->item_count)
       {
-         for (ULong i = length ; i < this->item_count ; ++ i)
-         {
-            T_OBJECT::drop(this->items[i]);
-         }
+         if (this->items[i] != NULL) this->items[i]->drop();
+         this->items[i] = NULL;
       }
-      else
-      {
-         for (ULong i = this->item_count ; i < length ; ++i)
-         {
-            this->items[i] = NULL;
-         }
-      }
-
-      this->last_position = length - 1;
-      this->item_count = length;
+      this->last_position = 0;
+      this->item_count = 0;
    }
 
-   ULong
+   uint
    Heap::count()
    {
       return this->item_count;
    }
 
-   T_OBJECT*
-   Heap::get(ULong at)
+   t::Object*
+   Heap::get(uint at)
    {
-      ASSERT(at < this->item_count, "<heap@x%x>: Index [%lu] out of range [0 .. %lu].\n", (UInt)this, at, this->item_count);
-      T_OBJECT* result = this->items[this->last_position - at];
-      T_OBJECT::pick(result);
+      ASSERT(
+            at < this->item_count,
+            "<Heap @x%x>: INDEX_OUT_OF_RANGE (.from %lu, .to %lu)\n",
+            (uint)this,
+            at,
+            this->item_count
+      );
+      t::Object* result = this->items[this->last_position - at];
 
       // ASSERT(result != t::tHEAP_OBJECT, "<heap@x%x> cannot return <system.HeapObject> objects.\n", (UInt)this);
 
       return result;
    }
 
-   T_OBJECT*
+   t::Object*
    Heap::pick_last_and_pop()
    {
-      T_OBJECT* result = this->get(0);
-      T_OBJECT::pick(result);
+      t::Object* result = this->get(0);
+      result->pick();
       this->pop(1);
       return result;
    }
 
    void
-   Heap::pop()
+   Heap::pop(uint count)
    {
-      this->pop(1);
-   }
+      ASSERT(
+            this->item_count > count,
+            "<Heap @x%x> CANNOT_POP_MORE_THAN_IN_THE_HEAP (.real %lu, .expected %lu)",
+            this->item_count,
+            count
+      )
 
-   void
-   Heap::pop(ULong count)
-   {
       if (this->item_count > 0)
       {
-         if (count > this->item_count) count = this->item_count;
+         //if (count > this->item_count) count = this->item_count;
 
-         for (ULong i = 0 ; i < count ; ++ i)
+         LOOP_FROM_TO(uint, i, 0, count)
          {
-            T_OBJECT::drop(this->items[this->last_position - i]);
+            this->items[this->last_position - i]->drop();
             this->items[this->last_position - i] = NULL;
          }
 
          this->item_count -= count;
          this->last_position -= count;
-
-         if (this->rooms - SVM_HEAP_ROOM_STEP > this->item_count)
-         {
-            this->resize(this->rooms - SVM_HEAP_ROOM_STEP);
-         }
       }
    }
 
    void
-   Heap::replace(ULong count, T_OBJECT* by)
+   Heap::replace_at(uint nAt, t::Object* pReplacement)
    {
-      ASSERT(this->item_count >= count, "Cannot replace more than items in the heap.");
-      ASSERT_NOT_NULL(by);
-
-      ULong new_length = this->item_count - count + 1;
-      this->change_length(new_length);
-      this->replace_at(0, by);
-   }
-
-   void
-   Heap::replace_at(ULong at, T_OBJECT* by)
-   {
-      ULong pos = this->last_position - at;
-      T_OBJECT::pick(by);
-      CHECK(by != this->items[pos], "You should not try to replace an object by itself.\n");
-      T_OBJECT::drop(this->items[pos]);
+      uint nPos = this->last_position - at;
+      pReplacement->pick();
+      this->items[nPos]->drop();
       this->items[pos] = by;
+
+      CHECK(
+            pReplacement != this->items[nPos],
+            "<Heap @x%x> REPLACING_AN_OBJECT_BY_ITSELF (.at %lu, .object %u)\n",
+            (uint)this,
+            nAt,
+            (uint)pReplacement
+      );
    }
 
    void
-   Heap::resize(ULong rooms)
+   Heap::resize(uint nRooms)
    {
       INTERNAL(
-         "<heap:%lu> : Resizing from <%ld> rooms to <%ld>. (@%ld + %ld b)\n",
-         (ULong)this,
+         "<Heap @x%x> RESIZING (.from %ld, .to %ld)\n",
+         (uint)this,
          this->rooms,
-         rooms,
-         (ULong)this->items,
-         sizeof(T_OBJECT*) * rooms
+         rooms
       );
-      this->items = (T_OBJECT**)REALLOC(this->items, sizeof(T_OBJECT*) * rooms);
+
+      this->items = (t::Object**)REALLOC(this->items, T__OBJECT__SIZEOF_PTR * rooms);
       ASSERT_REALLOC(this->items);
-      for (ULong i = this->rooms ; i < rooms ; ++i)
+
+      LOOP_FROM_TO(uint, i, this->rooms, nRooms)
       {
-         // @TODO: SVM_DROP ? probably...
+         if (this->items[i] != NULL) this->items[i]->drop();
          this->items[i] = NULL;
       }
       this->rooms = rooms;
    }
 
    bool
-   Heap::reverse(ULong num)
+   Heap::reverse(uint nNum)
    {
-      bool result;
-      if (this->item_count >= num)
+      CHECK(
+            "<Heap @x%x> TRYING_TO_REVERSE_MORE_THAN_IN_THE_HEAP"
+            (uint)this
+      )
+
+      if (this->item_count >= nNum)
       {
-         T_OBJECT* tmp = NULL;
-         ULong i_max = num % 2 == 0 ? num / 2 : (num - 1) / 2;
-         --num;
-         for (ULong i = 0 ; i < i_max ; ++i)
+         t::Object* pTmp = NULL;
+         uint i_max = nNum % 2 == 0 ? nNum / 2 : (nNum - 1) / 2;
+         --nNum;
+
+         LOOP_FROM_TO(uint, i, 0, i_max)
          {
-            tmp = this->items[this->last_position - num + i];
-            this->items[this->last_position - num + i] = this->items[this->last_position - i];
-            T_OBJECT::pick(this->items[this->last_position - i]);
-            this->items[this->last_position - i] = tmp;
+            pTmp = this->items[this->last_position - nNum + i];
+            this->items[this->last_position - nNum + i] = this->items[this->last_position - i];
+            this->items[this->last_position - i]->pick();
+            this->items[this->last_position - i] = pTmp;
          }
-         result = true;
       }
-      else
-      {
-         result = false;
-      }
-      return result;
    }
 
-   bool
+   void
    Heap::swap()
    {
-      bool result;
+      CHECK(
+            "<Heap @x%x> SWAPING_WITH_ONLY_ONE_ITEM"
+            (uint)this
+      );
+
       if (this->item_count > 1)
       {
-         T_OBJECT* last = this->items[this->last_position];
-         T_OBJECT::pick(last);
+         t::Object* pLastObj = this->items[this->last_position];
          this->items[this->last_position] = this->items[this->last_position - 1];
-         this->items[this->last_position - 1] = last;
-         T_OBJECT::drop(last);
-         result = true;
+         this->items[this->last_position - 1] = pLastObj;
       }
-      else
-      {
-         result = false;
-      }
-      return result;
    }
 }
