@@ -15,13 +15,13 @@
 #include "util.h"
 
 #define SVM_OBJECT_FIELDS_STEP 5
-
+#define T__OBJECT__SIZEOF_PTR sizeof(t::Object*)
 namespace t
 {
    extern vm::Class cOBJECT;
 
    /**
-    * Objects for the VM.
+    * @brief A reference type object.
     */
    class Object
    {
@@ -32,9 +32,8 @@ namespace t
       public: Object();
 
       /**
-       * Asserts an object is of type [type]. Exits the application otherwise.
+       * @brief Asserts an object is of type [type]. Exits the application otherwise.
        *
-       * @param object An object to check.
        * @param type A type to assert.
        */
       public: inline void assert_type(ushort type)
@@ -56,7 +55,7 @@ namespace t
       }
 
       /**
-       * Builds an array of object of length argc.
+       * @brief Builds an array of object of length argc.
        *
        * @param argc How many objects.
        * @return An [Object] array of length [argc].
@@ -64,7 +63,7 @@ namespace t
       public: static Object** build_array(int argc, ...);
 
       /**
-       * Compares two objects.
+       * @brief Compares two objects.
        *
        * @param pObject The object to compare to.
        * @return 0 if they are the same object, -1 if obj1 < obj2 and 1 otherwise
@@ -72,7 +71,8 @@ namespace t
       public: Short compare_to(Object* pObject);
 
       /**
-       * Checks if an object is of type [type].
+       * @brief Checks if an object is of type [type].
+       *
        * @param type The type to check.
        * @return true if [object] is of type [type].
        */
@@ -96,7 +96,7 @@ namespace t
       }
 
       /**
-       * Dummy function for destroying an object.
+       * @brief Dummy function for destroying an object.
        *
        * @param pObject The object to destroy.
        * @return true if everything went well.
@@ -107,7 +107,7 @@ namespace t
       }
 
       /**
-       * Decreases the reference count of an object.
+       * @brief Decreases the reference count of an object.
        *
        * @return true if everything went well.
        */
@@ -119,7 +119,7 @@ namespace t
       }
 
       /**
-       * Decreases the reference count of an object.
+       * @brief Decreases the reference count of an object.
        *
        * @param obj An object to drop.
        * @return true if everything went well.
@@ -127,7 +127,7 @@ namespace t
       public: static bool drop(Object* obj);
 
       /**
-       * Decreases the reference count of an object after having checking for
+       * @brief Decreases the reference count of an object after having checking for
        * null references.
        *
        * @param obj An object to drop.
@@ -142,7 +142,7 @@ namespace t
       }
 
       /**
-       * Increases the reference count.
+       * @brief Increases the reference count.
        *
        * @return true if everything went well.
        */
@@ -152,7 +152,7 @@ namespace t
       }
 
       /**
-       * Increases the reference count of an object.
+       * @brief Increases the reference count of an object.
        *
        * @param obj An object to pick.
        * @return true if everything went well.
@@ -160,7 +160,7 @@ namespace t
       public: static bool pick(Object* obj);
 
       /**
-       * Increases the reference count of an object.
+       * @brief Increases the reference count of an object.
        *
        * @param obj An object to pick.
        * @return true if everything went well.
@@ -177,7 +177,7 @@ namespace t
       }
 
       /**
-       * Prints its string represantion in the console.
+       * @brief Prints its string represantion in the console.
        */
       public: inline void print()
       {
@@ -186,14 +186,14 @@ namespace t
       }
 
       /**
-       * Prints the string representation of an object.
+       * @brief Prints the string representation of an object.
        *
        * @param o An object to print.
        */
       public: static void print(Value o);
 
       /**
-       * Prints on a new line its string representation.
+       * @brief Prints on a new line its string representation.
        */
       public: inline void print_line()
       {
@@ -202,9 +202,9 @@ namespace t
       }
 
       /**
-       * Prints on a new line the string representation of an object.
+       * @brief Prints on a new line the string representation of an object.
        *
-       * @param o An object to print.
+       * @param pObject An object to print.
        */
       public: static void print_line(Value pObject);
    };
