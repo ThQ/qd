@@ -74,9 +74,14 @@ elif [ "$1" == "t_map" ] ; then
    compile_project "$t_map_CXX $CXX_INTERNAL_FLAGS" "${t_map_SOURCES[*]}" "$t_map_OUTPUT" "$dTmp"
 elif [ "$1" == "t_object" ] ; then
    compile_project "$t_object_CXX $CXX_INTERNAL_FLAGS" "${t_object_SOURCES[*]}" "$t_object_OUTPUT" "$dTmp"
-
 elif [ "$1" == "t_string" ] ; then
    compile_project "$t_string_CXX $CXX_INTERNAL_FLAGS" "${t_string_SOURCES[*]}" "$t_string_OUTPUT" "$dTmp"
+
+# --------------
+#      VM
+# --------------
+elif [ "$1" == "vm_heap" ] ; then
+   compile_project "$vm_heap_CXX $CXX_INTERNAL_FLAGS" "${vm_heap_SOURCES[*]}" "$vm_heap_OUTPUT" "$dTmp"
 
 else
    echo "Can't find item [${1}] to compile."
