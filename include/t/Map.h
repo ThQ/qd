@@ -1,28 +1,40 @@
-#ifndef T_MAP
-#define T_MAP t::Map
+#ifndef T_MAP_H
+#define T_MAP_H
 
 #include "t/Collection.h"
 #include "t/String.h"
+#include "vm/Class.h"
 
 namespace t
 {
-   //extern T_OBJECT* tMAP;
+   extern vm::Class cMAP;
 
    /**
-    * A map is a list of unordered key-value pairs.
+    * @brief An unordered list of key-value pairs.
     *
     * @todo Make it a tree.
     */
    class Map : public Collection
    {
-      public: T_OBJECT** keys;   ///< An array of keys.
-      public: T_OBJECT** items;  ///< An array of items.
+      public: ushort key_type;         ///< Type of the keys.
+      public: vm::Class* key_class;    ///< Class of the keys.
+      public: ushort item_type;        ///< Type of the items.
+      public: vm::Class* item_class;   ///< Class of the items.
+      public: T_OBJECT** keys;         ///< An array of keys.
+      public: T_OBJECT** items;        ///< An array of items.
 
+      /**
+       * @brief Default constructor.
+       */
       public: Map();
+
+      /**
+       * @brief Default destructor.
+       */
       public: ~Map();
 
       /**
-       * Asserts that an object is of type t::Map.
+       * @brief Asserts that an object is of type t::Map.
        *
        * @param obj An object to check.
        */
@@ -32,7 +44,7 @@ namespace t
       }
 
       /**
-       * Checks if an object is of type t::Map.
+       * @brief Checks if an object is of type t::Map.
        *
        * @param obj An object to check.
        * @return true if [obj] is of type t::Map.
@@ -43,53 +55,53 @@ namespace t
       }
 
       /**
-       * Clears a map : Drop every object and resizes the map to zero.
+       * @brief Clears the map
        *
-       * @param map The map to clear.
-       * @return [map].
+       * Drop every object.
        */
       public: void clear();
 
       /**
-       * Destroys a @cls{t::Map}.
+       * @brief Destroys a @cls{t::Map}.
        *
        * @param pObject A pointer to a @cls{t::Map} to destroy.
        * @return true if everything went well.
        */
-      public: static bool destroy(Object* pObject);
+      public: static bool destroy(Value pObject);
 
       /**
-       * Finds the position of a key in a map.
+       * @brief Finds the position of a key in a map.
        *
-       * @param key The key to look for.
+       * @param pKey The key to look for.
        * @param dwPos Will receive the index of the key, if found.
        * @return true if the key is found.
        */
       public: bool find_key(Object* pKey, UInt64& dwPos);
 
       /**
-       * Tests if it contains a key.
+       * @brief Tests if it contains a key.
        *
-       * @param key The key to look for.
+       * @param pKey The key to look for.
        * @return true if the key is found.
        */
       public: bool has_key(Object* pKey);
 
       /**
-       * Prints a string representation of a map in the console.
+       * @brief Prints a string representation of a map in the console.
        *
        * @param pMap A pointer to a @cls{t::Map}.
        */
-      public: static void print(Object* pMap);
+      public: static void print(Value pMap);
 
       /**
-       * Prints a string representation of a map in the console on a new line.
+       * @brief Prints a string representation of a map in the console on a new line.
        *
        * @param pMap A pointer to a @cls{t::Map}.
        */
-      public: static void print_line(Object* pMap);
+      public: static void print_line(Value pMap);
+
       /**
-       * Sets an item in a map.
+       * @brief Sets an item in a map.
        *
        * @param key The key to set.
        * @param value The value to use.
@@ -99,7 +111,7 @@ namespace t
       public: bool set_item(Object* key, Object* value);
 
       /**
-       * Sets an item in a map.
+       * @brief Sets an item in a map.
        *
        * @param key The key to set.
        * @param value The value to use.

@@ -2,7 +2,7 @@
 
 namespace t
 {
-   // T_OBJECT* tMAP = NULL;
+   VM_CLASS__NEW(cMAP, t::Map, t::MAP_TYPE, &cOBJECT);
 
    Map::Map()
    {
@@ -11,10 +11,12 @@ namespace t
       this->items = 0;
       this->references = 0;
       this->type = t::MAP_TYPE;
+      this->klass = &t::cMAP;
 
-      this->fpDestroy = t::Map::destroy;
-      this->fpPrint = t::Map::print;
-      this->fpPrintLine = t::Map::print_line;
+      this->key_type = t::UNDEFINED_TYPE;
+      this->key_class = NULL;
+      this->item_type = t::UNDEFINED_TYPE;
+      this->item_class = NULL;
    }
 
    Map::~Map()
@@ -40,9 +42,9 @@ namespace t
    }
 
    bool
-   Map::destroy(Object* pObject)
+   Map::destroy(Value pObject)
    {
-      Map::assert(pObject);
+      Map::assert((Object*)pObject);
       ((Map*)pObject)->clear();
       return true;
    }
@@ -79,23 +81,22 @@ namespace t
    }
 
    void
-   Map::print(Object* pObject)
+   Map::print(Value pObject)
    {
-      Map::assert(pObject);
+      Map::assert((Object*)pObject);
       Map* pMap = (Map*)pObject;
 
       printf("[");
       LOOP_FROM_TO(UInt64, i, 0, pMap->length)
       {
-         ASSERT_NOT_NULL(pMap->keys[i]->fpPrint);
-         ASSERT_NOT_NULL(pMap->items[i]->fpPrint);
          if (pMap->keys[i] != NULL)
          {
             if (i != 0)
             {
                printf(", ");
             }
-            pMap->keys[i]->fpPrint(pMap->keys[i]);
+            vm::Class* pKeyClass = ((Object*)pMap->keys[i])->klass;
+            pKeyClass->print_func((Object*)pMap->keys[i]);
          }
          else
          {
@@ -104,7 +105,8 @@ namespace t
          printf(": ");
          if (pMap->items[i] != NULL)
          {
-            pMap->items[i]->fpPrint(pMap->items[i]);
+            vm::Class* pItemClass = ((Object*)pMap->items[i])->klass;
+            pItemClass->print_func((Object*)pMap->items[i]);
          }
          else
          {
@@ -116,9 +118,9 @@ namespace t
    }
 
    void
-   Map::print_line(Object* pMap)
+   Map::print_line(Value pMap)
    {
-      Map::assert(pMap);
+      Map::assert((Object*)pMap);
       Map::print(pMap);
       printf("\n");
    }
