@@ -55,7 +55,7 @@ namespace t
    typedef int8_t Int8;       ///< Integer from -128 to 127. (Char or c)
    typedef int16_t Int16;     ///< Integer from -32.768 to 32.767. (Short or s)
    typedef int32_t Int32;     ///< Integer from -2.147.483.648 to 2.147.483.647. (Int or i)
-   typedef int16_t Int64;     ///< Integer from -9.223.372.036.854.775.808 to 9.223.372.036.854.775.807. (Long or l)
+   typedef int64_t Int64;     ///< Integer from -9.223.372.036.854.775.808 to 9.223.372.036.854.775.807. (Long or l)
    typedef uint8_t UInt8;     ///< Unsigned integer from 0 to 255. (Unsigned char or C)
    typedef uint16_t UInt16;   ///< Unsigned integer from 0 to 65.535. (Unsigned short or S)
    typedef uint32_t UInt32;   ///< Unsigned integer from 0 to 4.294.967.295. (Unsigned int or I)
