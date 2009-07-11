@@ -35,7 +35,7 @@ $dRoot/src/t/Float.cpp \
 $dRoot/src/t/Function.cpp \
 $dRoot/src/t/HeapObject.cpp \
 $dRoot/src/t/List.cpp \
-$dRoot/src/t/Map.cpp \
+# $dRoot/src/t/Map.cpp \
 $dRoot/src/t/Object.cpp \
 $dRoot/src/t/String.cpp \
 $dRoot/src/t/UnicodeString.cpp \
@@ -87,7 +87,7 @@ t_OUTPUT="$vm_OUTPUT"
 
 t_xxx_SOURCES=( $dRoot/src/vm/Class.cpp $dRoot/src/t/Object.cpp $dRoot/src/util/Object.cpp $dRoot/src/Stats.cpp )
 # ---------------
-# TYPES
+#      TYPES
 # ---------------
 t_object_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/main_t_object.cpp )
 t_object_CXX="$vm_CXX"
@@ -113,3 +113,10 @@ t_string_SOURCES=( ${t_xxx_SOURCES[@]} $dRoot/src/t/String.cpp $dRoot/src/t/Coll
 t_string_CXX="$vm_CXX"
 t_string_OUTPUT="${vm_OUTPUT}-t-string"
 
+# ---------------
+#       VM
+# ---------------
+
+vm_heap_SOURCES=( $dRoot/src/vm/Heap.cpp $dRoot/src/t/Object.cpp $dRoot/src/t/HeapObject.cpp )
+vm_heap_CXX="$vm_CXX"
+vm_heap_OUTPUT="${vm_OUTPUT}-vm-heap
