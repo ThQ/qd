@@ -256,13 +256,10 @@ namespace t
    }
 
    void
-   List::push(Object* obj)
+   List::push(Value pValue)
    {
-      ASSERT_NOT_NULL(obj);
-
       this->resize(this->length + 1);
-      this->items[this->length - 1] = obj;
-      obj->pick();
+      this->items[this->length - 1] = pValue;
    }
 
    void

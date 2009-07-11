@@ -20,7 +20,7 @@ namespace t
    extern vm::Class cLIST;
 
    /**
-    * A list is an ordered and resizable collection of values.
+    * @brief An ordered and resizable collection of values.
     *
     * If you want a fixed size collection, use t::Array.
     */
@@ -74,7 +74,6 @@ namespace t
       /**
        * @brief Replaces each item of a list with NULL.
        *
-       * @param list The list to clear.
        * @todo Make it less REALLOC intensive.
        */
       public: void clear();
@@ -87,7 +86,7 @@ namespace t
       public: List* copy();
 
       /**
-       * If a list contains other lists, recursively replaces those lists
+       * @brief If a list contains other lists, recursively replaces those lists
        * with their own items.
        *
        * @return A new list with all elements from [list] flattened.
@@ -95,7 +94,7 @@ namespace t
       public: List* copy_flatten();
 
       /**
-       * Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
+       * @brief Creates a t::List filled with the items of [list] reverser (First becomes last, etc.).
        *
        * @return A new list with all objects reversed.
        */
@@ -129,68 +128,167 @@ namespace t
        * @brief Inserts an object.
        *
        * @param index The position at which to insert an item.
+       * @param obj A pointer to an object to insert.
        */
       public: void insert(UInt64 index, Object* obj);
 
       /**
-       * Pops one object off.
+       * @brief Pops one object off.
        *
        * @todo Make it less REALLOC intensive.
        */
       public: void pop();
 
       /**
-       * Pops n objects off [list].
+       * @brief Pops n objects off [list].
        *
        * @param num The number of items to pop.
        */
       public: void pop(UInt64 num);
 
       /**
-       * Prints a string represention in the console.
+       * @brief Prints a string represention in the console.
        *
        * @param pList The list to print.
        */
       public: static void print(Value pList);
 
       /**
-       * Prints a string represention on a new line in the console.
+       * @brief Prints a string represention on a new line in the console.
        *
        * @param pList The list to print.
        */
       public: static void print_line(Value pList);
 
       /**
-       * Pushes an object onto [list].
+       * @brief Pushes a bool.
        *
-       * @param obj An object to push.
+       * @param b A boolean to push.
        */
-      public: void push(Object* obj);
+      public: inline void push(Bool b)
+      {
+         this->push((Value)b);
+      }
 
       /**
-       * Pushes items from [push_list] into [base_list].
+       * @brief Pushes a Int8.
        *
-       * @param base_list A list to push to.
+       * @param i A Int8 to push.
+       */
+      public: inline void push(Int8 i)
+      {
+         this->push((Value)i);
+      }
+      /**
+       * @brief Pushes a Int16.
+       *
+       * @param i A Int16 to push.
+       */
+      public: inline void push(Int16 i)
+      {
+         this->push((Value)i);
+      }
+      /**
+       * @brief Pushes a Int32.
+       *
+       * @param i A Int32 to push.
+       */
+      public: inline void push(Int32 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes a Int64.
+       *
+       * @param i A Int64 to push.
+       */
+      public: inline void push(Int64 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes a UInt8.
+       *
+       * @param i A UInt8 to push.
+       */
+      public: inline void push(UInt8 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes a UInt16.
+       *
+       * @param i A UInt16 to push.
+       */
+      public: inline void push(UInt16 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes a UInt32.
+       *
+       * @param i A UInt32 to push.
+       */
+      public: inline void push(UInt32 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes a UInt64.
+       *
+       * @param i A UInt64 to push.
+       */
+      public: inline void push(UInt64 i)
+      {
+         this->push((Value)i);
+      }
+
+      /**
+       * @brief Pushes an object
+       *
+       * @param pObject An object to push.
+       */
+      public: inline void push(Object* pObject)
+      {
+         this->push((Value)pObject);
+         pObject->pick();
+      }
+
+      /**
+       * @brief Pushes a value.
+       *
+       * @param pValue A value to push.
+       */
+      public: void push(Value pValue);
+
+      /**
+       * @brief Pushes items from [push_list] into [base_list].
+       *
        * @param push_list The list from which items will be pushed.
        */
       public: void push_list(List* push_list);
 
       /**
-       * Removes an object at [index] from [list].
+       * @brief Removes an object at [index] from [list].
        *
        * @param index The index of the item to remove.
        */
       public: void remove_item(UInt64 index);
 
       /**
-       * Resizes [list] to its new [size].
+       * @brief Resizes [list] to its new [size].
        *
        * @param size The new size of the list.
        */
       public: void resize(UInt64 size);
 
       /**
-       * Sets the object of a list at a specified index.
+       * @brief Sets an item.
        *
        * @param at The position at which to set the item in [list].
        * @param obj The object to set at [at].
@@ -199,7 +297,7 @@ namespace t
       public: void set_item(UInt64 at, Object* obj);
 
       /**
-       * Slices the list
+       * @brief Slices the list.
        *
        * @param start Slice start.
        * @param end Slice end.
@@ -211,7 +309,7 @@ namespace t
       }
 
       /**
-       * Slices the list
+       * @brief Slices the list.
        *
        * @param start Slice start.
        * @param end Slice end.
