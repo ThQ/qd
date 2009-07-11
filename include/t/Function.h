@@ -17,31 +17,28 @@ namespace t
    extern T_OBJECT* tBAD_ARGUMENT_TYPE_EXCEPTION;
 
    /**
-    * An internal function to the VM.
+    * @brief An internal function.
     */
    class Function : public Object
    {
-      //public: const char* signature;
-      public: std::string name;        ///< Function's name. Useless ?
       public: T_OBJECT* return_type;   ///< A pointer to a @cls{t::Class} representing the type of the returned object.
-      // public: T_CLASS type;         ///< WTF is that ?
       public: T_OBJECT** arguments;    ///< An array of @cls{{t::Variable}} representing the parameters.
       public: UInt arguments_count;    ///< Number of arguments.
       public: bool is_static;          ///< Is a static function ?
       public: bool is_user;            ///< Is user created ?
 
       /**
-       * Constructor.
+       * @brief Default constructor.
        */
       public: Function();
 
       /**
-       * Destructor.
+       * @brief Destructor.
        */
       public: ~Function();
 
       /**
-       * Asserts that an object is of type t::tFUNCTION.
+       * @brief Asserts that an object is of type t::tFUNCTION.
        *
        * @param obj An object to check.
        */
@@ -52,20 +49,18 @@ namespace t
 
       #ifdef _DEBUG_
       /**
-       * Asserts the validity.
+       * @brief Asserts the validity.
        */
       public: void assert_validity();
       #endif
 
       /**
-       * Builds a string from a function @prm{func}.
-       *
-       * @param func The function to cast to string.
+       * @brief Builds a string from a function @prm{func}.
        */
       public: String* cast_to_string();
 
       /**
-       * Checks if an object is of type @cls{t::Function}.
+       * @brief Checks if an object is of type @cls{t::Function}.
        *
        * @param obj An object to check.
        * @return true if @prm{obj} is of type @cls{t::Function}.
@@ -76,21 +71,19 @@ namespace t
       }
 
       /**
-       * Builds a string from a function @prm{func} and prints it to the console.
-       *
-       * @param func The function to print.
+       * @brief Builds a string from a function @prm{func} and prints it to the console.
        */
       public: void print();
 
       /**
-       * Sets the arguments.
+       * @brief Sets the arguments.
        *
        * @param count How many arguments are passed.
        */
       public: void set_arguments(UInt8 count, ...);
 
       /**
-       * Sets the arguments.
+       * @brief Sets the arguments.
        *
        * @param count How many arguments are passed.
        * @param args Arguments to set.
@@ -98,7 +91,7 @@ namespace t
       public: void set_arguments(UInt8 count, T_OBJECT** args);
 
       /**
-       * Sets the return type to @prm{type}.
+       * @brief Sets the return type to @prm{type}.
        *
        * @param type Return type.
        */
