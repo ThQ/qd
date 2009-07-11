@@ -41,6 +41,8 @@ clear-doc-source:
 
 doc: doc-source doc-opcodes
 
+doc-api: doc-source
+
 doc-source: clear-doc-source
 	doxygen Doxyfile
 
@@ -61,6 +63,9 @@ vm-introspection: prepare-modules update-version-number
 
 vm-release: prepare-modules update-version-number
 	$(xCOMPILE) release
+
+vm-heap: update-version-number
+	$(xCOMPILE) vm_heap
 
 t: update-version-number
 	$(xCOMPILE) t
