@@ -15,7 +15,6 @@ main (int argc, char** argv)
 
    pBaseMap->set_item(pKey, pValue);
    pBaseMap->set_item(pValue, pKey);
-   pBaseMap->fpPrintLine(pBaseMap);
 
    pValue->drop();
    pKey->drop();
@@ -24,5 +23,6 @@ main (int argc, char** argv)
    Stats.print_report();
 
    ASSERT(Stats.dwReferences == 0, "There must not be any references left.");
+
    return 0;
 }
