@@ -64,6 +64,13 @@ vm-introspection: prepare-modules update-version-number
 vm-release: prepare-modules update-version-number
 	$(xCOMPILE) release
 
+vm-call-stack: update-version-number
+	$(xCOMPILE) vm_call_stack
+
+vm-engine: update-version-number
+	cp -f include/vm/Engine.h ${BUILD_DIR}/include/vm/Engine.h
+	$(xCOMPILE) vm_engine
+
 vm-heap: update-version-number
 	$(xCOMPILE) vm_heap
 
@@ -73,8 +80,14 @@ t: update-version-number
 t-array: update-version-number
 	$(xCOMPILE) t_array
 
+t-block: update-version-number
+	$(xCOMPILE) t_block
+
 t-exception: update-version-number
 	$(xCOMPILE) t_exception
+
+t-function: update-version-number
+	$(xCOMPILE) t_function
 
 t-list: update-version-number
 	$(xCOMPILE) t_list
