@@ -1,11 +1,10 @@
-#ifndef T_STRING_H
-#define T_STRING_H t::String
+#ifndef T__STRING__H
+#define T__STRING__H __FILE__
 
 #include <stdlib.h>
 #include <stdio.h>
 #include <string>
 
-#include "t/Bool.h"
 #include "t/Collection.h"
 
 namespace t
@@ -78,7 +77,7 @@ namespace t
       /**
        * @brief Asserts that an object is of type t::String.
        */
-      public: inline static void assert (T_OBJECT* obj)
+      public: inline static void assert (Object* obj)
       {
          obj->assert_type(t::STRING_TYPE);
       }
@@ -99,7 +98,7 @@ namespace t
        * @param obj The object to check.
        * @return true if @prm{obj} is of type t::tSTRING, false otherwise.
        */
-      public: inline static bool check (T_OBJECT* obj)
+      public: inline static bool check (Object* obj)
       {
          return obj->check_type(t::STRING_TYPE);
       }
@@ -111,14 +110,14 @@ namespace t
        * @return 0 if str1==str2, what otherwise ?? (see std::string.compare)
        * @todo Document properly.
        */
-      public: Short compare_to(String* pCompareStr);
+      public: Short compare_to (String* pCompareStr);
 
       /**
        * @brief Copies the content in another newly created @cls{t::String}.
        *
        * @return A pointer to a new @cls{t::String} with the same content as @prm{base_str}.
        */
-      public: String* copy();
+      public: String* copy ();
 
       /**
        * @brief Cuts a string after a substring is found.
@@ -126,7 +125,7 @@ namespace t
        * @param pSubstring The substring to search
        * @return A pointer to a new @cls{t::String} whose content is [this] cut after the first occurence of @prm{pSubstring}.
        */
-      public: String* cut_after(String* pSubstring);
+      public: String* cut_after (String* pSubstring);
 
       /**
        * @brief Cuts a string after a given index.
@@ -134,7 +133,7 @@ namespace t
        * @param cut_at At which index to cut.
        * @return A pointer to a new @cls{t::String} whose content is @prm{base_str} from index 0 to @prm{cut_at}.
        */
-      public: String* cut_at(UInt64 cut_at);
+      public: String* cut_at (UInt64 cut_at);
 
       /**
        * @brief Cuts a string before a substring is found.
@@ -150,7 +149,7 @@ namespace t
        * @param pObject A pointer to a @cls{t::String} object to destroy.
        * @return true if everything went well.
        */
-      public: inline static bool destroy(Value pObject)
+      public: inline static bool destroy (Value pObject)
       {
          return t::Object::destroy(pObject);
       }

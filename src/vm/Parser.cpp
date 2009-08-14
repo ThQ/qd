@@ -3,15 +3,15 @@
 namespace vm
 {
    // TODO: Stop intensive REALLOC'ing
-   UInt
-   Parser::parse_arguments(std::string content, ULong start, ULong end, t::Object**& argv)
+   uint
+   Parser::parse_arguments(std::string content, ulong start, ulong end, t::Object**& argv)
    {
       INTERNAL("Parser::parse_arguments\n");
       UShort step = 0;
       std::string buff = "";
-      UInt argc = 0;
+      uint argc = 0;
 
-      for (UInt i = start ; i < end ; ++ i)
+      for (uint i = start ; i < end ; ++ i)
       {
          char c = content[i];
          switch (step)
@@ -127,11 +127,11 @@ namespace vm
       return argc;
    }
 
-   ULong
-   Parser::parse_line(vm::OpCode* opc, std::string content, ULong start, ULong end)
+   ulong
+   Parser::parse_line(vm::OpCode* opc, std::string content, ulong start, ulong end)
    {
       INTERNAL("Parser::parse_line from %lu to %lu.\n", start, end);
-      ULong result = start;
+      ulong result = start;
       if (end > start + 1)
       {
          opc->type = content[start];
@@ -147,17 +147,17 @@ namespace vm
       return result;
    }
 
-   ULong
+   ulong
    Parser::parse_lines(std::string content, t::Block**& blocks)
    {
       INTERNAL("Parser::parse_lines : %s.\n", content.c_str());
 
       blocks = NULL;
-      ULong block_count = 0;
-      ULong block_rooms = 0;
-      UInt block_step = 10;
-      UInt at = 0;
-      UInt last_at = 0;
+      ulong block_count = 0;
+      ulong block_rooms = 0;
+      uint block_step = 10;
+      uint at = 0;
+      uint last_at = 0;
       t::Block* block = NULL;
 
       //svm::OpCode* previous_opcode = NULL;
@@ -214,7 +214,7 @@ namespace vm
             if (block_rooms < block_count)
             {
                block_rooms += block_step;
-               ULong new_size = sizeof(t::Block*) * block_rooms;
+               ulong new_size = sizeof(t::Block*) * block_rooms;
                blocks = (t::Block**)REALLOC(blocks, new_size);
             }
 

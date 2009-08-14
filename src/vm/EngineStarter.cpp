@@ -1,6 +1,6 @@
 #include "vm/EngineStarter.h"
 
-namespace NS_VM
+namespace vm
 {
    void
    EngineStarter::setup()

@@ -1,0 +1,153 @@
+#include "types.h"
+
+namespace t
+{
+   const uchar TYPE_SLOTS[256] =
+   {
+      /*   0 */ NULL_SLOTS,
+      /*   1 */ UNDEFINED_SLOTS,
+      /*   2 */ 0,
+      /*   3 */ 0,
+      /*   4 */ 0,
+      /*   5 */ 0,
+      /*   6 */ 0,
+      /*   7 */ 0,
+      /*   8 */ 0,
+      /*   9 */ 0,
+      /*  10 */ BOOL_SLOTS,
+      /*  11 */ CHAR_SLOTS,
+      /*  12 */ SHORT_SLOTS,
+      /*  13 */ INT_SLOTS,
+      /*  14 */ LONG_SLOTS,
+      /*  15 */ LONG_LONG_SLOTS,
+      /*  16 */ INT8_SLOTS,
+      /*  17 */ INT16_SLOTS,
+      /*  18 */ INT32_SLOTS,
+      /*  19 */ INT64_SLOTS,
+      /*  20 */ U_CHAR_SLOTS,
+      /*  21 */ U_SHORT_SLOTS,
+      /*  22 */ U_INT_SLOTS,
+      /*  23 */ U_LONG_SLOTS,
+      /*  24 */ U_LONG_LONG_SLOTS,
+      /*  25 */ U_INT8_SLOTS,
+      /*  26 */ U_INT16_SLOTS,
+      /*  27 */ U_INT32_SLOTS,
+      /*  28 */ U_INT64_SLOTS,
+      /*  29 */ 0,
+      /*  30 */ 0,
+      /*  31 */ 0,
+      /*  32 */ 0,
+      /*  33 */ 0,
+      /*  34 */ 0,
+      /*  35 */ 0,
+      /*  36 */ 0,
+      /*  37 */ 0,
+      /*  38 */ 0,
+      /*  39 */ 0,
+      /*  40 */ 0,
+      /*  41 */ 0,
+      /*  42 */ 0,
+      /*  43 */ 0,
+      /*  44 */ 0,
+      /*  45 */ 0,
+      /*  46 */ 0,
+      /*  47 */ 0,
+      /*  48 */ 0,
+      /*  49 */ OBJECT_SLOTS,
+      /*  50 */ ARRAY_SLOTS,
+      /*  51 */ LIST_SLOTS,
+      /*  52 */ BLOCK_SLOTS,
+      /*  53 */ CLASS_SLOTS,
+      /*  54 */ EXCEPTION_SLOTS,
+      /*  55 */ FUNCTION_SLOTS,
+      /*  56 */ MAP_SLOTS,
+      /*  57 */ STRING_SLOTS,
+      /*  58 */ UNICODE_STRING_SLOTS,
+      /*  59 */ USER_OBJECT_SLOTS,
+      /*  60 */ HEAP_OBJECT_SLOTS,
+      /*  61 */ REGISTER_VALUE_SLOTS,
+      /*  62 */ DESTINATION_REGISTER_VALUE_SLOTS
+   };
+
+   const char* TYPE_NAMES[256] =
+   {
+      /*   0 */ "Null",
+      /*   1 */ "Undefined",
+      /*   2 */ "",
+      /*   3 */ "",
+      /*   4 */ "",
+      /*   5 */ "",
+      /*   6 */ "",
+      /*   7 */ "",
+      /*   8 */ "",
+      /*   9 */ "",
+      /*  10 */ "Bool",
+      /*  11 */ "Char",
+      /*  12 */ "Short",
+      /*  13 */ "Int",
+      /*  14 */ "Long",
+      /*  15 */ "LongLong",
+      /*  16 */ "Int8",
+      /*  17 */ "Int16",
+      /*  18 */ "Int32",
+      /*  19 */ "Int64",
+      /*  20 */ "UnsignedChar",
+      /*  21 */ "UnsignedShort",
+      /*  22 */ "UnsignedInt",
+      /*  23 */ "UnsignedLong",
+      /*  24 */ "UnsignedLongLong",
+      /*  25 */ "UnsignedInt8",
+      /*  26 */ "UnsignedInt16",
+      /*  27 */ "UnsignedInt32",
+      /*  28 */ "UnsignedInt64",
+      /*  29 */ "",
+      /*  30 */ "",
+      /*  31 */ "",
+      /*  32 */ "",
+      /*  33 */ "",
+      /*  34 */ "",
+      /*  35 */ "",
+      /*  36 */ "",
+      /*  37 */ "",
+      /*  38 */ "",
+      /*  39 */ "",
+      /*  40 */ "",
+      /*  41 */ "",
+      /*  42 */ "",
+      /*  43 */ "",
+      /*  44 */ "",
+      /*  45 */ "",
+      /*  46 */ "",
+      /*  47 */ "",
+      /*  48 */ "",
+      /*  49 */ "Object",
+      /*  50 */ "Array",
+      /*  51 */ "List",
+      /*  52 */ "Block",
+      /*  53 */ "Class",
+      /*  54 */ "Exception",
+      /*  55 */ "Function",
+      /*  56 */ "Map",
+      /*  57 */ "String",
+      /*  58 */ "UnicodeString",
+      /*  59 */ "UserObject",
+      /*  60 */ "HeapObject",
+      /*  61 */ "RegisterValue",
+      /*  62 */ "DestinationRegisterValue"
+   };
+
+   void
+   print_line_value(ushort nType, Value pValue)
+   {
+      switch (nType)
+      {
+         //case CHAR_TYPE:      printf("%c\n", (t::Char)pValue); break;
+         //case SHORT_TYPE:     printf("%hd\n", (t::Short)pValue); break;
+         case INT_TYPE:       printf("%d\n", (t::Int)pValue); break;
+         case LONG_TYPE:      printf("%ld\n", (t::Long)pValue); break;
+         default:
+            FATAL("Unknown type %hu.", nType);
+            abort();
+      }
+   }
+}

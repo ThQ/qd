@@ -1,5 +1,5 @@
-#ifndef T_USER_FUNCTION
-#define T_USER_FUNCTION NS_TYPE::UserFunction
+#ifndef T__USER_FUNCTION__H
+#define T__USER_FUNCTION__H __FILE__
 
 #include "t/Block.h"
 #include "t/Function.h"
@@ -7,23 +7,28 @@
 namespace t
 {
    /**
-    * A function created by the user.
+    * @brief A function created by the user.
     */
    class UserFunction : public Function
    {
-      public: T_BLOCK* block; ///< A block of opcodes to run.
+      public: Block* block; ///< A block of opcodes to run.
 
       /**
-       * Constructor.
+       * @brief Default constructor.
        */
       public: UserFunction();
 
       /**
-       * Sets the block of opcodes to run.
-       *
-       * @param block A block of opcodes.
+       * @brief Destructor.
        */
-      public: void set_block(T_BLOCK* block);
+      public: ~UserFunction();
+
+      /**
+       * @brief Sets the block of opcodes to run.
+       *
+       * @param pBlock A block of opcodes.
+       */
+      public: void set_block(Block* pBlock);
    };
 }
 

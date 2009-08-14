@@ -1,28 +1,26 @@
-#ifndef T_CORE_FUNCTION
-#define T_CORE_FUNCTION NS_TYPE::CoreFunction
+#ifndef T__CORE_FUNCTION__H
+#define T__CORE_FUNCTION__H __FILE__
 
 #include "t/Function.h"
 
 namespace t
 {
    /**
-    * An internal function created internally.
+    * @brief An internal function created internally.
     */
 
    class CoreFunction : public t::Function
    {
-      public: ULong function_pointer; ///< A pointer to a C function to call.
+      public: void* function_pointer; ///< A pointer to a C function to call.
 
       /**
-       * Creates a t::CoreFunction object whose name is [name] and return type
-       * is [return_type], it uses the function pointed by [pointer].
+       * @brief Constructs a CoreFunction given its return type and class and function pointer.
        *
-       * @param name A pointer to a string containing the name of the function.
-       * @param pointer An integer that points to the function to call.
-       * @param return_type A pointer to a t::Class representing the return type.
-       * @return A pointer to the CoreFunction newly created.
+       * @param pFunc A pointer to the c function to call.
+       * @param nReturnType The type of the object to return.
+       * @param pReturnClass The class of the object to return.
        */
-      public: static CoreFunction* build(const char* name, ULong pointer, T_OBJECT* return_type);
+      public: CoreFunction (void* pFunc, ushort nReturnType, vm::Class* pReturnClass);
    };
 }
 

@@ -1,101 +1,98 @@
-#ifndef T_FUNCTION
-#define T_FUNCTION t::Function
-
-#define SVM_FUNCTION_NAME_LENGTH 256
+#ifndef T__FUNCTION__H
+#define T__FUNCTION__H __FILE__
 
 #include <stdarg.h>
-#include <string.h>
 
-#include "t/Class.h"
 #include "t/Exception.h"
 #include "t/String.h"
-#include "t/Variable.h"
+#include "vm/Class.h"
 
 namespace t
 {
-   extern T_OBJECT* tFUNCTION;
-   extern T_OBJECT* tBAD_ARGUMENT_TYPE_EXCEPTION;
+   extern vm::Class cFUNCTION;
 
    /**
     * @brief An internal function.
     */
    class Function : public Object
    {
-      public: T_OBJECT* return_type;   ///< A pointer to a @cls{t::Class} representing the type of the returned object.
-      public: T_OBJECT** arguments;    ///< An array of @cls{{t::Variable}} representing the parameters.
-      public: UInt arguments_count;    ///< Number of arguments.
-      public: bool is_static;          ///< Is a static function ?
-      public: bool is_user;            ///< Is user created ?
+      public: uchar*       argument_types;      ///< An array of types representing the parameters.
+      public: uchar        argument_count;      ///< Number of arguments.
+      public: bool         is_user;             ///< Is user created ?
+      public: vm::Class*   return_class;        ///< A pointer to a @cls{vm::Class} representing the class of the returned object.
+      public: ushort       return_type;         ///< The type of the return object.
 
       /**
        * @brief Default constructor.
        */
-      public: Function();
+      public: Function ();
+
+      /**
+       * @brief Constructs a function with its return type.
+       *
+       * @param nReturnType Function return type.
+       */
+      public: Function (ushort nReturnType);
+
+      /**
+       * @brief Constructs a function with its return type and class.
+       *
+       * @param nReturnType Function return type.
+       * @param pReturnClass Function return class.
+       */
+      public: Function (ushort nReturnType, vm::Class* pReturnClass);
 
       /**
        * @brief Destructor.
        */
-      public: ~Function();
+      public: ~Function ();
 
       /**
-       * @brief Asserts that an object is of type t::tFUNCTION.
+       * @brief Asserts that an object a function.
        *
-       * @param obj An object to check.
+       * @param pObject An object to check.
        */
-      public: inline static void assert(T_OBJECT* obj)
+      public: inline static void assert (Object* pObject)
       {
-         return T_OBJECT::assert_type(obj, NS_TYPE::tFUNCTION);
-      }
-
-      #ifdef _DEBUG_
-      /**
-       * @brief Asserts the validity.
-       */
-      public: void assert_validity();
-      #endif
-
-      /**
-       * @brief Builds a string from a function @prm{func}.
-       */
-      public: String* cast_to_string();
-
-      /**
-       * @brief Checks if an object is of type @cls{t::Function}.
-       *
-       * @param obj An object to check.
-       * @return true if @prm{obj} is of type @cls{t::Function}.
-       */
-      public: inline static bool check(T_OBJECT* obj)
-      {
-         return T_OBJECT::check_type(obj, NS_TYPE::tFUNCTION);
+         return pObject->assert_type(t::FUNCTION_TYPE);
       }
 
       /**
-       * @brief Builds a string from a function @prm{func} and prints it to the console.
+       * @brief Checks if an object is a function.
+       *
+       * @param pObject An object to check.
+       * @return true if it's a function.
        */
-      public: void print();
+      public: inline static bool check (Object* pObject)
+      {
+         return pObject->check_type(t::FUNCTION_TYPE);
+      }
 
       /**
        * @brief Sets the arguments.
        *
-       * @param count How many arguments are passed.
+       * @param nCount How many arguments are passed.
+       * @param pArgs Arguments to set.
        */
-      public: void set_arguments(UInt8 count, ...);
+      public: void define_arguments (uchar nCount, uchar* pArgs);
 
       /**
-       * @brief Sets the arguments.
+       * @brief Sets the return type.
        *
-       * @param count How many arguments are passed.
-       * @param args Arguments to set.
+       * @param nType Return type.
        */
-      public: void set_arguments(UInt8 count, T_OBJECT** args);
+      public: inline void set_return_type (ushort nType)
+      {
+         this->set_return_type(nType, NULL);
+      }
 
       /**
-       * @brief Sets the return type to @prm{type}.
+       * @brief Sets the return type.
        *
-       * @param type Return type.
+       * @param nType Return type.
+       * @param pClass Return class.
        */
-      public: void set_return_type(T_OBJECT* type);
+      public: void set_return_type (ushort nType, vm::Class* pClass);
    };
 }
 #endif

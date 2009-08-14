@@ -8,12 +8,23 @@ namespace t
       this->block = NULL;
    }
 
-   void
-   UserFunction::set_block(T_BLOCK* block)
+   UserFunction::~UserFunction()
    {
-      T_OBJECT::drop_safe(this->block);
-      T_OBJECT::pick_safe(block);
-      this->block = block;
+      if (this->block != NULL)
+      {
+         this->block->drop();
+      }
+   }
+
+   void
+   UserFunction::set_block(Block* pBlock)
+   {
+      if (this->block != NULL)
+      {
+         this->block->drop();
+      }
+      pBlock->drop();
+      this->block = pBlock;
    }
 }
 

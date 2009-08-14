@@ -2,75 +2,117 @@
 
 namespace t
 {
-   Block::Block()
+   VM_CLASS__NEW(cBLOCK, t::Block, t::BLOCK_TYPE, &cOBJECT);
+
+   Block::Block ()
    {
-      this->argc = 0;
-      this->argv = 0;
+      this->argument_count = 0;
+      this->argument_types = 0;
       this->exception = NULL;
       this->exception_handler = NULL;
-      //this->first_opcode = NULL;
-      //this->last_opcode = NULL;
+      this->type = t::BLOCK_TYPE;
+      this->klass = &cBLOCK;
       this->opcodes = 0;
       this->opcode_count = 0;
-      //this->name = "";
-      this->references = 0;
    }
 
-   Block::~Block()
+   Block::~Block ()
    {
-      /*for (unsigned long i = 0 ; i < this->line_count ; ++ i)
-      {
-         //delete this->lines[i];
-      }
-      */
-      Memory::free(this->opcodes);
-      if (this->exception != NULL) T_OBJECT::drop(this->exception);
+      this->destroy();
    }
 
    void
-   Block::append(vm::OpCode* opc)
+   Block::__delete__ (Value pObject)
    {
-      // @TODO : Too much REALLOC
+      ((t::Block*)pObject)->destroy();
+   }
+
+   Value
+   Block::__new__ ()
+   {
+      return new Block();
+   }
+
+   void
+   Block::__print__ (Value pObject)
+   {
+
+   }
+
+   void
+   Block::__print_line__ (Value pObject)
+   {
+
+   }
+
+   void
+   Block::append (vm::OpCode* opc)
+   {
       ++ this->opcode_count;
-      this->opcodes = (vm::OpCode**)Memory::realloc(this->opcodes, sizeof(vm::OpCode*) * this->opcode_count);
+      Memory_REALLOC(this->opcodes, vm::OpCode*, this->opcode_count);
       this->opcodes[this->opcode_count - 1] = opc;
    }
 
-   void
-   Block::clear()
-   {
-      this->opcode_count = 0;
-      Memory::free(this->opcodes);
-      this->opcodes = NULL;
-   }
-
-   ULong
-   Block::count()
+   ulong
+   Block::count ()
    {
       return this->opcode_count;
    }
 
-   vm::OpCode*
-   Block::get(ULong at)
+   void
+   Block::define_arguments (uchar nCount, uchar* pArgs)
    {
-      ASSERT(at < this->opcode_count, "[svm::Block::get] Index [%lu] out of range [0:%lu].\n", at, this->opcode_count -1);
+      ASSERT(this->argument_types == NULL, "Arguments have already been set.");
+
+      this->argument_types = pArgs;
+      this->argument_count = nCount;
+   }
+
+   void
+   Block::destroy ()
+   {
+      // Opcodes are actually freed in vm::Engine
+
+      if (this->exception != NULL)
+      {
+         this->exception->drop();
+      }
+   }
+
+   vm::OpCode*
+   Block::get (ulong at)
+   {
+      ASSERT(
+            at < this->opcode_count,
+            "[svm::Block::get] Index [%lu] out of range [0:%lu].\n",
+            at,
+            this->opcode_count -1
+      );
 
       return this->opcodes[at];
    }
 
    void
-   Block::set_exception_handler(Block* block)
+   Block::set_exception_handler (Block* block)
    {
-      T_OBJECT::drop_safe(this->exception_handler);
-      T_OBJECT::pick(block);
+      ASSERT_NOT_NULL(block);
+
+      if (this->exception_handler != NULL)
+      {
+         this->exception_handler->drop();
+      }
+      block->pick();
       this->exception_handler = block;
    }
 
    void
-   Block::throw_exception(T_EXCEPTION* e)
+   Block::throw_exception (Exception* pException)
    {
-      T_OBJECT::drop_safe(this->exception);
-      T_OBJECT::pick(e);
-      this->exception = (T_OBJECT*)e;
+      if (this->exception != NULL)
+      {
+         this->exception->drop();
+      }
+      pException->pick();
+      this->exception = pException;
    }
 }

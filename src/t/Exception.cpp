@@ -2,19 +2,17 @@
 
 namespace t
 {
-   ExceptionType* cEXCEPTION = NULL;
-   //T_OBJECT* tEXCEPTION = NULL;
-   //T_OBJECT* tRUNTIME_EXCEPTION = NULL;
-   //T_OBJECT* tINDEX_OUT_OF_RANGE_EXCEPTION = NULL;
+   VM_CLASS__NEW(cEXCEPTION, t::Object, t::EXCEPTION_TYPE, &cOBJECT);
 
-   Exception::Exception()
+   Exception::Exception ()
    {
       this->message = NULL;
       this->stack_trace = NULL;
       this->type = EXCEPTION_TYPE;
+      this->klass = &cEXCEPTION;
    }
 
-   Exception::Exception(String* message)
+   Exception::Exception (String* message)
    {
       ASSERT_NOT_NULL(message);
 
@@ -23,7 +21,7 @@ namespace t
       this->type = EXCEPTION_TYPE;
    }
 
-   Exception::Exception(String* message, List* stack_trace)
+   Exception::Exception (String* message, List* stack_trace)
    {
       ASSERT_NOT_NULL(message);
       ASSERT_NOT_NULL(stack_trace);
@@ -34,7 +32,7 @@ namespace t
    }
 
    String*
-   Exception::cast_to_string(Exception* pException)
+   Exception::cast_to_string (Exception* pException)
    {
       ASSERT_NOT_NULL(pException);
       ASSERT_NOT_NULL(pException->message);
@@ -47,7 +45,7 @@ namespace t
    }
 
    void
-   Exception::print(Exception* pException)
+   Exception::print (Exception* pException)
    {
       ASSERT_NOT_NULL(pException);
 
@@ -56,7 +54,7 @@ namespace t
    }
 
    void
-   Exception::print_line(Exception* pException)
+   Exception::print_line (Exception* pException)
    {
       ASSERT_NOT_NULL(pException);
 
@@ -65,7 +63,7 @@ namespace t
    }
 
    void
-   Exception::set_message(String* pMessage)
+   Exception::set_message (String* pMessage)
    {
       ASSERT_NOT_NULL(pMessage);
 
@@ -78,7 +76,7 @@ namespace t
    }
 
    void
-   Exception::set_stack_trace(List* pStackTrace)
+   Exception::set_stack_trace (List* pStackTrace)
    {
       ASSERT_NOT_NULL(pStackTrace);
 

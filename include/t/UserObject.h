@@ -1,5 +1,5 @@
-#ifndef T_USER_OBJECT
-#define T_USER_OBJECT NS_TYPE::UserObject
+#ifndef T__USER_OBJECT__H
+#define T__USER_OBJECT__H __FILE__
 
 #include "t/Object.h"
 

@@ -24,6 +24,7 @@ namespace vm
    Class::Class (
          uint nType,
          vm::Class* pParentClass,
+         t::InitializeFunction init_func,
          t::DestroyFunction destroy_func,
          t::PrintFunction print_func,
          t::PrintLineFunction print_line_func
@@ -32,6 +33,7 @@ namespace vm
       this->_init();
       this->type = nType;
       this->parent_class = pParentClass;
+      this->initialize_func = init_func;
       this->destroy_func = destroy_func;
       this->print_func = print_func;
       this->print_line_func = print_line_func;
@@ -41,6 +43,10 @@ namespace vm
    {
       this->_init();
       this->parent_class = pParentClass;
+   }
+
+   Class::~Class()
+   {
    }
 
    bool

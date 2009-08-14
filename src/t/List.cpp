@@ -38,26 +38,71 @@ namespace t
    }
 
    void
-   List::clear()
+   List::__delete__ (Value pList)
    {
-      if (T__IS_LITERAL_TYPE(this->item_type))
+
+   }
+
+   Value
+   List::__new__ ()
+   {
+      NEW(pResult, t::List);
+      return pResult;
+   }
+
+   void
+   List::__print__ (Value pLst)
+   {
+      t::List* pList = (t::List*)pLst;
+      switch (pList->item_type)
       {
-         LOOP_FROM_TO (UInt64, i, 0, this->length)
+         case t::BOOL_TYPE:
          {
-            this->items[i] = NULL;
-         }
-      }
-      else
-      {
-         LOOP_FROM_TO (UInt64, i, 0, this->length)
-         {
-            if (this->items[i] != NULL)
+            printf("[");
+            for (uint i = 0 ; i < pList->length ; ++i)
             {
-               ((Object*)this->items[i])->drop();
+               if (i != 0) printf(", ");
+               printf("%s", ((bool)pList->items[i]) == 0 ? "False" : "True");
             }
-            this->items[i] = NULL;
+            printf("]");
+            break;
+         }
+
+         case t::CHAR_TYPE:
+         case t::SHORT_TYPE:
+         case t::INT_TYPE:
+         {
+            printf("[");
+            for (uint i = 0 ; i < pList->length ; ++i)
+            {
+               if (i != 0) printf(", ");
+               printf("%d", (int)pList->items[i]);
+            }
+            printf("]");
+            break;
+         }
+
+         case t::U_CHAR_TYPE:
+         case t::U_SHORT_TYPE:
+         case t::U_INT_TYPE:
+         {
+            printf("[");
+            for (uint i = 0 ; i < pList->length ; ++i)
+            {
+               if (i != 0) printf(", ");
+               printf("%u", (uint)pList->items[i]);
+            }
+            printf("]");
+            break;
          }
       }
+   }
+
+   void
+   List::__print_line__ (Value pList)
+   {
+      List::__print__ (pList);
+      printf("\n");
    }
 
    List*
@@ -67,18 +112,18 @@ namespace t
       pCopiedList->item_type = this->item_type;
       pCopiedList->item_class = this->item_class;
       pCopiedList->length = this->length;
-      pCopiedList->items = (Value*)MALLOC(sizeof(Value) * this->length);
+      Memory_ALLOC(pCopiedList->items, Value, this->length);
 
       if (T__IS_LITERAL_TYPE(this->item_type))
       {
-         LOOP_FROM_TO(UInt64, i, 0, this->length)
+         LOOP_FROM_TO(uint, i, 0, this->length)
          {
             pCopiedList->items[i] = this->items[i];
          }
       }
       else
       {
-         LOOP_FROM_TO(UInt64, i, 0, this->length)
+         LOOP_FROM_TO(uint, i, 0, this->length)
          {
             pCopiedList->items[i] = this->items[i];
             ((Object*)pCopiedList->items[i])->pick();
@@ -95,7 +140,7 @@ namespace t
 
       if (this->item_type == t::LIST_TYPE)
       {
-         LOOP_FROM_TO(UInt64, i, 0, this->length)
+         LOOP_FROM_TO(uint, i, 0, this->length)
          {
             pFlattenedList->push_list(((List*)this->items[i])->copy_flatten());
          }
@@ -116,7 +161,7 @@ namespace t
       List* pReversedList = new List();
       pReversedList->resize(this->length);
 
-      LOOP_FROM_TO(UInt64, i, 0, this->length)
+      LOOP_FROM_TO(uint, i, 0, this->length)
       {
          pReversedList->items[i] = this->items[this->length - i - 1];
       }
@@ -130,41 +175,13 @@ namespace t
       List::assert((Object*)pList);
 
       ((List*)pList)->clear();
-      ((List*)pList)->items = (Value*)REALLOC(((List*)pList)->items, 0);
+      Memory_FREE(((List*)pList)->items);
 
       return true;
    }
 
-   Value
-   List::get_object_at(UInt64 at)
-   {
-      ASSERT(
-            at < this->length,
-            "Index %ld out of range [0:%ld[.",
-            (ulong)at,
-            (ulong)this->length
-      );
-      ASSERT(
-            T__IS_NOT_LITERAL_TYPE(this->item_type),
-            "Cannot use ::get_object_at on a list of literals."
-      );
-      return this->items[at];
-   }
-
-   Value
-   List::get_value_at(UInt64 at)
-   {
-      ASSERT(
-            at < this->length,
-            "Index %ld out of range [0:%ld[.",
-            (ulong)at,
-            (ulong)this->length
-      );
-      return this->items[at];
-   }
-
    void
-   List::insert(UInt64 at, Object* obj)
+   List::insert(uint at, Value obj)
    {
       ASSERT(
             at <= this->length,
@@ -180,12 +197,11 @@ namespace t
       else
       {
          this->resize(this->length + 1);
-         for (UInt64 i = this->length - 1 ; i > (at - 1) ; -- i)
+         for (uint i = this->length - 1 ; i > (at - 1) ; -- i)
          {
             this->items[i] = this->items[i - 1];
          }
          this->items[at] = obj;
-         obj->pick();
       }
    }
 
@@ -204,11 +220,11 @@ namespace t
    }
 
    void
-   List::pop(UInt64 num)
+   List::pop(uint num)
    {
       if (T__IS_NOT_LITERAL_TYPE(this->item_type))
       {
-         LOOP_FROM_TO(UInt64, i, this->length - num, this->length)
+         LOOP_FROM_TO(uint, i, this->length - num, this->length)
          {
             if (this->items[i] != NULL)
             {
@@ -235,17 +251,17 @@ namespace t
       }
       else
       {
-         LOOP_FROM_TO(UInt64, i, 0, pList->length)
+         LOOP_FROM_TO(uint, i, 0, pList->length)
          {
             if (i != 0)
             {
                printf(", ");
             }
-            vm::Class* pClass = ((Object*)pList->items[i])->klass;
-            pClass->print_func(pList->items[i]);
+            //vm::Class* pClass = ((Object*)pList->items[i])->klass;
+            //pClass->print_func(pList->items[i]);
          }
-         printf(")");
       }
+      printf(")");
    }
 
    void
@@ -269,8 +285,8 @@ namespace t
       ASSERT(
             this->item_type == pAList->item_type,
             "The list to push must have the same item type (%s != %s).",
-            t::cast_type_to_string(this->item_type),
-            t::cast_type_to_string(pAList->item_type)
+            t::get_type_name(this->item_type),
+            t::get_type_name(pAList->item_type)
       );
       ASSERT(
             this->item_class == pAList->item_class,
@@ -279,20 +295,20 @@ namespace t
             (uint)pAList->item_class
       );
 
-      UInt64 dwPushAt = this->length;
+      uint dwPushAt = this->length;
 
       this->resize(this->length + pAList->length);
 
       if (T__IS_LITERAL_TYPE(this->item_type))
       {
-         LOOP_FROM_TO(UInt64, i, 0, pAList->length)
+         LOOP_FROM_TO(uint, i, 0, pAList->length)
          {
             this->items[dwPushAt + i] = pAList->items[i];
          }
       }
       else
       {
-         LOOP_FROM_TO(UInt64, i, 0, pAList->length)
+         LOOP_FROM_TO(uint, i, 0, pAList->length)
          {
             this->items[dwPushAt + i] = pAList->items[i];
             if (pAList->items[i] != NULL)
@@ -304,7 +320,7 @@ namespace t
    }
 
    void
-   List::remove_item(UInt64 at)
+   List::remove_item(uint at)
    {
       T__LIST__ASSERT_IN_RANGE(this, at);
 
@@ -316,7 +332,7 @@ namespace t
          }
       }
 
-      for (UInt64 pos = at + 1 ; pos < this->length ; ++pos)
+      for (uint pos = at + 1 ; pos < this->length ; ++pos)
       {
          this->items[pos - 1] = this->items[pos];
       }
@@ -325,14 +341,14 @@ namespace t
    }
 
    void
-   List::resize(UInt64 size)
+   List::resize(uint size)
    {
       if (size != this->length)
       {
          /**
          if (size < this->length && T__IS_NOT_LITERAL_TYPE(this->item_type))
          {
-            LOOP_FROM_TO(UInt64, i, size - 1, this->length)
+            LOOP_FROM_TO(uint, i, size - 1, this->length)
             {
                if (this->items[i] != NULL)
                {
@@ -342,29 +358,13 @@ namespace t
          }
          */
 
-         size_t obj_size = sizeof(Value);
-         this->items = (Value*)REALLOC(this->items, size * obj_size);
+         Memory_REALLOC(this->items, Value, size);
          this->length = size;
       }
    }
 
-
-   void
-   List::set_item(UInt64 at, Object* obj)
-   {
-      if (T__IS_NOT_LITERAL_TYPE(this->item_type))
-      {
-         if (this->items[at] != NULL)
-         {
-            ((Object*)this->items[at])->drop();
-         }
-         obj->pick();
-      }
-      this->items[at] = obj;
-   }
-
    List*
-   List::slice(UInt64 start, UInt64 end, UInt64 step)
+   List::slice(uint start, uint end, uint step)
    {
       List* pSlice = new List();
       pSlice->item_type = this->item_type;
@@ -373,14 +373,14 @@ namespace t
 
       if (T__IS_LITERAL_TYPE(this->item_type))
       {
-         for (UInt64 i = start, j = 0 ; i < end ; i += step, ++j)
+         for (uint i = start, j = 0 ; i < end ; i += step, ++j)
          {
             pSlice->items[j] = this->items[i];
          }
       }
       else
       {
-         for (UInt64 i = start, j = 0 ; i < end ; i += step, ++j)
+         for (uint i = start, j = 0 ; i < end ; i += step, ++j)
          {
             pSlice->items[j] = this->items[i];
             if (pSlice->items[j] != NULL)

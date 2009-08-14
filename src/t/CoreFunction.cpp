@@ -2,21 +2,14 @@
 
 namespace t
 {
-   CoreFunction*
-   CoreFunction::build(const char* name, ULong pointer, T_OBJECT* return_type)
+   CoreFunction::CoreFunction(void* pFunc, ushort nReturnType, vm::Class* pReturnClass)
    {
-      ASSERT(strlen(name) > 0, "<svm::CoreFunction>.name must be longer than 0 characters.\n");
-      ASSERT(pointer != 0, "<svm::CoreFunction> cannot bind a null pointer.\n");
-      T_OBJECT::assert_not_null(return_type);
+      ASSERT_NOT_NULL(pFunc);
+      ASSERT_TYPE(nReturnType);
 
-      CoreFunction* f = new CoreFunction();
-      T_CLASS::assert(f->cls);
-      T_OBJECT::assert_not_null(f);
-      f->name = name;
-      f->function_pointer = pointer;
-      f->set_return_type(return_type);
-
-      return f;
+      this->function_pointer = pFunc;
+      this->is_user = false;
+      this->set_return_type(nReturnType, pReturnClass);
    }
 }
 

@@ -7,7 +7,6 @@
 #include "t/Block.h"
 #include "t/Bool.h"
 #include "t/HeapObject.h"
-#include "t/Int.h"
 #include "t/Object.h"
 #include "t/String.h"
 #include "vm/OpCode.h"
@@ -31,7 +30,7 @@ namespace vm
        * @param arguments An array of @cls{t::Object} that will contain all the arguments.
        * @return The number of arguments found.
        */
-      public: static UInt parse_arguments(std::string content, ULong start, ULong end, t::Object**& arguments);
+      public: static uint parse_arguments(std::string content, ulong start, ulong end, t::Object**& arguments);
 
       /**
        * Tries to find an opcode and its namespace in a string content.
@@ -42,7 +41,7 @@ namespace vm
        * @param end Where to stop.
        * @return At wich position we must try to find the opcode arguments.
        */
-      public: static ULong parse_line(vm::OpCode* opc, std::string content, ULong start, ULong end);
+      public: static ulong parse_line(vm::OpCode* opc, std::string content, ulong start, ulong end);
 
       /**
        * Parses a text content so as to find opcode calls.
@@ -51,7 +50,7 @@ namespace vm
        * @param blocks A pointer to a @cls{t::Block} array that will contain all the blocks found.
        * @return The number of blocks found.
        */
-      public: static ULong parse_lines(std::string content, t::Block**& blocks);
+      public: static ulong parse_lines(std::string content, t::Block**& blocks);
    };
 }
 

@@ -16,13 +16,20 @@ main (int argc, char** argv)
    pAnotherArray->drop();
    pArrayArray->drop();
 
+   t::Array* pIntArray = new t::Array(t::U_LONG_TYPE, NULL, 10000000);
+   pIntArray->pick();
 
-   t::Array* pInt16Array = new t::Array(t::INT16_TYPE, NULL, 1);
-   pInt16Array->pick();
-   pInt16Array->set_item(0, (t::Value)16);
-   pInt16Array->clear_item(0);
-   pInt16Array->drop();
+   for (t::ULong i = 0; i < 10000000; ++i)
+   {
+      pIntArray->set_item(i, (t::Value)(t::ULong)i);
+   }
+
+   pIntArray->klass->print_line_func(pIntArray);
+   for (t::ULong i = 0; i < 10000000; ++i)
+   {
+      pIntArray->clear_item(i);
+   }
+   pIntArray->drop();
 
    Stats.print_report();
-   return 0;
 }

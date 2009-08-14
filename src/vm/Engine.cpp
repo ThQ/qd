@@ -2,545 +2,519 @@
 
 namespace vm
 {
-   Engine::Engine()
+   Engine::Engine ()
    {
-      this->current_block = NULL;
       this->blocks = NULL;
       this->block_count = 0;
+      this->classes = NULL;
+      this->class_count = 0;
+      this->current_block = NULL;
+      this->functions = NULL;
+      this->function_count = 0;
+      this->opcodes = NULL;
+      Memory_ALLOC(this->opcode_arguments, t::Value, VM__OPCODE__MAX_ARGUMENTS);
+      this->opcode_count = 0;
    }
 
-   Engine::~Engine()
+   Engine::~Engine ()
    {
-      for (ULong i = 0 ; i < this->block_count ; ++ i)
+      this->clear_blocks();
+
+      // Clean up opcodes
+      for (ulong i = 0 ; i < this->opcode_count ; ++i)
       {
-         T_OBJECT::drop(this->blocks[i]);
+         if (this->opcodes[i] != NULL)
+         {
+            delete this->opcodes[i];
+         }
       }
-      delete this->blocks;
-      T_OBJECT::drop_safe(this->current_block);
+      Memory_FREE_IF_NOT_NULL(this->opcodes);
+      Memory_FREE_IF_NOT_NULL(this->opcode_arguments);
+      Memory_FREE_IF_NOT_NULL(this->classes);
+      Memory_FREE_IF_NOT_NULL(this->functions);
+   }
+
+   t::Value
+   Engine::call (ulong nIndex, uchar nArgumentCount, uchar* pArgumentTypes, t::Value* pArguments)
+   {
+      t::Value pResult = NULL;
+      t::CoreFunction* pFunc = (t::CoreFunction*)this->get_function(nIndex);
+
+      if (pFunc != NULL) // && check_arguments(pFunc, nArgumentCount, pArguments))
+      {
+         CoreFunctionPointer fpFunc = (CoreFunctionPointer)pFunc->function_pointer;
+         pResult = fpFunc(this, nArgumentCount, pArgumentTypes, pArguments);
+      }
+
+      return pResult;
    }
 
    void
-   Engine::append_block(t::Block* block)
+   Engine::clear_blocks ()
    {
-      ++ this->block_count;
-      // @TODO: Stop intensive REALLOC
-      this->blocks = (t::Block**)REALLOC(this->blocks, sizeof(t::Block*) * this->block_count);
-      this->blocks[this->block_count - 1] = block;
-      T_OBJECT::pick(block);
-   }
-
-   t::Object*
-   Engine::build_traceback()
-   {
-      t::Object* traceback = t::List::build();
-      t::List::assert(traceback);
-      t::Object::pick(traceback);
-      for (ULong i = this->stack.count() - 1 ; i > 0 ; --i)
+      for (ulong i = 0 ; i < this->block_count ; ++i)
       {
-         t::Object* entry = t::Map::build();
-         t::Map::assert(entry);
-         t::Object::pick(entry);
-         std::string s_key;
-         s_key.assign("function");
-         t::Map::set_item(entry, s_key, this->stack.blocks[i]->name);
-         t::List::append(traceback, entry);
+         if (this->blocks[i] != NULL)
+         {
+            this->blocks[i]->drop();
+         }
       }
-      return (t::Object*)traceback;
-   }
-
-   void
-   Engine::clear_arguments(UInt& argc, t::Object**& argv)
-   {
-      for (UInt i = 0 ; i < argc ; ++ i)
-      {
-         t::Object::drop_safe(argv[i]);
-         argv[i] = NULL;
-      }
-      // @TODO: Free / delete / something ?
-      argv = 0;
-      argc = 0;
-   }
-
-   void
-   Engine::clear_blocks()
-   {
+      Memory_FREE_IF_NOT_NULL(this->blocks);
       this->block_count = 0;
-      free(this->blocks);
-   }
-
-   t::Object*
-   Engine::call(std::string method_name, UInt argc, t::Object**& argv)
-   {
-      t::Object* result = NULL;
-      t::CoreFunction* f = (t::CoreFunction*)this->functions.get((std::string)method_name);
-
-      if  (f != NULL)
-      {
-         if (check_arguments(f, argc, argv))
-         {
-            NS_VM::MethodPointer ptr = (NS_VM::MethodPointer)f->function_pointer;
-            result = ptr(argc, argv);
-         }
-      }
-
-      if (result == NULL)
-      {
-         result = t::gNULL;
-      }
-
-      T_OBJECT::assert_not_null(result);
-
-      return result;
-   }
-
-   t::Object*
-   Engine::call_object(std::string method_name, UInt argc, t::Object**& argv)
-   {
-      #ifdef _SHOW_INTERNAL_
-      INTERNAL("<%s>.<%s> (", ((t::Class*)argv[0]->cls)->name.c_str(), method_name.c_str());
-      for (ULong i = 0 ; i < argc ; ++i)
-      {
-         if (i != 0)
-         {
-            printf(", ");
-         }
-         printf("%s[@%lu]", ((t::Class*)argv[i]->cls)->name.c_str(), (ULong)argv[i]);
-      }
-      printf(") [parameters=%u]\n", argc);
-      #endif
-
-      t::Class* cls = (t::Class*)argv[0]->cls;
-      t::Class::assert(cls);
-      t::Object::pick(cls);
-
-      t::Object* result = NULL;
-
-      t::Function* f = this->classes.get_method(((t::Class*)argv[0]->cls), method_name);
-      t::Object::pick(f);
-
-      if (f != NULL)
-      {
-         if (this->check_arguments(f, argc, argv))
-         {
-            // TODO: Check the result object type
-            if (f->is_user == true)
-            {
-               t::Object::assert_not_null(((t::UserFunction*)f)->block);
-               this->heap.append(argc, argv);
-               this->run_block(((t::UserFunction*)f)->block);
-               if (this->heap.item_count >= 1)
-               {
-                  result = this->heap.get(0);
-                  this->heap.pop();
-               }
-               else
-               {
-                  result = t::gNULL;
-               }
-            }
-            else
-            {
-               NS_VM::ClassMethodPointer ptr = (NS_VM::ClassMethodPointer)((t::CoreFunction*)f)->function_pointer;
-               result = ptr(this, argv[0], argc, argv);
-            }
-         }
-      }
-      else
-      {
-         #ifdef __DEBUG__
-         WARNING("Method not found : <%s>.<%s>.\n", cls->name.c_str(), method_name.c_str());
-         #endif
-         //this->throw_ethrow_class_method_not_found(argv[0], *method_name);
-      }
-      t::Object::drop(f);
-      t::Object::drop(cls);
-
-      if (result == NULL)
-      {
-         WARNING(
-            "Result of function <%s>.<%s> is C's <null> instead of <svm::Null>.\n",
-            cls->name.c_str(),
-            method_name.c_str()
-         );
-         result = t::gNULL;
-      }
-
-      return result;
-
-   }
-
-   bool
-   Engine::check_arguments(int argc, ...)
-   {
-      bool result = true;
-      va_list l;
-      va_start(l, argc);
-      for (int i = 0 ; i < argc ; i +=2)
-      {
-         t::Object* obj = va_arg(l, t::Object*);
-         t::Class* cls = va_arg(l, t::Class*);
-         if (obj->cls != cls)
-         {
-            std::string s_msg;
-            s_msg.assign("Expected type<");
-            s_msg.append(cls->name);
-            s_msg.append("> but got <");
-            s_msg.append(((t::Class*)obj->cls)->name);
-            s_msg.append(">.");
-
-            t::Object* msg = t::String::build(s_msg);
-            t::Exception* e = new t::Exception();
-            e->set_class(t::tBAD_ARGUMENT_TYPE_EXCEPTION);
-            t::Exception::set_message(e, msg);
-            this->throw_exception((t::Object*)e);
-
-            result = false;
-            break;
-         }
-      }
-      va_end(l);
-      return result;
-   }
-
-   bool
-   Engine::check_arguments(t::Function* f, UInt argc, t::Object**& argv)
-   {
-      bool result = true;
-      if (argc != f->arguments_count)
-      {
-         // TODO: Throw an exception instead !
-         WARNING("Bad argument count, got <%d> instead of <%d>\n", argc, f->arguments_count);
-      }
-      else
-      {
-         //DEBUG("Testing arguments\n");
-         for (ULong i = 0; i < f->arguments_count ; ++ i)
-         {
-            //DEBUG("Testing arg #%d/%d(%d)\n", i, argc, f->arguments_count);
-            t::Variable* expected_type = ((t::Variable*)f->arguments[i]);
-            t::Object::pick(expected_type);
-            t::Object* given_type = argv[i]->cls;
-            t::Object::pick(given_type);
-
-            t::Class* func_var_arg = (t::Class*)((t::Variable*)f->arguments[i])->object_type;
-            result = t::Class::is_child_of(argv[i]->cls, func_var_arg);
-            if (result != true)
-            {
-               WARNING(
-                  "Bad argument type: <%s@%lu is not child of type <%s@%lu>.\n",
-                  ((t::Class*)argv[i]->cls)->name.c_str(),
-                  (ULong)argv[i]->cls,
-                  ((t::Class*)((t::Variable*)f->arguments[i])->object_type)->name.c_str(),
-                  (ULong)((t::Variable*)f->arguments[i])->object_type
-               );
-
-               // TODO: Throw an exception or what ?
-               //svm::throw_bad_type(((svm::Variable*)f->arguments[i])->object_type, argv[i]->cls);
-               break;
-            }
-
-            t::Object::drop(expected_type);
-            t::Object::drop(given_type);
-         }
-      }
-
-      return result;
    }
 
    void
-   Engine::exit()
+   Engine::copy_arguments (vm::OpCode* pOpcode, t::Value* pArguments)
+   {
+      uchar nCount = pOpcode->argument_count;
+      uchar* pArgumentTypes = pOpcode->argument_types;
+      t::Value* pBaseObjects = pOpcode->arguments;
+
+      for (uchar i = 0 ; i < nCount ; ++i)
+      {
+         pArguments[i] = (t::Value)pBaseObjects[i];
+         if (T__IS_OBJECT_TYPE(pArgumentTypes[i]))
+         {
+            ASSERT_NOT_NULL(pArguments[i]);
+            ((t::Object*)pArguments[i])->pick();
+         }
+      }
+   }
+
+   void
+   Engine::exit ()
    {
       // @TODO: Make it a real exit() !
    }
 
    t::Block*
-   Engine::find_nearest_exception_handler()
+   Engine::find_nearest_exception_handler ()
    {
-      t::Block* result = NULL;
-      if (this->stack.count() > 0)
+      t::Block* pResult = NULL;
+      if (this->call_stack.count() > 0)
       {
-         for (ULong i = this->stack.count() - 1; i > 0 ; --i)
+         for (ulong i = this->call_stack.count() - 1; i > 0 ; --i)
          {
-            if (this->stack.get(i)->exception_handler != NULL)
+            if (this->call_stack.get(i)->exception_handler != NULL)
             {
-               result = this->stack.get(i)->exception_handler;
+               pResult = this->call_stack.get(i)->exception_handler;
                break;
             }
          }
       }
-      return result;
+      return pResult;
    }
 
-   t::Block*
-   Engine::get_block(std::string name)
+   void
+   Engine::format_arguments (vm::OpCode* pOpcode, t::Value* pArguments)
    {
-      //INTERNAL("Engine::get_block(%s)\n", name.c_str());
-      t::Block* result = NULL;
-      for (ULong i = 0 ; i < this->block_count ; ++ i)
+      uchar nCount = pOpcode->argument_count;
+      uchar* pArgumentTypes = pOpcode->argument_types;
+      t::Value* pBaseObjects = pOpcode->arguments;
+
+      for (uchar i = 0 ; i < nCount ; ++i)
       {
-         if (this->blocks[i]->name.compare(name) == 0)
+         if (pArgumentTypes[i] == t::REGISTER_VALUE_TYPE)
          {
-            result = this->blocks[i];
-            break;
-         }
-      }
-      //INTERNAL("/ Engine::get_block(%s) = %lu\n", result->name.c_str(), (ULong)result);
-      return result;
-   }
-
-   void
-   Engine::import_swap(t::Block* block)
-   {
-      ULong swap_len = this->heap.count();
-      for (ULong i = 0 ; i < swap_len ; ++i)
-      {
-         block->heap.append(this->heap.get(0));
-         this->heap.pop(1);
-      }
-   }
-
-   void
-   Engine::make_empty_object_array(t::Object**& obj, UInt count)
-   {
-      switch (count)
-      {
-         case 0:
-            obj = NULL;
-            break;
-
-         default:
-            obj = new t::Object*[count];
-      }
-   }
-
-   void
-   Engine::print_version()
-   {
-      printf("%s v%s\n\n", PACKAGE_NAME, PACKAGE_VERSION);
-      printf("name: %s\n", PACKAGE_NAME);
-      printf("version: %s\n", PACKAGE_VERSION);
-      printf("author: %s\n", PACKAGE_AUTHOR_NAME);
-
-   }
-
-   // -----------------------------------------
-   // This is a placeholder. DO NOT REMOVE!
-   // -----------------------------------------
-   // [!opcodes:definitions]
-   // -----------------------------------------
-
-   void
-   Engine::run_block(t::Block* block, bool add_to_stack)
-   {
-      INTERNAL(
-         "<block:%s @%lu> [%lu opcodes] : Running ... (heap_size=%lu)\n",
-         block->name.c_str(),
-         (ULong)block,
-         block->count(),
-         this->heap.count()
-      );
-      ASSERT(this->heap.count() >= block->argc, "There must be enough in the heap to run this block.\n");
-
-      // If block have arguments, with HeapObject's replaced by their real values
-      if (block->argc > 0)
-      {
-         for (long i = (long)block->argc - 1 ; i >= 0 ; -- i)
-         {
-            t::String::assert(block->argv[i]);
-            t::Object* obj = this->heap.pick_last_and_pop();
-
-            t::Class* cls = (t::Class*)obj->cls;
-            #ifdef _DEBUG_
-            if (cls->name != ((t::String*)block->argv[i])->value)
+            t::RegisterObject* pRegObj = (t::RegisterObject*)pBaseObjects[i];
+            switch (pRegObj->object_type)
             {
-               WARNING(
-                  "Bad block parameter type, expected <%s> but got <%s>.\n",
-                  ((t::String*)block->argv[i])->value.c_str(),
-                  cls->name.c_str()
-               );
+               case t::BOOL_TYPE:
+               case t::CHAR_TYPE:
+               case t::U_CHAR_TYPE:
+               case t::SHORT_TYPE:
+               case t::U_SHORT_TYPE:
+               case t::INT_TYPE:
+               case t::U_INT_TYPE:
+                  pArguments[i] = (t::Value)this->current_block->registers.get_int(pRegObj->position);
+                  break;
+
+               case t::LONG_TYPE:
+               case t::U_LONG_TYPE:
+                  pArguments[i] = (t::Value)this->current_block->registers.get_long(pRegObj->position);
+                  break;
+
+               default:
+                  pArguments[i] = (t::Value)this->current_block->registers.get_object(pRegObj->position);
+                  ASSERT_NOT_NULL(pArguments[i]);
+                  ((t::Object*)pArguments[i])->pick();
             }
-            #endif
-            block->heap.append(obj);
-         }
-      }
-      ASSERT(block != NULL, "Cannot use a <NULL> t::Block*.\n");
-
-      t::Object::drop_safe(this->current_block);
-      this->current_block = block;
-      t::Object::pick(block);
-
-      if (add_to_stack == true)
-      {
-         this->stack.append(block);
-      }
-
-      // Execute each opcode in this block
-      vm::OpCode* opc;
-      for (ULong i = 0 ; i < block->count() ; ++i)
-      {
-         //INTERNAL("BLOCK LOOP\n");
-         opc = block->get(i);
-         // t::Object::assert_not_null(opc);
-         t::Object** args;
-         //INTERNAL("Make empty object array\n");
-         make_empty_object_array(args, opc->argc);
-
-         // If opcode have arguments, replace each HeapObject by its real value
-         //INTERNAL("Passing through arguments\n");
-         for (ULong j = 0 ; j < opc->argc ; ++j)
-         {
-            //INTERNAL("arg %lu\n", j);
-            t::Object::assert_not_null(opc->argv[j]);
-            if (opc->argv[j]->cls == t::tHEAP_OBJECT)
-            {
-               t::HeapObject* hobj = (t::HeapObject*)opc->argv[j];
-               args[j] = this->current_block->heap.get(hobj->position);
-            }
-            else
-            {
-               args[j] = opc->argv[j];
-            }
-            t::Object::assert_not_null(args[j]);
-            t::Object::pick(args[j]);
-         }
-         //INTERNAL("// Passing through arguments\n");
-
-         //INTERNAL("Print info about opcode\n");
-         #ifdef _SHOW_INTERNAL_
-         if (opc->argc == 0)
-         {
-            INTERNAL("Running <opcode:%c%c> [%lu/%lu] \n", opc->type, opc->method, i, block->count());
          }
          else
          {
-            //INTERNAL("opcode has arguments\n");
-            INTERNAL("Running <opcode:%c%c> [%lu/%lu] (", opc->type, opc->method, i, block->count());
-            //INTERNAL("looping through opcode args\n");
-            for (ULong k = 0 ; k < opc->argc ; ++k)
+            pArguments[i] = (t::Value)pBaseObjects[i];
+            if (T__IS_OBJECT_TYPE(pArgumentTypes[i]))
             {
-               t::Object* o = args[k];
-               t::Object::pick(o);
-               if (k != 0)
-               {
-                  printf(", ");
-               }
-               printf("%lu/%d @%lu ::", (k+1), opc->argc, (ULong)o);
-               if (o->cls != NULL)
-               {
-                  printf("%s", ((t::Class*)o->cls)->name.c_str());
-               }
-               else
-               {
-                  printf("<UnknownClass>");
-               }
-
-               t::Object::drop(o);
+               ASSERT_NOT_NULL(pArguments[i]);
+               ((t::Object*)pArguments[i])->pick();
             }
-            printf(")\n");
          }
-         #endif
+      }
+   }
 
-         t::Object::assert_not_null(this->current_block);
-         t::Object::assert_not_null(block);
+   t::Block*
+   Engine::get_block (ulong nIndex)
+   {
+      ASSERT(
+            nIndex < this->block_count,
+            "<Engine @x%x> INDEX_OUT_OF_BLOCK_RANGE (.from 0, .to %lu, .at %lu)",
+            (uint)this,
+            this->block_count,
+            nIndex
+      );
 
-         bool opc_handled = false;
-         bool opc_namespace_handled = false;
-         //ULong i = 0 ; // TODO: Ugly lazy trick, damn' I'm lazy, yeah < What the fuck ?
-         //INTERNAL("SWITCH OPC->TYPE\n");
-         switch (opc->type)
-         {
-            // --------------------------------------
-            // This is a place holder, DO NOT REMOVE !
-            // --------------------------------------
-            // [!opcodes:ns_switch]
-            // --------------------------------------
-            case OPC_NS_NIL: opc_namespace_handled = true; opc_handled = true; break;
-         }
-         #ifdef _DEBUG_
-         if (! opc_namespace_handled)
-         {
-            WARNING("<opcode-namespace:%c> not handled.\n", opc->type);
-         }
-         if (! opc_handled)
-         {
-            WARNING("<opcode:%c%c> not handled.\n", opc->type, opc->method);
-         }
-         #endif
+      return this->blocks[nIndex];
+   }
 
-         // EXCEPTION HANDLING
-         // ------------------
-         // If current opcode has an exception, try to find an exception handler
-         // (starting in the current block and going up in the stack) and run it,
-         // otherwise just die printing a stacktrace.
-         if (this->current_block->exception != NULL)
+   bool
+   Engine::handle_exception ()
+   {
+      bool bHandled = false;
+
+      t::Block* pExceptionHandler = this->find_nearest_exception_handler();
+      if (pExceptionHandler != NULL)
+      {
+         ASSERT_NOT_NULL(pExceptionHandler);
+         this->run_block(pExceptionHandler, true);
+         bHandled = true;
+      }
+      else
+      {
+         /**
+         t::Exception* pException = this->current_block->exception;
+         ASSERT_NOT_NULL(pException);
+
+         const vm::Class* pExceptionClass = pException->klass;
+         ASSERT_NOT_NULL(pExceptionClass);
+         */
+
+         printf("[Uncaught exception]\n");
+      }
+
+      return bHandled;
+   }
+/**
+   void
+   Engine::import_swap (t::Block* pBlock, ulong nCount)
+   {
+      ASSERT(
+            nCount < this->swap.count(),
+            "<Engine @x%x> NOT_ENOUGH_IN_THE_SWAP (.count %lu, .swap_len %lu)",
+            (uint)this,
+            nCount,
+            this->swap.count()
+      )
+
+      for (ulong i = 0 ; i < nCount ; ++i)
+      {
+         pBlock->stack.append(this->swap.get(0));
+         this->swap.pop(1);
+      }
+   }
+*/
+
+   void
+   Engine::make_empty_value_array (t::Value*& pArray, uchar nCount)
+   {
+      switch (nCount)
+      {
+         case 0:
+            pArray = NULL;
+            break;
+
+         default:
+            Memory_ALLOC(pArray, t::Value, nCount);
+      }
+   }
+
+   void
+   Engine::print_block (uint nBlockIndex, t::Block* pBlock)
+   {
+      printf(
+            "  %u: @x%x %s\n"
+            " -----------------------------------\n",
+            nBlockIndex,
+            (uint)pBlock,
+            T__BLOCK__GET_NAME(pBlock)
+      );
+      for (ulong i = 0 ; i < pBlock->opcode_count ; ++ i)
+      {
+         this->print_opcode(i, pBlock->opcodes[i]);
+      }
+      printf("\n");
+   }
+
+   void
+   Engine::print_blocks ()
+   {
+      for (uint i = 0 ; i < this->block_count ; ++i)
+      {
+         this->print_block(i, this->blocks[i]);
+      }
+   }
+
+   void
+   Engine::print_opcode (uint nOpcodeIndex, vm::OpCode* pOpcode)
+   {
+      printf("  %u: @x%x [", nOpcodeIndex, (uint)pOpcode);
+      printf("%0d", pOpcode->ns);
+      if (pOpcode->ns < 100)
+      {
+      }
+      else
+      {
+         //printf("%d", pOpcode->ns);
+      }
+      printf(".");
+      if (pOpcode->method < 100)
+      {
+         printf(" %d", pOpcode->method);
+      }
+      else
+      {
+         printf("%d", pOpcode->method);
+      }
+      printf("]");
+      if (pOpcode->argument_count > 0)
+      {
+         printf(" (");
+         for (uint i = 0 ; i < pOpcode->argument_count ; ++ i)
          {
-            t::Block* exception_handler = this->find_nearest_exception_handler();
-            if (exception_handler != NULL)
+            if (i != 0)
             {
-               t::Object::assert_not_null(exception_handler);
-               this->run_block(exception_handler);
+               printf(" ");
+            }
+            switch (pOpcode->argument_types[i])
+            {
+               case t::REGISTER_VALUE_TYPE:
+                  printf("$");
+                  printf("%u", ((t::RegisterObject*)pOpcode->arguments[i])->position);
+                  break;
+
+               case t::CHAR_TYPE:
+               case t::SHORT_TYPE:
+               case t::INT_TYPE:
+                  printf("%d", (int)pOpcode->arguments[i]);
+                  break;
+
+               case t::U_CHAR_TYPE:
+               case t::U_SHORT_TYPE:
+               case t::U_INT_TYPE:
+                  printf("%u", (uint)pOpcode->arguments[i]);
+                  break;
+
+               default:
+                  FATAL("Unknown type <%d>\n", pOpcode->argument_types[i]);
+                  abort();
+            }
+         }
+         printf(")");
+      }
+      printf("\n");
+   }
+
+   void
+   Engine::print_version ()
+   {
+      printf("%s v%s\n\n", QD__NAME, QD__VERSION);
+      printf("name: %s\n", QD__NAME);
+      printf("version: %s\n", QD__VERSION);
+      printf("author: %s\n", QD__AUTHOR_NAME);
+
+   }
+
+   void
+   Engine::run ()
+   {
+      t::Block* pBlock = this->get_block(0);
+      this->run_block(pBlock, true);
+   }
+
+   void
+   Engine::run_block (t::Block* pBlock, bool bAddToStack)
+   {
+      ASSERT_NOT_NULL(pBlock);
+      ASSERT_NOT_NULL(pBlock->klass);
+      ASSERT_NOT_NULL(this->opcode_arguments);
+
+      /**
+      ASSERT(
+            this->swap.count() >= pBlock->argument_count,
+            "<Block:?? @x%x> NOT_ENOUGH_OBJECTS_STORED_IN_THE_HEAP"
+            " (.real %lu, .expected %hu)\n",
+            (uint)pBlock,
+            this->swap.count(),
+            pBlock->argument_count
+      );
+      */
+
+      INTERNAL(
+         "<Block:?? @x%x> RUNNING (.opcode_count %lu)\n",
+         (uint)pBlock,
+         pBlock->count()
+      );
+
+      pBlock->pick();
+      this->current_block = pBlock;
+
+      // If block have arguments, import enough items from the swap into the
+      // current block's heap.
+      /*if (pBlock->argument_count > 0)
+      {
+         this->import_swap(pBlock, pBlock->argument_count);
+      }*/
+
+      if (bAddToStack == true)
+      {
+         this->call_stack.append(pBlock);
+      }
+
+      // Execute each opcode in this block
+      ASSERT_NOT_NULL(pBlock);
+      vm::OpCode* pOpcode = NULL;
+      for (uint i = 0 ; i < pBlock->count() ; ++i)
+      {
+         pOpcode = pBlock->get(i);
+         ASSERT_NOT_NULL(pOpcode);
+         ASSERT(
+               pOpcode->argument_count < VM__OPCODE__MAX_ARGUMENTS,
+               "TOO_MUCH_ARGUMENTS (.max %d, .now %d)",
+               VM__OPCODE__MAX_ARGUMENTS,
+               pOpcode->argument_count
+         );
+         if (pOpcode->argument_count > 0)
+         {
+            if (pOpcode->has_register_arguments)
+            {
+               this->format_arguments(pOpcode, this->opcode_arguments);
             }
             else
             {
-               t::Exception* e = (t::Exception*)this->current_block->exception;
-               t::Class* e_cls = (t::Class*)this->current_block->exception->cls;
-               t::Object::assert_not_null(e_cls);
-               printf("[Uncaught exception]\n%s: ", e_cls->name.c_str());
-               t::String::print((t::String*)e->message);
-               printf("\n");
-               this->build_traceback();
-               i = block->count();
-               this->exit();
-               break;
+               this->copy_arguments(pOpcode, this->opcode_arguments);
             }
+            //*/
          }
 
-         for (ULong j = 0 ; j < opc->argc ; ++j)
+         bool opc_handled = false;
+         bool opc_namespace_handled = true;
+         t::Block* pBlockToRun = NULL;
+
+         INTERNAL(
+               "<OpCode:0x%x> RUN (.index %u, .ns %u, .function %u .argument_count %u)\n",
+               (uint)pOpcode,
+               i,
+               pOpcode->ns,
+               pOpcode->method,
+               pOpcode->argument_count
+         );
+
+         switch (pOpcode->ns)
          {
-            t::Object::assert_not_null(args[j]);
-            t::Object::drop(args[j]);
+            #ifdef OPCODES__ARRAY__H
+            case OPC_NS_ARRAY:
+               opc_handled = opcodes::Array::run(pBlock, pOpcode, this->opcode_arguments);
+               break;
+            #endif
+
+            #ifdef OPCODES__BLOCK__H
+            case OPC_NS_BLOCK:
+               opc_handled = opcodes::Block::run(pOpcode, this->opcode_arguments, this->blocks, pBlockToRun);
+               if (pBlockToRun != NULL)
+               {
+                  this->run_block(pBlockToRun, true);
+               }
+               break;
+            #endif
+
+            #ifdef OPCODES__DUMMY__H
+            case OPC_NS_DUMMY:
+               opc_handled = opcodes::Dummy::run(pOpcode, this->opcode_arguments);
+               break;
+            #endif
+
+            #ifdef OPCODES__INT__H
+            case OPC_NS_INT:
+               opc_handled = opcodes::Int::run(pBlock, pOpcode, this->opcode_arguments);
+               break;
+            #endif
+
+            #ifdef OPCODES__JUMP__H
+            case OPC_NS_JUMP:
+               opc_handled = opcodes::Jump::run(pOpcode, this->opcode_arguments, i);
+               break;
+            #endif
+
+            #ifdef OPCODES__LIST__H
+            case OPC_NS_LIST:
+               opc_handled = opcodes::List::run(pBlock, pOpcode, this->opcode_arguments);
+               break;
+            #endif
+
+            #ifdef OPCODES__REGISTERS__H
+            case OPC_NS_REGISTERS:
+               opc_handled = opcodes::Registers::run(pBlock, pOpcode, this->opcode_arguments);
+               break;
+            #endif
+
+            default:
+               opc_namespace_handled = false;
+
          }
-         delete[] args;
-         //opc = opc->next_opcode;
-         // TODO: Problem here ! Damn'it ! Reference counting is great ! << WTF ?
-         //delete args;
+
+         #ifdef _DEBUG_
+         if (! opc_namespace_handled)
+         {
+            WARNING("<opcode-namespace:%c> not handled.\n", pOpcode->ns);
+         }
+         else if (! opc_handled)
+         {
+            WARNING("<opcode:%c%c> not handled.\n", pOpcode->ns, pOpcode->method);
+         }
+         #endif
+
+         // Exception handling
+         if (this->current_block->exception != NULL && !this->handle_exception())
+         {
+            i = pBlock->count();
+            this->exit();
+            break;
+         }
       }
-   }
 
-   void
-   Engine::run_file(const char* file_path)
-   {
-      INTERNAL("<%s> : Running file...\n", file_path);
+      pBlock->drop();
+      ASSERT_NOT_NULL(pBlock->klass);
 
-      std::fstream file(file_path, std::fstream::in);
-      std::string content = "";
-
-      char buff[128] = "";
-
-      while (!file.eof())
+      if (bAddToStack == true)
       {
-         file.read(buff, 127);
-         content.append(buff, 0, file.gcount());
+         this->call_stack.pop();
       }
-
-      file.close();
-
-      this->block_count = Parser::parse_lines(content, this->blocks);
-
-      std::string s_main;
-      s_main.assign("MAIN");
-      t::Block* block = this->get_block(s_main);
-
-      ASSERT(block != NULL, "No <MAIN> block found.");
-      this->run_block(block);
-
-      INTERNAL("/ <%s> : Running file...\n", file_path);
    }
 
    void
-   Engine::throw_exception(t::Object* exception)
+   Engine::size_blocks(ulong nCount)
    {
-      t::Object::assert_not_null(this->current_block);
-      this->current_block->throw_exception(exception);
+      this->block_count = nCount;
+      Memory_ALLOC(this->blocks, t::Block*, nCount);
+   }
+
+   void
+   Engine::size_classes(ulong nCount)
+   {
+      this->class_count = nCount;
+      Memory_ALLOC(this->classes, vm::Class*, nCount);
+   }
+
+   void
+   Engine::size_functions(ulong nCount)
+   {
+      this->function_count = nCount;
+      Memory_ALLOC(this->functions, t::Function*, nCount);
+   }
+
+   void
+   Engine::size_opcodes (uint nCount)
+   {
+      this->opcode_count = nCount;
+      Memory_ALLOC(this->opcodes, vm::OpCode*, nCount);
    }
 }

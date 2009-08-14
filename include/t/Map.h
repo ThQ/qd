@@ -1,5 +1,5 @@
-#ifndef T_MAP_H
-#define T_MAP_H
+#ifndef T__MAP__H
+#define T__MAP__H __FILE__
 
 #include "t/Collection.h"
 #include "t/String.h"

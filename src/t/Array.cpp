@@ -9,29 +9,36 @@ namespace t
       this->_init();
    }
 
-   Array::Array (ushort nItemType, vm::Class* pItemClass, UInt64 length)
+   Array::Array (ushort nItemType, uint length)
+   {
+      this->_init();
+      this->set_item_type(nItemType);
+      this->size(length);
+   }
+
+   Array::Array (ushort nItemType, vm::Class* pItemClass, uint length)
    {
       this->_init();
       this->set_item_type(nItemType, pItemClass);
       this->size(length);
    }
 
-   Array::Array (ushort nItemType, vm::Class* pItemClass, UInt64 dwArrayLength, Value* pItems)
+   Array::Array (ushort nItemType, vm::Class* pItemClass, uint dwArrayLength, Value* pItems)
    {
       this->_init();
       this->set_item_type(nItemType, pItemClass);
       this->size(dwArrayLength);
 
-      if (T__IS_LITERAL_TYPE(nItemType))
+      if (T__IS_VALUE_TYPE(nItemType))
       {
-         LOOP_FROM_TO(UInt64, i, 0, dwArrayLength)
+         LOOP_FROM_TO(uint, i, 0, dwArrayLength)
          {
             this->items[i] = pItems[i];
          }
       }
       else
       {
-         LOOP_FROM_TO(UInt64, i, 0, dwArrayLength)
+         LOOP_FROM_TO(uint, i, 0, dwArrayLength)
          {
             ASSERT_NULL(this->items[i]);
             ASSERT_NOT_NULL(pItems[i]);
@@ -45,9 +52,9 @@ namespace t
 
    Array::~Array ()
    {
-      if (T__IS_NOT_LITERAL_TYPE(this->item_type))
+      if (T__IS_NOT_VALUE_TYPE(this->item_type))
       {
-         LOOP_FROM_TO(UInt64, i, 0, this->item_count)
+         LOOP_FROM_TO(uint, i, 0, this->length)
          {
             if (this->items[i] != NULL)
             {
@@ -59,129 +66,106 @@ namespace t
    }
 
    void
-   Array::clear ()
+   Array::__delete__ (Value pArray)
    {
-      if (T__IS_LITERAL_TYPE(this->item_type))
-      {
-         LOOP_FROM_TO(UInt64, item_index, 0, this->item_count)
-         {
-            this->items[item_index] = NULL;
-         }
-      }
-      else
-      {
-         LOOP_FROM_TO(UInt64, item_index, 0, this->item_count)
-         {
-            ASSERT_NOT_NULL(this->items[item_index]);
 
-            ((Object*)this->items[item_index])->drop();
-            this->items[item_index] = NULL;
-         }
-      }
+   }
+
+   Value
+   Array::__new__ ()
+   {
+      NEW(pResult, t::Array);
+      return pResult;
    }
 
    void
-   Array::clear_item (UInt64 item_index)
+   Array::__print__ (Value pArray)
    {
-      ASSERT(
-            item_index < this->item_count,
-            "Index [%lu] out of range [0:%lu].",
-            (ulong)item_index,
-            (ulong)this->item_count
-      );
-
-      if (T__IS_NOT_LITERAL_TYPE(this->item_type) && this->items[item_index] != NULL)
+      t::Array* pArr = (t::Array*)pArray;
+      switch (pArr->item_type)
       {
-         ((Object*)this->items[item_index])->drop();
-      }
-      this->items[item_index] = NULL;
-   }
-
-   void
-   Array::clear_range (UInt64 range_start, UInt64 range_end)
-   {
-      ASSERT(range_start < range_end, "Start index must be lower than end index.");
-      ASSERT(range_end <= this->item_count, "End index must be lower than the item count.");
-
-      if (T__IS_LITERAL_TYPE(this->item_type))
-      {
-         LOOP_FROM_TO(UInt64, item_index, range_start, range_end)
+         case t::BOOL_TYPE:
          {
-            this->items[item_index] = NULL;
-         }
-      }
-      else
-      {
-         LOOP_FROM_TO(UInt64, item_index, range_start, range_end)
-         {
-            if (this->items[item_index] != NULL)
+            printf("[");
+            for (uint i = 0 ; i < pArr->length ; ++i)
             {
-               ASSERT_NOT_NULL(((Object*)this->items[item_index])->klass);
-
-               ((Object*)this->items[item_index])->drop();
-               this->items[item_index] = NULL;
+               if (i != 0) printf(", ");
+               printf("%s", ((bool)pArr->items[i]) == 0 ? "False" : "True");
             }
+            printf("]");
+            break;
          }
-      }
-   }
 
-   void
-   Array::set_item (UInt64 item_index, Value new_item)
-   {
-      ASSERT(this->item_type != t::UNDEFINED_TYPE, "An array must have its type defined");
-      ASSERT(item_index < this->item_count, "Index [%ld] out of range [0:%ld].", (ulong)item_index, (ulong)this->item_count);
-
-      if (T__IS_NOT_LITERAL_TYPE(this->item_type))
-      {
-         ASSERT_NOT_NULL(new_item);
-         if (this->items[item_index] != NULL)
+         case t::CHAR_TYPE:
+         case t::SHORT_TYPE:
+         case t::INT_TYPE:
          {
-            ASSERT_NOT_NULL(((Object*)this->items[item_index])->klass);
-            ((Object*)this->items[item_index])->drop();
+            printf("[");
+            for (uint i = 0 ; i < pArr->length ; ++i)
+            {
+               if (i != 0) printf(", ");
+               printf("%d", (int)pArr->items[i]);
+            }
+            printf("]");
+            break;
          }
-         ((Object*)new_item)->pick();
-      }
 
-      this->items[item_index] = new_item;
+         case t::U_CHAR_TYPE:
+         case t::U_SHORT_TYPE:
+         case t::U_INT_TYPE:
+         {
+            printf("[");
+            for (uint i = 0 ; i < pArr->length ; ++i)
+            {
+               if (i != 0) printf(", ");
+               printf("%u", (uint)pArr->items[i]);
+            }
+            printf("]");
+            break;
+         }
+      }
    }
 
    void
-   Array::set_item_type (ushort type, vm::Class* cls)
+   Array::__print_line__ (Value pArray)
    {
-#     ifdef _DEBUG_
-      if (T__IS_LITERAL_TYPE(type))
-      {
-         ASSERT_NULL(cls);
-      }
-      else
-      {
-         ASSERT_NOT_NULL(cls);
-      }
-#     endif
-
-      this->item_type = type;
-      this->item_class = cls;
-
+      Array::__print__ (pArray);
+      printf("\n");
    }
 
    void
-   Array::size (UInt64 array_size)
+   Array::size (uint array_size)
    {
       // A 0-length array may be useful : A function may want to return an empty array.
       // ASSERT(array_size != 0, "An Array of 0-length must not be created.");
-      ASSERT(this->item_count == 0, "Cannot size an array already sized.");
+      ASSERT(this->length == 0, "Cannot size an array already sized.");
       ASSERT(this->items == NULL, "Cannot size an array that is already containing objects.");
 
-      this->item_count = array_size;
-      this->items = (Value*) malloc(sizeof(Object*) * array_size);
+      this->length = array_size;
+      this->slot_count = array_size * this->slot_size;
+      Memory_ALLOC(this->items, Value, array_size * this->slot_size);
 
-      LOOP_FROM_TO(UInt64, i, 0, array_size)
+      LOOP_FROM_TO(uint, i, 0, slot_count)
       {
          this->items[i] = NULL;
       }
    }
 
-   //T_OBJECT* tARRAY = NULL;
+   t::Array*
+   Array::slice (uint nStartIndex, uint nLength, uint nStep)
+   {
+      ASSERT(nStep != 0, "ZERO_STEP");
+      ASSERT(nLength <= this->length, "SLICE_TOO_BIG");
+
+      uint nSliceLen = (nLength % nStep) == 0 ? (nLength / nStep) : (nLength / nStep) + 1;
+
+      NEW(pSlice, t::Array)(this->item_type, this->item_class, nSliceLen);
+
+      for (uint i = nStartIndex, j = 0; i < nLength ; i += nStep, ++j)
+      {
+         pSlice->items[j] = this->items[i];
+      }
+
+      return pSlice;
+   }
 }
-
-

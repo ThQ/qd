@@ -1,5 +1,5 @@
-#ifndef VM_CLASS_H
-#define VM_CLASS_H
+#ifndef VM__CLASS__H
+#define VM__CLASS__H __FILE__
 
 #include <string>
 
@@ -9,23 +9,25 @@
    vm::Class class_object_name(\
          type, \
          parent_class, \
-         c_class::destroy, \
-         c_class::print, \
-         c_class::print_line \
+         c_class::__new__ ,\
+         c_class::__delete__ ,\
+         c_class::__print__, \
+         c_class::__print_line__ \
    );
 namespace vm
 {
    /**
-    * @brief A base type for all internal classes.
+    * @brief A base class for all internal classes.
     */
    class Class
    {
-      public: Class* parent_class;     ///< A parent class.
-      public: ushort type;            ///< Type of the object.
+      public: Class* parent_class;                    ///< A parent class.
+      public: ushort type;                            ///< Type of the object.
 
-      public: t::DestroyFunction destroy_func;
-      public: t::PrintFunction print_func;
-      public: t::PrintLineFunction print_line_func;
+      public: t::InitializeFunction initialize_func;  ///< A functor to a function used to create an object of that class.
+      public: t::DestroyFunction destroy_func;        ///< A functor to a function used to destroy an object of that class.
+      public: t::PrintFunction print_func;            ///< A functor to a function used to print an object of that class.
+      public: t::PrintLineFunction print_line_func;   ///< A functor to a function used to print on a new line an object of that class.
 
       /**
        * @brief Constructor.
@@ -43,6 +45,7 @@ namespace vm
        * @brief Constructs a class given its type and its parent.
        *
        * @param nType The class type.
+       * @param pParentClass A pointer to the parent class.
        */
       public: Class (uint nType, vm::Class* pParentClass);
 
@@ -50,8 +53,13 @@ namespace vm
        * @brief Constructs a class given its type, its parent ands its base methods.
        *
        * @param nType The class type.
+       * @param pParentClass A pointer to the parent class.
+       * @param fpInit A functor to a function used to initialize an object of that class.
+       * @param fpDestroy A functor to a function used to destroy an object of that class.
+       * @param fpPrint A functor to a function used to print an object of that class.
+       * @param fpPrintLine A functor to a function used to print on a new line an object of that class.
        */
-      public: Class (uint nType, vm::Class* pParentClass, t::DestroyFunction, t::PrintFunction, t::PrintLineFunction);
+      public: Class (uint nType, vm::Class* pParentClass, t::InitializeFunction fpInit, t::DestroyFunction fpDestroy, t::PrintFunction fpPrint, t::PrintLineFunction fpPrintLine);
 
       /**
        * @brief Constructs a class given its parent class.
@@ -59,6 +67,11 @@ namespace vm
        * @param pParentClass The parent class.
        */
       public: Class (vm::Class* pParentClass);
+
+      /**
+       * @brief Destructor.
+       */
+      public: ~Class ();
 
       /**
        * @brief Initializes a class.
@@ -76,8 +89,7 @@ namespace vm
       /**
        * @brief Checks if @prm{cls} is a child of @prm{parent_class}.
        *
-       * @param cls The class to be checked.
-       * @param parent_class The parent parent class.
+       * @param pParentClass The parent parent class.
        * @return true if @prm{cls} is a child of @prm{parent_class}.
        */
       public: bool is_child_of (vm::Class* pParentClass);

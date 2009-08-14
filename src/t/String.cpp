@@ -9,7 +9,7 @@ namespace t
       this->_init();
    }
 
-   String::String(char chr)
+   String::String (char chr)
    {
       this->_init();
       this->value.append(1, chr);
@@ -46,7 +46,7 @@ namespace t
    }
 
    String*
-   String::center(UInt64 centered_str_len, String* pad_str)
+   String::center (UInt64 centered_str_len, String* pad_str)
    {
       String* pCenteredStr; // Result
       UInt64 this_len = this->value.length();
@@ -121,19 +121,19 @@ namespace t
    }
 
    Short
-   String::compare_to(String* pCompareStr)
+   String::compare_to (String* pCompareStr)
    {
       return (this == pCompareStr) ? 0 : (Short)this->value.compare(pCompareStr->value);
    }
 
    String*
-   String::copy()
+   String::copy ()
    {
       return new String(this);
    }
 
    String*
-   String::cut_after(String* pSubstr)
+   String::cut_after (String* pSubstr)
    {
       UInt64 pSubstrFoundAt;
       String* pCutStr = NULL;

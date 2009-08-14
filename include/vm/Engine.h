@@ -1,212 +1,264 @@
-#ifndef ENGINE_H
-#define ENGINE_H
+#ifndef VM__ENGINE__H
+#define VM__ENGINE__H __FILE__
 
 
 #include <fstream>
 #include <math.h>
 #include <string>
-#include <unicode/unistr.h>
 
-#include "t/Array.h"
+#include "opcodes/Array.h"
+#include "opcodes/Block.h"
+#include "opcodes/Dummy.h"
+#include "opcodes/Int.h"
+#include "opcodes/List.h"
+#include "opcodes/Jump.h"
+#include "opcodes/Registers.h"
+
 #include "t/Block.h"
-#include "t/Bool.h"
-#include "t/Class.h"
+#include "t/CoreFunction.h"
 #include "t/Exception.h"
-#include "t/Float.h"
 #include "t/Function.h"
-#include "t/HeapObject.h"
-#include "t/Int.h"
 #include "t/List.h"
-#include "t/Map.h"
 #include "t/Object.h"
+#include "t/RegisterObject.h"
 #include "t/String.h"
-#include "t/UnicodeString.h"
-#include "t/UserObject.h"
-#include "vm/ClassTable.h"
-#include "vm/FunctionTable.h"
-#include "vm/Heap.h"
+#include "t/UserFunction.h"
+
+#include "vm/CallStack.h"
+#include "vm/Class.h"
 #include "vm/OpCode.h"
-#include "vm/Parser.h"
-#include "vm/Stack.h"
-#include "util/Int.h"
-#include "util/List.h"
-// @MODULES[INCLUDE]
-
-#define SVM_METHOD(name) t::Object* name(vm::Engine* engine, int argc, t::Object** argv)
-#define SVM_CLASS_METHOD(name) t::Object* name(vm::Engine* engine, t::Object* self, int argc, t::Object** argv)
-
-#define SVM_THROW_CLASS_NOT_FOUND_EXCEPTION(eng, cls) \
-   DEPRECATED(); \
-   t::Object* e = t::Exception::build(); \
-   e->set_class(t::tCLASS_NOT_FOUND_EXCEPTION); \
-   eng->throw_exception(e);
-
-#define SVM_THROW_INDEX_OUT_OF_RANGE_EXCEPTION(engine, index, count) \
-   DEPRECATED(); \
-   t::Object* e = t::Exception::build(); \
-   e->set_class(t::tINDEX_OUT_OF_RANGE_EXCEPTION); \
-   engine->throw_exception(e);
 
 namespace vm
 {
-
    /**
-    * The Real Virtual Machine.
+    * @brief The Real Virtual Machine.
     *
     * It contains all the classes, the functions, the blocks, etc.
     */
    class Engine
    {
-      public: t::Block** blocks;       ///< An array of @cls{t::Block}.
-      public: UInt block_count;        ///< The number of blocks.
-      public: ClassTable classes;      ///< A class table.
-      public: t::Block* current_block; ///< The block being currently run.
-      public: FunctionTable functions; ///< A function table.
-      public: Heap heap;               ///< Global heap, also called the swap.
-      public: Stack stack;             ///< Call stack.
+      public: t::Block**      blocks;           ///< An array of @cls{t::Block}.
+      public: ulong           block_count;      ///< The number of blocks.
+      public: CallStack       call_stack;       ///< Call stack.
+      public: vm::Class**     classes;          ///< A class table.
+      public: ulong           class_count;      ///< How many classes.
+      public: t::Block*       current_block;    ///< The block being currently run.
+      public: t::Function**   functions;        ///< A function table.
+      public: ulong           function_count;   ///< How many functions.
+      public: vm::OpCode**    opcodes;          ///< An array of @cls{vm::OpCode}.
+                                                ///< We store all the opcodes here,
+                                                ///< and not in t::Block* because it lets
+                                                ///< us make an alloc once and for all opcodes,
+                                                ///< intead of a lot of small ones.
+      public: t::Value*       opcode_arguments; ///< An array of t::Value's that will contain the formated arguments
+                                                ///< for an opcode.
+      public: uint            opcode_count;     ///< The number of opcodes.
 
       /**
-       * Constructor.
+       * @brief Default constructor.
        */
       public: Engine();
 
       /**
-       * Destructor.
+       * @brief Destructor.
        */
       public: ~Engine();
 
       /**
-       * Appends a pointer to a t::Block to [blocks].
+       * @brief Calls a function.
        *
-       * @param block The block to append.
+       * @param nFunctionIndex Index of the function.
+       * @param nArgumentCount Number of arguments passed.
+       * @param pArgumentTypes An array of the types of the arguments.
+       * @param pArguments An array of pointers to t::Object's which are the arguments passed.
+       * @return A value return by the function.
        */
-      public: void append_block(t::Block* block);
+      public: t::Value call (ulong nFunctionIndex, uchar nArgumentCount, uchar* pArgumentTypes, t::Value* pArguments);
 
       /**
-       * Creates a t::List containing a traceback.
+       * @brief Clears the block array.
+       */
+      public: void clear_blocks ();
+
+      public: void copy_arguments (vm::OpCode* pOpcode, t::Value* pArguments);
+
+      /**
+       * @brief Exits the currently running engine.
+       */
+      public: void exit ();
+
+      /**
+       * @brief Finds the nearest exception handler block.
        *
-       * @return A pointer to a t::List containing the traceback.
-       */
-      public: t::Object* build_traceback();
-
-      /**
-       * Calls a function.
+       * Going up the stack from the current block to find an exception handler.
        *
-       * @param method_name Name of the function.
-       * @param argc Number of arguments passed.
-       * @param argv An array of pointers to t::Object's which are the arguments passed.
-       * @return A pointer to a t::Object returned by the function.
+       * @return A pointer to an exception handler block if found, NULL otherwise.
        */
-      public: t::Object* call(std::string method_name, UInt argc, t::Object**& argv);
+      public: t::Block* find_nearest_exception_handler ();
 
       /**
-       * Calls an instance method.
+       * @todo Handle object types more appropriatly.
+       */
+      public: void format_arguments (vm::OpCode* pOpcode, t::Value* pArguments);
+
+      /**
+       * @brief Gets a block.
        *
-       * @param method_name Name of the instance method.
-       * @param argc Number of arguments passed.
-       * @param argv An array of pointers to t::Object's which are the arguments passed. The first one being the object to call.
-       * @return A pointer to a t::Object returned by the function.
+       * @param nIndex The index of the block to get.
+       * @return A pointer to the block if found, NULL otherwise.
        */
-      public: t::Object* call_object(std::string method_name, UInt argc, t::Object**& argv);
+      public: t::Block* get_block (ulong nIndex);
 
       /**
-       * Checks if an array of t::Object's matches the list of arguments needed by a function.
+       * @brief Gets a function.
        *
-       * @param f A pointer to a t::Function to check against.
-       * @param argc The number of arguments to check.
-       * @param argv The arguments to check.
-       * @return true if argv matches f.
+       * @param nIndex The index of the function to get.
+       * @return A pointer to the function.
+       * @todo Do some ASSERTs
        */
-      public: bool check_arguments(t::Function* f, UInt argc, t::Object**& argv);
+      public: inline t::Function* get_function (ulong nIndex)
+      {
+         return this->functions[nIndex];
+      }
+
+      public: bool handle_exception ();
 
       /**
-       * Checks if a list of t::Object's are of type of a list of t::Class's
+       * @brief Imports the swap content into a block's heap.
        *
-       * @param argc A number of pairs (object, type) to check.
-       * @return true if each pair matches.
+       * @param pBlock A pointer to the block importing the swap.
        */
-      public: bool check_arguments(int argc, ...);
-
-      /**
-       * Replaces [argc] arguments of [argv] with NULL.
-       *
-       * @param argc How many arguments to clear.
-       * @param argv An array of pointer to t::Object's to clear.
-       */
-      public: void clear_arguments(UInt& argc, t::Object**& argv);
-
-      /**
-       * Clears [blocks].
-       */
-      public: void clear_blocks();
-
-      /**
-       * Exits the currently running engine.
-       */
-      public: void exit();
-
-      /**
-       * Going up the stack from the current frame to find an exception handler.
-      *
-      * @return An exception handler block if found, NULL otherwise.
+      /**public: inline void import_swap (t::Block* pBlock)
+      {
+         this->import_swap(pBlock, this->swap.count());
+      }
       */
-      public: t::Block* find_nearest_exception_handler();
 
       /**
-       * Get the block associated with the name [name].
+       * @brief Imports a portion of the swap into a block's heap.
        *
-       * @param name The block's name to search.
-       * @return The block if found, NULL otherwise.
+       * @param pBlock A pointer to the block importing the swap.
+       * @param nCount How many item to import.
        */
-      public: t::Block* get_block(std::string name);
+      // public: void import_swap (t::Block* pBlock, ulong nCount);
 
       /**
-       * Imports the swap content into a block's stack.
-       *
-       * @param block A pointer to a t::Block that is importing the swap.
-       */
-      public: void import_swap(t::Block* block);
-
-      /**
-       * Makes an empty array of t::Object's of length [count].
+       * @brief Makes an empty array of t::Object's of length [count].
        *
        * @param obj An array of pointer to t::Object's.
        * @param count The length of the new array.
        */
-      public: static void make_empty_object_array(t::Object**& obj, UInt count);
+      public: static void make_empty_value_array (t::Value*& obj, uchar count);
 
       /**
-       * Prints information about the engine to the console.
-       */
-      public: static void print_version();
-
-      /**
-       * Runs each opcode of a [block].
+       * @brief Prints a block and its opcodes.
        *
-       * @param block The block to run.
-       * @param add_to_stack Wether add this block to the call stack.
+       * @param nBlockIndex Index of the block.
+       * @param pBlock A pointer to the block to print.
        */
-      public: void run_block(t::Block* block, bool add_to_stack = true);
-      // [!opcodes:prototypes]
+      public: void print_block (uint nBlockIndex, t::Block* pBlock);
 
       /**
-       * Reads the file at [file_path], parses it and runs its opcodes.
+       * @brief Prints all the blocks and their opcodes.
+       */
+      public: void print_blocks ();
+
+      /**
+       * @brief Prints an opcode and its arguments.
        *
-       * @param file_path The path to the file to run.
+       * @param nOpcodeIndex The index of the opcode in the block.
+       * @param pOpcode The opcode to print.
        */
-      public: void run_file(const char* file_path);
+      public: void print_opcode (uint nOpcodeIndex, vm::OpCode* pOpcode);
 
       /**
-       * Throws a t::Exception.
+       * @brief Prints information about the engine to the console.
+       */
+      public: static void print_version ();
+
+      /**
+       * @brief Runs the first block.
+       */
+      public: void run ();
+
+      /**
+       * @brief Runs each opcode of a block.
+       *
+       * @param pBlock The block to run.
+       * @param bAddToStack Wether to add this block to the call stack.
+       */
+      public: void run_block (t::Block* pBlock, bool bAddToStack);
+
+      /**
+       * @brief Sets a block at a given index.
+       *
+       * @param nIndex The index of the block to set.
+       * @param pBlock The block to use.
+       */
+      public: inline void set_block (ulong nIndex, t::Block* pBlock, uint nFirstOpcodeIndex, uint nOpcodeCount)
+      {
+         ASSERT_NOT_NULL(pBlock);
+         pBlock->pick();
+         pBlock->opcodes = (vm::OpCode**)(this->opcodes + (sizeof(vm::OpCode*) * nFirstOpcodeIndex));
+         pBlock->opcode_count = nOpcodeCount;
+         this->blocks[nIndex] = pBlock;
+      }
+
+      /**
+       * @brief Sets an opcode at a given index.
+       *
+       * @param nIndex The index of the opcode to set.
+       * @param pBlock The opcode to use.
+       */
+      public: inline void set_opcode (uint nIndex, OpCode* pOpc)
+      {
+         ASSERT_NOT_NULL(pOpc);
+         this->opcodes[nIndex] = pOpc;
+      }
+
+      /**
+       * @brief Sizes the block array.
+       *
+       * @param nCount Size of the block array.
+       */
+      public: void size_blocks (ulong nCount);
+
+      /**
+       * @brief Sizes the class array.
+       *
+       * @param nCount Size of the class array.
+       */
+      public: void size_classes (ulong nCount);
+
+      /**
+       * @brief Sizes of the function array.
+       *
+       * @param nCount Size of the function array.
+       */
+      public: void size_functions (ulong nCount);
+
+      /**
+       * @brief Sizes of the opcode array.
+       *
+       * @param nCount Size of the opcode array.
+       */
+      public: void size_opcodes (uint nCount);
+
+      /**
+       * @brief Throws a t::Exception.
        *
        * @param exception The exception to throw.
        */
-      public: void throw_exception(t::Object* exception);
+      public: inline void throw_exception (t::Object* exception)
+      {
+         ASSERT_NOT_NULL(this->current_block);
+         ASSERT_NOT_NULL(exception);
+
+         this->current_block->throw_exception(exception);
+      }
    };
 
-   // @TODO: Shouldn't be elsewhere ? in NS_T ?
-   typedef t::Object*(*MethodPointer)(int argc, t::Object** argv);
-   typedef t::Object*(*ClassMethodPointer)(vm::Engine* engine, t::Object* &self, int argc, t::Object** argv);
+   typedef t::Value (*CoreFunctionPointer)(vm::Engine* pEngine, uchar nArgumentCount, uchar* pArgumentTypes, t::Value* Arguments);
 }
 
 #endif
