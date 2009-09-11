@@ -14,8 +14,8 @@ namespace t
     */
    class RegisterObject: public Object
    {
-      public: uint   position;      ///< The position of the value in a given register.
-      public: uchar  object_type;   ///< The object type (to determine in which register it's stored).
+      public: u3   position;      ///< The position of the value in a given register.
+      public: u1   object_type;   ///< The object type (to determine in which register it's stored).
 
       /**
        * @brief Default constructor.

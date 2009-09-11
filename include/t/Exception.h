@@ -22,7 +22,9 @@ namespace t
     */
    class Exception : public Object
    {
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
       public: String*   message;       ///< Error message.
+      #endif
       public: List*     stack_trace;   ///< A representation of the stack trace when the exception was thrown.
 
       /**
@@ -30,13 +32,16 @@ namespace t
        */
       public: Exception ();
 
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
       /**
        * @brief Constructs an exception with a message.
        *
        * @param pMessage The exception message.
        */
       public: Exception (String* pMessage);
+      #endif
 
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
       /**
        * @brief Constructs an exception with a message and a stack trace.
        *
@@ -44,6 +49,7 @@ namespace t
        * @param pStackTrace The exception stack trace.
        */
       public: Exception (String* pMessage, List* pStackTrace);
+      #endif
 
       /**
        * @brief Asserts that an object is of type @cls{t::Exception}.
@@ -91,12 +97,14 @@ namespace t
        */
       public: static void print_line (Exception* pException);
 
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
       /**
        * @brief Sets the message of exception @prm{error} to @prm{message}.
        *
        * @param pMessage The message to use.
        */
       public: void set_message (String* pMessage);
+      #endif
 
       /**
        * @brief Sets the stack trace of exception @prm{exception} to @prm{stack_trace}.

@@ -8,6 +8,16 @@
 #include "assert.h"
 #include "log.h"
 
+#define PRTF_i1 "d"
+#define PRTF_i2 "d"
+#define PRTF_i3 "d"
+#define PRTF_i4 "ld"
+
+#define PRTF_u1 "u"
+#define PRTF_u2 "u"
+#define PRTF_u3 "u"
+#define PRTF_u4 "lu"
+
 #define T__IS_LITERAL_TYPE(type)       ((type) >= 10 && (type) <= 30)
 #define T__IS_NOT_LITERAL_TYPE(type)   (type < 10 || type > 30)
 #define T__IS_NOT_VALUE_TYPE(type)     (type < 10 || type > 30)
@@ -20,7 +30,6 @@
 #define T__OBJECT2VALUE(val)           ((t::Value)((t::Object)(val)))
 #define T__UINT2VALUE(val)             ((t::Value)((uint)(val)))
 #define T__VALUE2OBJECT(val)           ((t::Object)((t::Value)(val)))
-
 #define ASSERT_TYPE(type)              ASSERT(T__IS_TYPE(type), "UNKNOWN_TYPE (.type %u)", (uint)type)
 
 typedef unsigned char uchar;
@@ -29,6 +38,16 @@ typedef unsigned int uint;
 typedef unsigned long ulong;
 typedef long long longlong;
 typedef unsigned long long ulonglong;
+
+typedef unsigned char   u1;
+typedef unsigned short  u2;
+typedef unsigned int    u3;
+typedef unsigned long   u4;
+
+typedef char            i1;
+typedef short           i2;
+typedef int             i3;
+typedef long            i4;
 
 namespace t
 {
@@ -71,7 +90,7 @@ namespace t
 
    const uchar INT16_TYPE          = 17;
    const uchar INT16_SLOTS         = 1;
-   typedef int16_t Int16;     ///< Integer from -32.768 to 32.767. (Short or s)
+   typedef int16_t Int16;     ///< Integer from -32.768 to 32.767. (Short or h)
 
    const uchar INT32_TYPE          = 18;
    const uchar INT32_SLOTS         = 1;
@@ -107,7 +126,7 @@ namespace t
 
    const uchar U_INT16_TYPE        = 26;
    const uchar U_INT16_SLOTS       = 1;
-   typedef uint16_t UInt16;   ///< Unsigned integer from 0 to 65.535. (Unsigned short or S)
+   typedef uint16_t UInt16;   ///< Unsigned integer from 0 to 65.535. (Unsigned short or H)
 
    const uchar U_INT32_TYPE        = 27;
    const uchar U_INT32_SLOTS       = 1;
@@ -158,7 +177,7 @@ namespace t
 
    const uchar DESTINATION_REGISTER_VALUE_TYPE = 62;
    const uchar DESTINATION_REGISTER_VALUE_SLOTS = 1;
-   typedef void* Value;       ///< A pointer.
+   typedef void* Value;
 
    typedef Value (*CastToStringFunction)(Value);
    typedef Value (*InitializeFunction)();

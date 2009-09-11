@@ -58,6 +58,14 @@ namespace t
       public: Value get_value_at (UInt64 index);
 
       /**
+       * @brief Reverses all the values of an array.
+       */
+      public: inline void reverse ()
+      {
+         this->reverse(0, this->length);
+      }
+
+      /**
        * @brief Reverses the values in a portion of the array.
        *
        * @param nStartIndex The start of the portion to reverse.

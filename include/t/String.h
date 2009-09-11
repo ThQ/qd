@@ -13,6 +13,8 @@ namespace t
 
    /**
     * @brief A string of characters.
+    *
+    * @todo Remove dependency to std::string.
     */
    class String : public Collection
    {
@@ -50,7 +52,7 @@ namespace t
        * @param string_arr The character array to be used as value.
        * @param string_arr_len The length of the character array.
        */
-      public: String (char* string_arr, UInt64 string_arr_len);
+      public: String (char* string_arr, uint string_arr_len);
 
       /**
        * @brief Creates a new string based on another one.
@@ -90,7 +92,7 @@ namespace t
        * @return A pointer to a new @cls{t::String} which content is the one of @prm{str_base} centered on @prm{centered_length} using @prm{pad_str}.
        * @todo Break this into functions: left padding and right padding in place.
        */
-      public: String* center (t::UInt64 centered_length, String* pad_str);
+      public: String* center (uint centered_length, String* pad_str);
 
       /**
        * @brief Checks if an object is of type t::String.
@@ -133,7 +135,7 @@ namespace t
        * @param cut_at At which index to cut.
        * @return A pointer to a new @cls{t::String} whose content is @prm{base_str} from index 0 to @prm{cut_at}.
        */
-      public: String* cut_at (UInt64 cut_at);
+      public: String* cut_at (uint cut_at);
 
       /**
        * @brief Cuts a string before a substring is found.
@@ -168,10 +170,10 @@ namespace t
        * @param sub_str The substring to look for.
        * @param start_at The index at which to start looking for.
        * @param found_at A pointer that will receive the index at which
-       * the substring was found (points to UInt64(0) if not found).
+       * the substring was found (points to uint(0) if not found).
        * @return true if the substring was found.
        */
-      public: inline bool find (String* sub_str, UInt64 start_at, UInt64& found_at)
+      public: inline bool find (String* sub_str, uint start_at, uint& found_at)
       {
          return this->find(sub_str, start_at, this->value.length(), found_at);
       }
@@ -183,10 +185,10 @@ namespace t
        * @param start_at The index at which to start looking for.
        * @param end_at The index at which to end looking for.
        * @param found_at A pointer that will receive the index at which
-       * the substring was found (points to UInt64(0) if not found).
+       * the substring was found (points to uint(0) if not found).
        * @return true if the substring was found.
        */
-      public: bool find (String* sub_str, UInt64 start_at, UInt64 end_at, UInt64& found_at);
+      public: bool find (String* sub_str, uint start_at, uint end_at, uint& found_at);
 
       /**
        * @brief Gets a character.
@@ -194,14 +196,14 @@ namespace t
        * @param char_index The index of the character to get.
        * @return A pointer to a new @cls{t::String} only containing the character to get.
        */
-      public: String* get_character (UInt64 char_index);
+      public: String* get_character (uint char_index);
 
       /**
        * @brief Returns the length of a @cls{t::String}.
        *
        * @return A pointer to a @cls{t::Int} containing the length of the string.
        */
-      public: UInt64 get_length ();
+      public: uint get_length ();
 
       /**
        * @brief Inserts a string into another one.
@@ -210,7 +212,7 @@ namespace t
        * @param splice_str The string to insert.
        * @return A pointer to a new @cls{t::String} which content is the same as [this] with the substring inserted.
        */
-      public: String* insert (UInt64 at_index, String* splice_str);
+      public: String* insert (uint at_index, String* splice_str);
 
       /**
        * @brief Tests if a string only contains letter.
@@ -262,7 +264,7 @@ namespace t
        * @param pad_str The string to be used as padding.
        * @return A pointer to a new @cls{t::String} whose value is [this] padded to @prm{pad_len} using @prm{pad_str}.
        */
-      public: String* lpad (UInt64 pad_len, String* pad_str);
+      public: String* lpad (uint pad_len, String* pad_str);
 
       /**
        * @brief Creates a @cls{t::String} whose content is the one of @prm{self} multiplied n times.
@@ -270,7 +272,7 @@ namespace t
        * @param times The number of times to multiply the base string.
        * @return A pointer to a @cls{t::String} whose value is @prm{base_str} concatenated n times.
        */
-      public: String* multiply (UInt8 times);
+      public: String* multiply (uint times);
 
       /**
        * @brief Creates a @cls{t::String} which is a copy of a base string right padded to a certain length.
@@ -279,7 +281,7 @@ namespace t
        * @param pad_str The string to be used as padding.
        * @return A pointer to a new @cls{t::String} whose value is @prm{base_str} padded to @prm{pad_len} using @prm{pad_str}.
        */
-      public: String* pad (UInt64 pad_len, String* pad_str);
+      public: String* pad (uint pad_len, String* pad_str);
 
       /**
        * @brief Prints the content.
@@ -301,7 +303,7 @@ namespace t
        *
        * @todo Make this work
        */
-      public: String* strip (String* characters, UInt64 start_at, UInt64 end_at);
+      public: String* strip (String* characters, uint start_at, uint end_at);
 
       /**
        * @brief Changes all lowercased characters to upper case, and all uppercased

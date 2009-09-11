@@ -1,3 +1,10 @@
+.block
+dummy:hello
+dummy:print_ints__iii 100 101 $i0
+block:invoke__i_ 1
+jump:if_else__iii 1 5 4
+dummy:hello
+
 
 Formater = :AbstractType()
     nop

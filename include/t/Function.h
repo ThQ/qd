@@ -16,11 +16,11 @@ namespace t
     */
    class Function : public Object
    {
-      public: uchar*       argument_types;      ///< An array of types representing the parameters.
-      public: uchar        argument_count;      ///< Number of arguments.
+      public: u1*          argument_types;      ///< An array of types representing the parameters.
+      public: u1           argument_count;      ///< Number of arguments.
       public: bool         is_user;             ///< Is user created ?
       public: vm::Class*   return_class;        ///< A pointer to a @cls{vm::Class} representing the class of the returned object.
-      public: ushort       return_type;         ///< The type of the return object.
+      public: u1           return_type;         ///< The type of the return object.
 
       /**
        * @brief Default constructor.

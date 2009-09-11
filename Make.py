@@ -2,12 +2,15 @@
 
 import getopt
 import os
+import re
 import sys
 
 D_BUILD = "./build"
 D_TEMP = D_BUILD + "/tmp"
 D_SRC = "./src"
 D_INCLUDE = "./include"
+
+xGCC = "colorgcc -x c++ -c "
 
 CXX_INCLUDES=" -I" + D_INCLUDE
 CXX_DEBUG_FLAGS=CXX_INCLUDES + " -Wall -pg -O0 -D__DEBUG__=1 -DUSE_COLORS=1"
@@ -37,16 +40,19 @@ FILES.files = [
    File("t/BaseArray", ["ns:t", "cu:vm-engine"]),
    File("t/Block", ["ns:t", "cu:vm-engine", "cu:vm-call-stack"]),
    File("t/CoreFunction", ["ns:t"]),
-   File("t/Exception", ["ns:t"]),
+   File("t/Exception", ["ns:t", "cu:vm-engine"]),
    File("t/Function", ["ns:t"]),
    File("t/List", ["ns:t", "cu:vm-engine"]),
    File("t/Object", ["ns:t", "cu:vm-call-stack", "cu:vm-engine"]),
    File("t/RegisterObject", ["ns:t", "cu:vm-engine"]),
-   File("t/String", ["ns:t"]),
+   File("t/String", ["ns:t", "cu:vm-engine"]),
    File("t/UserFunction", ["ns:t"]),
+   File("opcodes/Arguments", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/Array", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/Block", ["ns:opcodes", "cu:vm-engine"]),
+   File("opcodes/Debug", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/Dummy", ["ns:opcodes", "cu:vm-engine"]),
+   File("opcodes/Exception", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/Int", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/Jump", ["ns:opcodes", "cu:vm-engine"]),
    File("opcodes/List", ["ns:opcodes", "cu:vm-engine"]),
@@ -55,6 +61,7 @@ FILES.files = [
    File("vm/Class", ["ns:vm", "cu:vm-call-stack", "cu:vm-engine"]),
    File("vm/EngineStarter", ["ns:vm"]),
    File("vm/Engine", ["ns:vm", "cu:vm-engine"]),
+   File("vm/Frame", ["ns:vm", "cu:vm-engine"]),
    File("vm/OpCode", ["ns:vm", "cu:vm-call-stack", "cu:vm-engine"]),
    File("vm/Parser", ["ns:vm"]),
    File("vm/RegisterPool", ["ns:vm", "cu:vm-engine", "cu:vm-call-stack"]),
@@ -77,6 +84,7 @@ class CompilingTask (Task):
       self.name = ""
       self.mode = "internal"
       self.options = []
+      self.re_c_include = re.compile("^#include\s+\"([^\"]+).h\"$")
 
    def parse_options(self):
       short_options = "m:"
@@ -138,7 +146,7 @@ class CompilingTask (Task):
          l += o_abs_path
          print l
 
-         cmd = "colorgcc -x c++ -c " + D_SRC + "/" + cpp_rel_path + " -o " + o_abs_path + self.cxx_flags
+         cmd = xGCC + D_SRC + "/" + cpp_rel_path + " -o " + o_abs_path + self.cxx_flags
 
          gxx_results = os.popen(cmd, "r")
          i += 1

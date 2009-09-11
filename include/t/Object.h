@@ -27,8 +27,8 @@ namespace t
    class Object
    {
       public: const vm::Class*   klass;         ///< Object's class.
-      public: UInt64             references;    ///< Number of references to this object.
-      public: ushort             type;          ///< Object's type.
+      public: u3                 references;    ///< Number of references to this object.
+      public: u1                 type;          ///< Object's type.
 
       /**
        * @brief Default constructor.

@@ -29,6 +29,52 @@ namespace opcodes
             break;
          }
 
+         case OPC_JUMP_IF_LE:
+         {
+            VM__OPCODE__GET_ARG(0, u3, nDestOpcodeIndex);
+            VM__OPCODE__GET_ARG(1, i3, nVal1);
+            VM__OPCODE__GET_ARG(2, i3, nVal2);
+
+            LOG_OPCODE(
+                  pOpCode,
+                  "OPC_JUMP_IF_LE"
+                  "(.destination %u, .value1 %d, value2 %d, .condition %s)\n",
+                  nDestOpcodeIndex,
+                  nVal1,
+                  nVal2,
+                  nVal1 < nVal2 ? "True" : "False"
+            );
+
+            if (nVal1 <= nVal2)
+            {
+               nOpcodeIndex = nDestOpcodeIndex == 0 ? 0 : nDestOpcodeIndex - 1;
+            }
+            break;
+         }
+
+         case OPC_JUMP_IF_LT:
+         {
+            VM__OPCODE__GET_ARG(0, u3, nDestOpcodeIndex);
+            VM__OPCODE__GET_ARG(1, i3, nVal1);
+            VM__OPCODE__GET_ARG(2, i3, nVal2);
+
+            LOG_OPCODE(
+                  pOpCode,
+                  "OPC_JUMP_IF_LT"
+                  "(.destination %u, .value1 %u, value2 %u, .condition %s)\n",
+                  nDestOpcodeIndex,
+                  nVal1,
+                  nVal2,
+                  nVal1 < nVal2 ? "True" : "False"
+            );
+
+            if (nVal1 < nVal2)
+            {
+               nOpcodeIndex = nDestOpcodeIndex == 0 ? 0 : nDestOpcodeIndex - 1;
+            }
+            break;
+         }
+
          case OPC_JUMP_IF_ELSE:
          {
             VM__OPCODE__GET_ARG(0, uint, nCondition);
@@ -46,7 +92,7 @@ namespace opcodes
             break;
          }
 
-         case OPC_JUMP_UNLESS:
+         case OPC_JUMP_IF_NOT:
          {
             VM__OPCODE__GET_ARG(0, uint, nCondition);
             VM__OPCODE__GET_ARG(1, uint, nDestOpcodeIndex);

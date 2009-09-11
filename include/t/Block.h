@@ -1,9 +1,7 @@
 #ifndef T__BLOCK__H
 #define T__BLOCK__H __FILE__
 
-#include "t/Exception.h"
 #include "t/Object.h"
-#include "vm/RegisterPool.h"
 #include "vm/OpCode.h"
 
 #define T__BLOCK__GET_NAME(pBlock) "??"
@@ -16,14 +14,11 @@ namespace t
     */
    class Block : public Object
    {
-      public: uchar              argument_count;      ///< Number of arguments.
+      protected: t::Value*       arguments;
+      public: u1                 argument_count;      ///< Number of arguments.
       public: uchar*             argument_types;      ///< The types of the arguments.
-      public: Exception*         exception;           ///< A pointer to a @cls{t::Exception} thrown, NULL otherwise.
-      public: Block*             exception_handler;   ///< A pointer to @cls{t::Block} used as exception handler, NULL if none.
-      public: vm::RegisterPool   registers;           ///< A register manager.
-      //public: vm::Stack          stack;               ///< Block's heap.
       public: vm::OpCode**       opcodes;             ///< An array of @cls{vm::OpCode}s.
-      public: ulong              opcode_count;        ///< Number of opcodes.
+      public: uint               opcode_count;        ///< Number of opcodes.
 
       /**
        * @brief Default constructor.
@@ -78,6 +73,11 @@ namespace t
        */
       public: ulong count ();
 
+      public: inline uint count_arguments ()
+      {
+         return this->argument_count;
+      }
+
       /**
        * @brief Sets the arguments.
        *
@@ -97,32 +97,44 @@ namespace t
        * @param index The index at which get the opcode.
        * @return A pointer to a @cls{vm::OpCode} to get.
        */
-      public: vm::OpCode* get (ulong index);
-
-      /**
-       * @brief Sets the exception handler for the block.
-       *
-       * @param block A pointer to a @cls{t::Block} to use as an exception handler.
-       */
-      public: void set_exception_handler (Block* block);
-
-      /**
-       * @brief Throws an exception inside the block.
-       *
-       * @param exception A pointer to a @cls{t::Object} that is a @cls{t::Exception} to throw.
-       */
-      public: inline void throw_exception (Object* exception)
+      public: inline vm::OpCode* get (uint nIndex)
       {
-         Exception::assert(exception);
-         this->throw_exception((Exception*)exception);
+         ASSERT(
+               nIndex < this->opcode_count,
+               "[svm::Block::get] Index [%u] out of range [0:%u].\n",
+               nIndex,
+               this->opcode_count -1
+         );
+
+         return this->opcodes[nIndex];
       }
 
-      /**
-       * @brief Throws an exception inside the block.
-       *
-       * @param exception A pointer to a @cls{t::Exception} to throw.
-       */
-      public: void throw_exception (Exception* exception);
+      public: inline t::Value get_argument (uchar nIndex)
+      {
+         return this->arguments[nIndex];
+      }
+
+      public: inline char* get_file_name ()
+      {
+         return (char*)"??";
+      }
+
+      public: inline u3 get_line_number ()
+      {
+         return 0;
+      }
+
+      public: inline char* get_name ()
+      {
+         return (char*)"??";
+      }
+
+      public: void print_arguments ();
+
+      public: inline void set_argument (uchar nIndex, t::Value pVal)
+      {
+         this->arguments[nIndex] = pVal;
+      }
    };
 }
 

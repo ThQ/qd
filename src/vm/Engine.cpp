@@ -13,6 +13,7 @@ namespace vm
       this->function_count = 0;
       this->opcodes = NULL;
       Memory_ALLOC(this->opcode_arguments, t::Value, VM__OPCODE__MAX_ARGUMENTS);
+      ASSERT_NOT_NULL(this->opcode_arguments);
       this->opcode_count = 0;
    }
 
@@ -64,15 +65,14 @@ namespace vm
    }
 
    void
-   Engine::copy_arguments (vm::OpCode* pOpcode, t::Value* pArguments)
+   Engine::copy_arguments (vm::OpCode* pOpcode, t::Value*& pArguments)
    {
-      uchar nCount = pOpcode->argument_count;
+      uchar nCount = pOpcode->count_arguments();
       uchar* pArgumentTypes = pOpcode->argument_types;
-      t::Value* pBaseObjects = pOpcode->arguments;
 
       for (uchar i = 0 ; i < nCount ; ++i)
       {
-         pArguments[i] = (t::Value)pBaseObjects[i];
+         pArguments[i] = (t::Value)pOpcode->get_argument(i);
          if (T__IS_OBJECT_TYPE(pArgumentTypes[i]))
          {
             ASSERT_NOT_NULL(pArguments[i]);
@@ -93,13 +93,16 @@ namespace vm
       t::Block* pResult = NULL;
       if (this->call_stack.count() > 0)
       {
-         for (ulong i = this->call_stack.count() - 1; i > 0 ; --i)
+         vm::Frame* pFrame = this->call_stack.last_frame;
+         while (pFrame != NULL)
          {
-            if (this->call_stack.get(i)->exception_handler != NULL)
+            ASSERT_NOT_NULL(pFrame);
+            if (pFrame->exception_handler != NULL)
             {
-               pResult = this->call_stack.get(i)->exception_handler;
+               pResult = pFrame->exception_handler;
                break;
             }
+            pFrame = pFrame->parent_frame;
          }
       }
       return pResult;
@@ -108,9 +111,9 @@ namespace vm
    void
    Engine::format_arguments (vm::OpCode* pOpcode, t::Value* pArguments)
    {
-      uchar nCount = pOpcode->argument_count;
+      uchar nCount = pOpcode->count_arguments();
       uchar* pArgumentTypes = pOpcode->argument_types;
-      t::Value* pBaseObjects = pOpcode->arguments;
+      t::Value* pBaseObjects = pOpcode->get_arguments();
 
       for (uchar i = 0 ; i < nCount ; ++i)
       {
@@ -126,16 +129,16 @@ namespace vm
                case t::U_SHORT_TYPE:
                case t::INT_TYPE:
                case t::U_INT_TYPE:
-                  pArguments[i] = (t::Value)this->current_block->registers.get_int(pRegObj->position);
+                  pArguments[i] = (t::Value)this->current_frame->registers.get_int(pRegObj->position);
                   break;
 
                case t::LONG_TYPE:
                case t::U_LONG_TYPE:
-                  pArguments[i] = (t::Value)this->current_block->registers.get_long(pRegObj->position);
+                  pArguments[i] = (t::Value)this->current_frame->registers.get_long(pRegObj->position);
                   break;
 
                default:
-                  pArguments[i] = (t::Value)this->current_block->registers.get_object(pRegObj->position);
+                  pArguments[i] = (t::Value)this->current_frame->registers.get_object(pRegObj->position);
                   ASSERT_NOT_NULL(pArguments[i]);
                   ((t::Object*)pArguments[i])->pick();
             }
@@ -180,38 +183,11 @@ namespace vm
       }
       else
       {
-         /**
-         t::Exception* pException = this->current_block->exception;
-         ASSERT_NOT_NULL(pException);
-
-         const vm::Class* pExceptionClass = pException->klass;
-         ASSERT_NOT_NULL(pExceptionClass);
-         */
-
          printf("[Uncaught exception]\n");
       }
 
       return bHandled;
    }
-/**
-   void
-   Engine::import_swap (t::Block* pBlock, ulong nCount)
-   {
-      ASSERT(
-            nCount < this->swap.count(),
-            "<Engine @x%x> NOT_ENOUGH_IN_THE_SWAP (.count %lu, .swap_len %lu)",
-            (uint)this,
-            nCount,
-            this->swap.count()
-      )
-
-      for (ulong i = 0 ; i < nCount ; ++i)
-      {
-         pBlock->stack.append(this->swap.get(0));
-         this->swap.pop(1);
-      }
-   }
-*/
 
    void
    Engine::make_empty_value_array (t::Value*& pArray, uchar nCount)
@@ -288,19 +264,19 @@ namespace vm
             {
                case t::REGISTER_VALUE_TYPE:
                   printf("$");
-                  printf("%u", ((t::RegisterObject*)pOpcode->arguments[i])->position);
+                  printf("%u", ((t::RegisterObject*)pOpcode->get_argument(i))->position);
                   break;
 
                case t::CHAR_TYPE:
                case t::SHORT_TYPE:
                case t::INT_TYPE:
-                  printf("%d", (int)pOpcode->arguments[i]);
+                  printf("%d", (int)pOpcode->get_argument(i));
                   break;
 
                case t::U_CHAR_TYPE:
                case t::U_SHORT_TYPE:
                case t::U_INT_TYPE:
-                  printf("%u", (uint)pOpcode->arguments[i]);
+                  printf("%u", (uint)pOpcode->get_argument(i));
                   break;
 
                default:
@@ -314,13 +290,21 @@ namespace vm
    }
 
    void
+   Engine::print_opcode_arguments ()
+   {
+      for (uint i = 0 ; i < VM__OPCODE__MAX_ARGUMENTS ; ++i)
+      {
+         INTERNAL("#%u = %d\n", i, (int)this->opcode_arguments[i]);
+      }
+   }
+
+   void
    Engine::print_version ()
    {
       printf("%s v%s\n\n", QD__NAME, QD__VERSION);
       printf("name: %s\n", QD__NAME);
       printf("version: %s\n", QD__VERSION);
       printf("author: %s\n", QD__AUTHOR_NAME);
-
    }
 
    void
@@ -337,6 +321,11 @@ namespace vm
       ASSERT_NOT_NULL(pBlock->klass);
       ASSERT_NOT_NULL(this->opcode_arguments);
 
+      INTERNAL(
+            "<Block:0x%x> RUN (.depth %u)\n",
+            (uint)this,
+            this->call_stack.count()
+      );
       /**
       ASSERT(
             this->swap.count() >= pBlock->argument_count,
@@ -348,41 +337,38 @@ namespace vm
       );
       */
 
-      INTERNAL(
-         "<Block:?? @x%x> RUNNING (.opcode_count %lu)\n",
-         (uint)pBlock,
-         pBlock->count()
-      );
 
       pBlock->pick();
       this->current_block = pBlock;
-
-      // If block have arguments, import enough items from the swap into the
-      // current block's heap.
-      /*if (pBlock->argument_count > 0)
-      {
-         this->import_swap(pBlock, pBlock->argument_count);
-      }*/
+      this->current_frame = new vm::Frame(pBlock); // This frame is destroyed by the callstack
 
       if (bAddToStack == true)
       {
-         this->call_stack.append(pBlock);
+         this->call_stack.append(this->current_frame);
+      }
+
+      //t::Value* pBlockArguments = NULL;
+      if (pBlock->argument_count > 0)
+      {
+
       }
 
       // Execute each opcode in this block
       ASSERT_NOT_NULL(pBlock);
       vm::OpCode* pOpcode = NULL;
+
       for (uint i = 0 ; i < pBlock->count() ; ++i)
       {
          pOpcode = pBlock->get(i);
          ASSERT_NOT_NULL(pOpcode);
          ASSERT(
-               pOpcode->argument_count < VM__OPCODE__MAX_ARGUMENTS,
+               pOpcode->count_arguments() < VM__OPCODE__MAX_ARGUMENTS,
                "TOO_MUCH_ARGUMENTS (.max %d, .now %d)",
                VM__OPCODE__MAX_ARGUMENTS,
-               pOpcode->argument_count
+               pOpcode->count_arguments()
          );
-         if (pOpcode->argument_count > 0)
+
+         if (pOpcode->count_arguments() > 0)
          {
             if (pOpcode->has_register_arguments)
             {
@@ -392,12 +378,10 @@ namespace vm
             {
                this->copy_arguments(pOpcode, this->opcode_arguments);
             }
-            //*/
          }
 
          bool opc_handled = false;
          bool opc_namespace_handled = true;
-         t::Block* pBlockToRun = NULL;
 
          INTERNAL(
                "<OpCode:0x%x> RUN (.index %u, .ns %u, .function %u .argument_count %u)\n",
@@ -410,50 +394,89 @@ namespace vm
 
          switch (pOpcode->ns)
          {
+            #ifdef OPCODES__ARGUMENTS__H
+            case OPC_NS_ARGUMENTS:
+            {
+               opc_handled = opcodes::Arguments::run(this->current_frame, pOpcode, this->opcode_arguments);
+               break;
+            }
+            #endif
+
             #ifdef OPCODES__ARRAY__H
             case OPC_NS_ARRAY:
-               opc_handled = opcodes::Array::run(pBlock, pOpcode, this->opcode_arguments);
+            {
+               opc_handled = opcodes::Array::run(this->current_frame, pOpcode, this->opcode_arguments);
                break;
+            }
             #endif
 
             #ifdef OPCODES__BLOCK__H
             case OPC_NS_BLOCK:
-               opc_handled = opcodes::Block::run(pOpcode, this->opcode_arguments, this->blocks, pBlockToRun);
+            {
+               t::Block* pBlockToRun = NULL;
+               opc_handled = opcodes::Block::run(pBlock, this->current_frame, pOpcode, this->opcode_arguments, this->blocks, pBlockToRun);
                if (pBlockToRun != NULL)
                {
                   this->run_block(pBlockToRun, true);
                }
                break;
+            }
+            #endif
+
+            #ifdef OPCODES__DEBUG__H
+            case OPC_NS_DEBUG:
+            {
+               opc_handled = opcodes::Debug::run(pOpcode, this->opcode_arguments);
+               break;
+            }
             #endif
 
             #ifdef OPCODES__DUMMY__H
             case OPC_NS_DUMMY:
+            {
                opc_handled = opcodes::Dummy::run(pOpcode, this->opcode_arguments);
                break;
+            }
+            #endif
+
+            #ifdef OPCODES__EXCEPTION__H
+            case OPC_NS_EXCEPTION:
+            {
+               opc_handled = opcodes::Exception::run(this->current_frame, pOpcode, this->opcode_arguments);
+               break;
+            }
             #endif
 
             #ifdef OPCODES__INT__H
             case OPC_NS_INT:
-               opc_handled = opcodes::Int::run(pBlock, pOpcode, this->opcode_arguments);
+            {
+               opc_handled = opcodes::Int::run(this->current_frame, pOpcode, this->opcode_arguments);
                break;
+            }
             #endif
 
             #ifdef OPCODES__JUMP__H
             case OPC_NS_JUMP:
+            {
                opc_handled = opcodes::Jump::run(pOpcode, this->opcode_arguments, i);
                break;
+            }
             #endif
 
             #ifdef OPCODES__LIST__H
             case OPC_NS_LIST:
-               opc_handled = opcodes::List::run(pBlock, pOpcode, this->opcode_arguments);
+            {
+               opc_handled = opcodes::List::run(this->current_frame, pOpcode, this->opcode_arguments);
                break;
+            }
             #endif
 
             #ifdef OPCODES__REGISTERS__H
             case OPC_NS_REGISTERS:
-               opc_handled = opcodes::Registers::run(pBlock, pOpcode, this->opcode_arguments);
+            {
+               opc_handled = opcodes::Registers::run(this->current_frame, pOpcode, this->opcode_arguments);
                break;
+            }
             #endif
 
             default:
@@ -473,7 +496,7 @@ namespace vm
          #endif
 
          // Exception handling
-         if (this->current_block->exception != NULL && !this->handle_exception())
+         if (this->current_frame->exception != NULL && !this->handle_exception())
          {
             i = pBlock->count();
             this->exit();

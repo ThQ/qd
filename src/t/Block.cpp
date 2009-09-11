@@ -6,10 +6,9 @@ namespace t
 
    Block::Block ()
    {
+      Memory_ALLOC(this->arguments, t::Value, 16);
       this->argument_count = 0;
       this->argument_types = 0;
-      this->exception = NULL;
-      this->exception_handler = NULL;
       this->type = t::BLOCK_TYPE;
       this->klass = &cBLOCK;
       this->opcodes = 0;
@@ -72,47 +71,20 @@ namespace t
    Block::destroy ()
    {
       // Opcodes are actually freed in vm::Engine
-
-      if (this->exception != NULL)
-      {
-         this->exception->drop();
-      }
-   }
-
-   vm::OpCode*
-   Block::get (ulong at)
-   {
-      ASSERT(
-            at < this->opcode_count,
-            "[svm::Block::get] Index [%lu] out of range [0:%lu].\n",
-            at,
-            this->opcode_count -1
-      );
-
-      return this->opcodes[at];
    }
 
    void
-   Block::set_exception_handler (Block* block)
+   Block::print_arguments ()
    {
-      ASSERT_NOT_NULL(block);
-
-      if (this->exception_handler != NULL)
+      for (uint i = 0 ; i < this->count_arguments(); ++i)
       {
-         this->exception_handler->drop();
+         INTERNAL(
+               "<Block:0x%x> ARGUMENT (.at 0x%x, .equals=%d)\n",
+               (uint)this,
+               i,
+               (int)this->get_argument(i)
+         );
       }
-      block->pick();
-      this->exception_handler = block;
    }
 
-   void
-   Block::throw_exception (Exception* pException)
-   {
-      if (this->exception != NULL)
-      {
-         this->exception->drop();
-      }
-      pException->pick();
-      this->exception = pException;
-   }
 }

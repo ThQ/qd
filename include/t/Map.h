@@ -16,12 +16,12 @@ namespace t
     */
    class Map : public Collection
    {
-      public: ushort key_type;         ///< Type of the keys.
-      public: vm::Class* key_class;    ///< Class of the keys.
-      public: ushort item_type;        ///< Type of the items.
-      public: vm::Class* item_class;   ///< Class of the items.
-      public: T_OBJECT** keys;         ///< An array of keys.
-      public: T_OBJECT** items;        ///< An array of items.
+      public: ushort       key_type;         ///< Type of the keys.
+      public: vm::Class*   key_class;    ///< Class of the keys.
+      public: ushort       item_type;        ///< Type of the items.
+      public: vm::Class*   item_class;   ///< Class of the items.
+      public: T_OBJECT**   keys;         ///< An array of keys.
+      public: T_OBJECT**   items;        ///< An array of items.
 
       /**
        * @brief Default constructor.

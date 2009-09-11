@@ -133,6 +133,13 @@ namespace t
       printf("\n");
    }
 
+   Array*
+   Array::copy ()
+   {
+      NEW(pCopy, t::Array)(this->item_type, this->item_class, this->length);
+      return pCopy;
+   }
+
    void
    Array::size (uint array_size)
    {

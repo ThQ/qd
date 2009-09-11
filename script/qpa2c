@@ -1,0 +1,139 @@
+#!/usr/bin/python
+
+# .block
+# INT_PRINT__i 1
+
+import re
+import sys
+
+import qpa
+
+class Block:
+    def __init__ (self):
+        self.first_opcode_at = 0
+        self.last_opcode_at = 0
+
+class Pasm:
+    def __init__ (self):
+        self.blocks = []
+        self.path = [".", "..", "../build"]
+        self.res_namespace = "[a-zA-Z_0-9]+"
+        self.res_function = "[a-zA-Z_0-9]+"
+        self.re_call = re.compile("(" + self.res_namespace + "):(" + self.res_function + ")")
+        self.block_counter = 0
+        self.opcode_counter = 0
+        self.res_int = "[0-9]+"
+        self.res_reg = "\$[iIlLo][0-9]+"
+        self.res_arg = "(?:" + self.res_int + ")|(?:" + self.res_reg + ")"
+        self.re_arg = re.compile("(" + self.res_arg + ")")
+        self.re_args = re.compile("(" + self.res_arg + ")*")
+
+    def compile (self, file_abs_path):
+        hsrc = open(file_abs_path)
+        current_block = None
+
+        if hsrc :
+            self.out_header()
+            content = hsrc.read()
+            lines = content.splitlines()
+            line_index = 0
+            for line in lines:
+                line = line.strip()
+                if line[0:1] == ".":
+                    if current_block != None:
+                        current_block.last_opcode_at = line_index
+                    current_block = Block()
+                    self.block_counter += 1
+                    current_block.first_opcode_at = line_index
+                    self.blocks.append(current_block)
+                else:
+                    self.compile_line(line)
+                    line_index += 1
+            if current_block != None:
+                current_block.last_opcode_at = line_index
+
+            for i in range (0, self.block_counter):
+                block = self.blocks[i]
+                self.out("t::Block* pBlock__" + str(i) + " = new t::Block();\n")
+
+            out = "vm::Engine* pEng = new vm::Engine();\n"
+            out += "pEng->size_opcodes(" + str(self.opcode_counter) + ");\n"
+            for i in range(0, self.opcode_counter):
+                out += "pEng->set_opcode(" + str(i) + ", pOpc__" + str(i + 1) + ");\n"
+
+            out += "\npEng->size_blocks(" + str(self.block_counter) + ");\n"
+            for i in range(0, self.block_counter):
+                out += "pEng->set_block(" + str(i) + ", pBlock__" + str(i)
+                out += ", " + str(self.blocks[i].first_opcode_at)
+                out += ", " + str(self.blocks[i].last_opcode_at - self.blocks[i].first_opcode_at)
+                out += ");\n"
+            self.out(out)
+
+            self.out("pEng->run();\n");
+            self.out("delete pEng;\n");
+            self.out_footer()
+
+    def compile_line (self, line):
+        self.opcode_counter += 1
+        match = self.re_call.match(line).groups()
+
+
+        opc_def = "\n// " + line + "\n"
+        opc_def += "vm::OpCode* pOpc__" + str(self.opcode_counter)
+        opc_def += " = new vm::OpCode("
+        opc_def += "OPC_NS_" + match[0].upper()
+        opc_def += ", OPC_" + match[0].upper() + "_" + match[1].upper()
+        opc_def += ");"
+        self.out(opc_def)
+
+        arg_count = 0
+        space_index = line.find(" ")
+        if space_index != -1:
+            out_args = ""
+            line_args = line[space_index + 1:].strip()
+            args = self.re_arg.split(line_args)
+            for arg in args:
+                arg = arg.strip()
+                if arg != "":
+                    arg_count += 1
+                    out_args += "pOpc__" + str(self.opcode_counter)
+                    out_args += "->set_argument("
+                    out_args += str(arg_count - 1)
+                    out_args += ", "
+                    if arg[0:1] == "$":
+                        reg_type = arg[1:2]
+                        out_args += "t::REGISTER_VALUE_TYPE, "
+                        out_args += "new t::RegisterObject("
+                        if reg_type == "i" or reg_type == "I":
+                            out_args += "t::INT_TYPE"
+                        elif reg_type == "o":
+                           out_args += "t::OBJECT_TYPE"
+                        out_args += ", " + arg[2:]
+                        out_args += ")"
+                    else:
+                        out_args += "t::INT_TYPE, "
+                        out_args += "(t::Value)" + arg
+                    out_args += ");\n"
+        if arg_count > 0:
+            self.out("pOpc__" + str(self.opcode_counter) + "->size_arguments(" + str(arg_count) + ");")
+            self.out(out_args)
+
+        return True
+
+    def out (self, content):
+        print content
+
+    def out_header (self):
+        out = '#include "vm/Engine.h"\n'
+        out += '#include "Stats.h"\n\n'
+        out += "int main(int argc, char** argv){\n"
+        self.out(out)
+
+    def out_footer (self):
+        self.out("}\n");
+#pasm = Pasm()
+#pasm.compile(sys.argv[1])
+
+qpa_parser = qpa.Parser()
+parsed = qpa_parser.parse_file(sys.argv[1])
+print parsed.to_string()

@@ -7,9 +7,11 @@
 #define QD__VERSION_MAJOR           "0"
 #define QD__VERSION_MINOR           "1"
 
-#define QD__VM__KEEP_STATS          1
+#define QD__ASSERT__ALLOW                 1
+#define QD__T__EXCEPTION__HAVE_MESSAGE    1
+#define QD__VM__KEEP_STATS                1
 
-#define QD__LOG__PREFIX             "### "
+#define QD__LOG__PREFIX                   "### "
 
 #ifdef __DEBUG__
    #define _DEBUG_
@@ -31,6 +33,7 @@
    #define QD__LOG__SHOW_DEBUG
    #define QD__LOG__SHOW_FATAL
    #define QD__LOG__SHOW_INTERNAL
+   #define QD__LOG__SHOW_OPCODE
    #define QD__LOG__SHOW_WARNING
    #define ALLOW_UNICODE 1
 

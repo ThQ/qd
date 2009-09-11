@@ -4,22 +4,19 @@
 #include "t/Block.h"
 #include "t/Object.h"
 #include "t/String.h"
+#include "vm/Frame.h"
 
 namespace vm
 {
    /**
     * @brief A call stack.
     *
-    * Stores a pointer to all the block previously called.
-    *
-    * @todo Think about sizing up/down the stack.
-    * (Only a stupid resize up is done right now).
+    * Stores a pointer to all the frames previously called.
     */
    class CallStack
    {
-      public: t::Block**   blocks;        ///< An array of all the blocks.
-      public: ulong        block_count;   ///< How many blocks in the call stack.
-
+      public: u3           frame_count;   ///< How many blocks in the call stack.
+      public: vm::Frame*   last_frame;
       /**
        * @brief Default constructor.
        */
@@ -35,30 +32,31 @@ namespace vm
        *
        * @param pBlock A pointer to a block to append.
        */
-      public: void append(t::Block* pBlock);
+      public: void append(vm::Frame* pBlock);
 
       /**
        * @brief Counts how many blocks in the stack.
        *
        * @return The number of blocks.
        */
-      public: ulong count();
+      public: inline u3 count()
+      {
+         return this->frame_count;
+      }
 
       /**
-       * @brief Gets a specific block.
+       * @brief Pops a frame off.
        *
-       * @param nAt The index of the block to get.
-       * @return A pointer to the block.
-       */
-      public: t::Block* get(ulong nAt);
-
-      /**
-       * @brief Pops a block off.
-       *
-       * @return The poped block.
        * @todo Way too REALLOC intensive.
        */
-      public: t::Block* pop();
+      public: void pop();
+
+      /**
+       * @brief Returns the frame at the top of the stack.
+       *
+       * @return The last frame appended.
+       */
+      public: vm::Frame* peek ();
 
       /**
        * @brief Prints the call stack to the screen.

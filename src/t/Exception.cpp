@@ -6,12 +6,15 @@ namespace t
 
    Exception::Exception ()
    {
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
       this->message = NULL;
+      #endif
       this->stack_trace = NULL;
       this->type = EXCEPTION_TYPE;
       this->klass = &cEXCEPTION;
    }
 
+   #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
    Exception::Exception (String* message)
    {
       ASSERT_NOT_NULL(message);
@@ -20,7 +23,9 @@ namespace t
       this->stack_trace = NULL;
       this->type = EXCEPTION_TYPE;
    }
+   #endif
 
+   #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
    Exception::Exception (String* message, List* stack_trace)
    {
       ASSERT_NOT_NULL(message);
@@ -30,16 +35,19 @@ namespace t
       this->stack_trace = stack_trace;
       this->type = EXCEPTION_TYPE;
    }
+   #endif
 
    String*
    Exception::cast_to_string (Exception* pException)
    {
       ASSERT_NOT_NULL(pException);
-      ASSERT_NOT_NULL(pException->message);
 
       String* pResult = new String();
+      #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
+      ASSERT_NOT_NULL(pException->message);
       pResult->value.assign(pException->message->value);
       pResult->value.append("\n");
+      #endif
 
       return pResult;
    }
@@ -62,6 +70,7 @@ namespace t
       String::print_line(pMessage);
    }
 
+   #ifdef QD__T__EXCEPTION__HAVE_MESSAGE
    void
    Exception::set_message (String* pMessage)
    {
@@ -74,6 +83,7 @@ namespace t
       this->message = pMessage;
       pMessage->pick();
    }
+   #endif
 
    void
    Exception::set_stack_trace (List* pStackTrace)

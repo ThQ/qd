@@ -10,8 +10,8 @@ namespace t
     */
    class Collection : public Object
    {
-      public: uint length;        ///< Number of items in the collection.
-      public: uint slot_count;    ///< How many slots.
+      public: u3 length;        ///< Number of items in the collection.
+      public: u3 slot_count;    ///< How many slots.
    };
 }
 

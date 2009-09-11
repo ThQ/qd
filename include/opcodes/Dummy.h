@@ -4,10 +4,10 @@
 #include "t/Block.h"
 #include "vm/OpCode.h"
 
-#define OPC_NS_DUMMY          59  /*  ;  */
+#define OPC_NS_DUMMY           59 /*  ;  */
 #define OPC_DUMMY_HELLO       112 /*  p  */
-#define OPC_DUMMY_NIL         78  /*  N  */
-#define OPC_DUMMY_PRINT_INTS  80  /*  P  */
+#define OPC_DUMMY_NIL          78 /*  N  */
+#define OPC_DUMMY_PRINT_INTS   80 /*  P  */
 
 namespace opcodes
 {
@@ -20,19 +20,6 @@ namespace opcodes
        * @param pArguments An array of values as arguments.
        */
       public: static bool run (vm::OpCode* pOpCode, t::Value* pArguments);
-
-      /**
-       * @brief Runs a OPC_DUMMY_HELLO opcode.
-       */
-      public: static inline void run_hello ();
-
-      /**
-       * @brief Runs a OPC_DUMMY_PRINT_INTS opcode.
-       *
-       * @param pOpc The opcode to run.
-       * @param pArguments An array of values as arguments.
-       */
-      public: static inline void run_print_ints (vm::OpCode* pOpc, t::Value* pArguments);
    };
 }
 

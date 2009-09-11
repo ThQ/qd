@@ -4,11 +4,14 @@
 #include "t/Block.h"
 #include "vm/OpCode.h"
 
-#define OPC_NS_JUMP            62  /*  >  */
-#define OPC_JUMP_TO            50  /*  2  */
+#define OPC_NS_JUMP            62 /*  >  */
+#define OPC_JUMP_TO            50 /*  2  */
 #define OPC_JUMP_IF           105 /*  i  */
+#define OPC_JUMP_IF_NOT       117 /*  u  */
 #define OPC_JUMP_UNLESS       117 /*  u  */
-#define OPC_JUMP_IF_ELSE       63  /*  ?  */
+#define OPC_JUMP_IF_LE        108 /*  l  */
+#define OPC_JUMP_IF_LT         60 /*  <  */
+#define OPC_JUMP_IF_ELSE       63 /*  ?  */
 
 namespace opcodes
 {

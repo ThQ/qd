@@ -3,6 +3,7 @@
 
 #include "t/List.h"
 #include "t/Block.h"
+#include "vm/Frame.h"
 #include "vm/OpCode.h"
 
 #define OPC_NS_LIST           76 /*  L  */
@@ -15,8 +16,6 @@ namespace opcodes
 {
    /**
     * @brief A class that runs list opcodes.
-    *
-    * * OPC_LIST_NEW[3]          (nDestReg :uint, nType :uint)
     */
    class List
    {
@@ -27,7 +26,7 @@ namespace opcodes
        * @param pOpCode The opcode to run.
        * @param pArguments An array of values as arguments.
        */
-      public: static bool run (t::Block* pBlock, vm::OpCode* pOpCode, t::Value* pArguments);
+      public: static bool run (vm::Frame* pFrame, vm::OpCode* pOpCode, t::Value* pArguments);
    };
 }
 

@@ -1,0 +1,7 @@
+#!/bin/bash
+here_dir=`pwd`
+sir_file=$1
+sirpp=${here_dir}/../translaters/sir_pp.py
+xPython=python
+
+$xPython ${sirpp} ${sir_file}

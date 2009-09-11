@@ -9,7 +9,7 @@
 #define T__ARRAY__ASSERT_IN_RANGE(pArray, nIndex, nLength) \
    ASSERT( \
          nIndex < nLength, \
-         "<Array:0x%x> INDEX_OUT_OF_RANGE (.index %u, .length %u", \
+         "<Array:0x%x> INDEX_OUT_OF_RANGE (.index %u, .length %u)\n", \
          (uint)pArray, \
          (nIndex), \
          (nLength) \
@@ -110,7 +110,12 @@ namespace t
       }
 
       /**
-       * Asserts that an object is of type t::ARRAY_TYPE.
+       * @brief Copies an array to a new one.
+       */
+      public: Array* copy ();
+
+      /**
+       * @brief Asserts that an object is of type t::ARRAY_TYPE.
        *
        * @param obj The object to check.
        */
@@ -120,7 +125,7 @@ namespace t
       }
 
       /**
-       * Checks if an object is of type @cls{t::Array}.
+       * @brief Checks if an object is of type @cls{t::Array}.
        *
        * @param obj A pointer to a @cls{t::Object} to check.
        * @return true if @prm{obj} is a pointer to a @cls{t::Object}.
@@ -173,13 +178,21 @@ namespace t
       }
 
       /**
-       * Allocates memory for @prm{array_size} items in array [this->items] and
+       * @brief Allocates memory for @prm{array_size} items in array [this->items] and
        * fills each dimension with NULL.
        *
        * @param array_size The size of the array.
        */
       public: void size (uint array_size);
 
+      /**
+       * @brief Slices an array and returns the slice array.
+       *
+       * @param nStartIndex Start index of the slice.
+       * @param nLength Length of the slice.
+       * @param nStep Step used to make the slice.
+       * @return An array containing the slice.
+       */
       public: t::Array* slice (uint nStartIndex, uint nLength, uint nStep);
    };
 }

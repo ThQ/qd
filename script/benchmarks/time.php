@@ -31,7 +31,7 @@ if ($argc > 2)
       {
          chdir($argv[1]);
          $cmd_tests = split(",", $argv[2]);
-         if ($argv[2] == "_")
+         if ($argv[2] == "_" || $argv[2] == "*")
          {
             $cmd_tests = array_keys($FILES);
          }
@@ -58,7 +58,7 @@ if ($argc > 2)
             }
             else
             {
-               echo "Cannot find test language [" . $test_name . "].";
+               echo "Cannot find test [" . $test_name . "].";
             }
          }
 

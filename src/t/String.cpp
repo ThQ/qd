@@ -27,7 +27,7 @@ namespace t
       this->value.assign(string_arr);
    }
 
-   String::String (char* string_arr, UInt64 string_arr_len)
+   String::String (char* string_arr, uint string_arr_len)
    {
       this->_init();
       this->value.assign(string_arr, string_arr_len);
@@ -46,17 +46,17 @@ namespace t
    }
 
    String*
-   String::center (UInt64 centered_str_len, String* pad_str)
+   String::center (uint centered_str_len, String* pad_str)
    {
       String* pCenteredStr; // Result
-      UInt64 this_len = this->value.length();
-      UInt64 pad_str_len = pad_str->value.length();
+      uint this_len = this->value.length();
+      uint pad_str_len = pad_str->value.length();
 
       if (this_len < centered_str_len)
       {
-         UInt64 padding_len = centered_str_len - this_len;
-         UInt64 left_padding_len;
-         UInt64 right_padding_len;
+         uint padding_len = centered_str_len - this_len;
+         uint left_padding_len;
+         uint right_padding_len;
 
          if (padding_len % 2 == 0)
          {
@@ -76,9 +76,9 @@ namespace t
          // +---+---+---+      +---+---+---+---+---+---+---+---+---+---+---+
 
          // Pads left
-         LOOP_FROM_TO(UInt64, char_index, 0, left_padding_len)
+         LOOP_FROM_TO(uint, char_index, 0, left_padding_len)
          {
-            UInt64 pad_char_index = 0;
+            uint pad_char_index = 0;
             while (pad_char_index < pad_str_len && pad_char_index < left_padding_len)
             {
                centered_str_arr[char_index] = pad_str->value[pad_char_index];
@@ -89,16 +89,16 @@ namespace t
          }
 
          // Copies string after left padding.
-         LOOP_FROM_TO(UInt64, char_index, 0, this_len)
+         LOOP_FROM_TO(uint, char_index, 0, this_len)
          {
             centered_str_arr[left_padding_len + char_index ] = this->value[char_index];
          }
 
          // Pads right
-         LOOP_FROM_TO(UInt64, char_index, 0, right_padding_len)
+         LOOP_FROM_TO(uint, char_index, 0, right_padding_len)
          {
-            UInt64 pad_char_index = 0;
-            UInt64 dwRightPaddingPos = left_padding_len + this_len;
+            uint pad_char_index = 0;
+            uint dwRightPaddingPos = left_padding_len + this_len;
             while (pad_char_index < pad_str_len && pad_char_index < right_padding_len)
             {
                centered_str_arr[dwRightPaddingPos + char_index] = pad_str->value[pad_char_index];
@@ -135,9 +135,9 @@ namespace t
    String*
    String::cut_after (String* pSubstr)
    {
-      UInt64 pSubstrFoundAt;
+      uint pSubstrFoundAt;
       String* pCutStr = NULL;
-      if (this->find(pSubstr, (UInt64)0, pSubstrFoundAt))
+      if (this->find(pSubstr, (uint)0, pSubstrFoundAt))
       {
          pCutStr = this->cut_at(pSubstrFoundAt + pSubstr->value.length());
       }
@@ -152,14 +152,14 @@ namespace t
    }
 
    String*
-   String::cut_at (UInt64 dwCutStrLen)
+   String::cut_at (uint dwCutStrLen)
    {
       String* pCutStr = NULL;
       char* psCutStr= new char[dwCutStrLen];
 
       if (dwCutStrLen < this->value.length())
       {
-         LOOP_FROM_TO(UInt64, char_index, 0, dwCutStrLen)
+         LOOP_FROM_TO(uint, char_index, 0, dwCutStrLen)
          {
             psCutStr[char_index] = this->value[char_index];
          }
@@ -177,9 +177,9 @@ namespace t
    String*
    String::cut_before (String* pSubstr)
    {
-      UInt64 pSubstrFoundAt;
+      uint pSubstrFoundAt;
       String* pCutStr = NULL;
-      if (this->find(pSubstr, (UInt64)0, pSubstrFoundAt))
+      if (this->find(pSubstr, (uint)0, pSubstrFoundAt))
       {
          pCutStr = this->cut_at(pSubstrFoundAt);
       }
@@ -200,30 +200,30 @@ namespace t
    }
 
    bool
-   String::find (String* sub_str, UInt64 start_at_pos, UInt64 end_at_pos, UInt64& found_at)
+   String::find (String* sub_str, uint start_at_pos, uint end_at_pos, uint& found_at)
    {
       ASSERT(
-            start_at_pos < (UInt64)this->value.length(),
-            "start_at_pos(%lu) is outside [0:%lu], the range of the string.",
+            start_at_pos < (uint)this->value.length(),
+            "start_at_pos(%u) is outside [0:%u], the range of the string.",
             start_at_pos,
-            (UInt64)this->value.length()
+            (uint)this->value.length()
       );
 
       ASSERT(
-            end_at_pos < (UInt64)this->value.length(),
-            "end_at_pos(%lu) is outside [0:%lu], the range of the string.",
+            end_at_pos < (uint)this->value.length(),
+            "end_at_pos(%u) is outside [0:%u], the range of the string.",
             end_at_pos,
-            (UInt64)this->value.length()
+            (uint)this->value.length()
       );
 
       bool sub_str_found = false;
-      UInt64 sub_str_len = sub_str->value.length();
-      UInt64 this_char_index = start_at_pos;
+      uint sub_str_len = sub_str->value.length();
+      uint this_char_index = start_at_pos;
 
       while ((this_char_index < end_at_pos) && (this_char_index + sub_str_len <= end_at_pos))
       {
          sub_str_found = true;
-         LOOP_FROM_TO(UInt64, sub_str_char_index, 0, sub_str_len)
+         LOOP_FROM_TO(uint, sub_str_char_index, 0, sub_str_len)
          {
             if (this->value[this_char_index + sub_str_char_index] != sub_str->value[sub_str_char_index])
             {
@@ -243,49 +243,49 @@ namespace t
    }
 
    String*
-   String::get_character (UInt64 char_index)
+   String::get_character (uint char_index)
    {
       ASSERT(
             char_index < this->value.length(),
-            "%s(...) : %lu is outside [0:%lu], the range of the string",
+            "%s(...) : %u is outside [0:%u], the range of the string",
             __FUNCTION__,
             char_index,
-            (UInt64)this->value.length()
+            (uint)this->value.length()
       );
 
       return new String(this->value[char_index]);
    }
 
-   UInt64
+   uint
    String::get_length ()
    {
-      return (UInt64)this->value.length();
+      return (uint)this->value.length();
    }
 
    String*
-   String::insert (UInt64 at_index, String* splice_str)
+   String::insert (uint at_index, String* splice_str)
    {
-      UInt64 this_len = this->value.length();
-      UInt64 splice_str_len = splice_str->value.length();
-      UInt64 joined_len = this_len + splice_str_len;
+      uint this_len = this->value.length();
+      uint splice_str_len = splice_str->value.length();
+      uint joined_len = this_len + splice_str_len;
 
       char* psJoinedStr = new char[joined_len + 1];
 
       // Copies the first portion (before @prm{at_index})
-      LOOP_FROM_TO(UInt64, char_index, 0, at_index)
+      LOOP_FROM_TO(uint, char_index, 0, at_index)
       {
          psJoinedStr[char_index] = this->value[char_index];
       }
 
       // Copies the splice string
-      LOOP_FROM_TO(UInt64, char_index, 0, splice_str_len)
+      LOOP_FROM_TO(uint, char_index, 0, splice_str_len)
       {
          psJoinedStr[at_index + char_index] = splice_str->value[char_index];
       }
 
       // Copies the second portion (after @prm{at_index})
-      ULong second_portion_at = at_index + splice_str_len;
-      LOOP_FROM_TO(UInt64, char_index, at_index, this_len)
+      uint second_portion_at = at_index + splice_str_len;
+      LOOP_FROM_TO(uint, char_index, at_index, this_len)
       {
          psJoinedStr[second_portion_at + char_index] = this->value[char_index];
       }
@@ -299,14 +299,14 @@ namespace t
    bool
    String::is_alphabetic ()
    {
-      UInt64 str_len = this->value.length();
+      uint str_len = this->value.length();
       bool is_alphabetic = false;
 
       if (str_len > 0)
       {
          is_alphabetic = true;
 
-         LOOP_FROM_TO(UInt64, char_index, 0, str_len)
+         LOOP_FROM_TO(uint, char_index, 0, str_len)
          {
             if (this->value[char_index] < 'A' || (this->value[char_index] > 'Z' && this->value[char_index] < 'a') || this->value[char_index] > 'z')
             {
@@ -326,14 +326,14 @@ namespace t
    bool
    String::is_digit ()
    {
-      UInt64 str_len = this->value.length();
+      uint str_len = this->value.length();
       bool is_digit = false;
 
       if (str_len > 0)
       {
          is_digit = true;
 
-         LOOP_FROM_TO(UInt64, char_index, 0, str_len)
+         LOOP_FROM_TO(uint, char_index, 0, str_len)
          {
             if (this->value[char_index] < '0' || this->value[char_index] > '9')
             {
@@ -353,10 +353,10 @@ namespace t
    bool
    String::is_lowercase ()
    {
-      UInt64 str_len = this->value.length();
+      uint str_len = this->value.length();
       bool is_lowercase = true;
 
-      LOOP_FROM_TO(UInt64, char_index, 0, str_len)
+      LOOP_FROM_TO(uint, char_index, 0, str_len)
       {
          if (this->value[char_index] >= 'A' && this->value[char_index] <= 'Z')
          {
@@ -371,14 +371,14 @@ namespace t
    bool
    String::is_space ()
    {
-      ULong this_len = this->value.length();
+      uint this_len = (uint)this->value.length();
       bool is_space = false;
 
       if (this_len > 0)
       {
          is_space = true;
 
-         LOOP_FROM_TO(UInt64, char_index, 0, this_len)
+         LOOP_FROM_TO(uint, char_index, 0, this_len)
          {
             if (this->value[char_index] > ' ')
             {
@@ -398,10 +398,10 @@ namespace t
    bool
    String::is_uppercase ()
    {
-      UInt64 this_len = this->value.length();
+      uint this_len = this->value.length();
       bool is_uppercase = true;
 
-      LOOP_FROM_TO(UInt64, char_index, 0, this_len)
+      LOOP_FROM_TO(uint, char_index, 0, this_len)
       {
          if (this->value[char_index] >= 'a' && this->value[char_index] <= 'z')
          {
@@ -416,10 +416,10 @@ namespace t
    String*
    String::lower_case ()
    {
-      UInt64 lower_case_str_len = this->value.length();
+      uint lower_case_str_len = this->value.length();
       char* lower_case_str_arr = new char[lower_case_str_len];
 
-      for (ULong char_index = 0 ; char_index < lower_case_str_len ; ++char_index)
+      for (uint char_index = 0 ; char_index < lower_case_str_len ; ++char_index)
       {
          if (this->value[char_index] >= 'A' && this->value[char_index] <= 'Z')
          {
@@ -437,30 +437,30 @@ namespace t
    }
 
    String*
-   String::lpad (UInt64 dest_str_final_len, String* pad_str)
+   String::lpad (uint dest_str_final_len, String* pad_str)
    {
       char* dest_str = new char[dest_str_final_len];
-      UInt64 this_len = this->value.length();
-      UInt64 pad_str_len = pad_str->value.length();
-      UInt64 dest_str_current_len = 0;
+      uint this_len = this->value.length();
+      uint pad_str_len = pad_str->value.length();
+      uint dest_str_current_len = 0;
 
       // Copies [this] at the end of the array.
-      for (UInt64 char_index = 0 ; char_index < this_len ; ++ char_index)
+      for (uint char_index = 0 ; char_index < this_len ; ++ char_index)
       {
          dest_str[dest_str_final_len - this_len + char_index] = this->value[char_index];
       }
 
-      // As long as we did not feel the array...
+      // As long as we did not fill the array...
       while (dest_str_current_len < dest_str_final_len)
       {
          // ... copies another time pad_str, backwardly.
-         for (UInt64 char_index = pad_str_len - 1 ; char_index >= 0  && dest_str_current_len < dest_str_final_len ; --char_index)
+         for (uint char_index = pad_str_len - 1 ; char_index >= 0  && dest_str_current_len < dest_str_final_len ; --char_index)
          {
             dest_str[dest_str_final_len - dest_str_current_len] = pad_str->value[char_index];
             ++ dest_str_current_len;
          }
       }
-      ASSERT(dest_str_current_len == dest_str_final_len, "We did not feel the array completely, what's wrong ?");
+      ASSERT(dest_str_current_len == dest_str_final_len, "We did not fill the array completely, what's wrong ?");
 
       String* result = new String(dest_str, dest_str_final_len);
       delete dest_str;
@@ -468,9 +468,9 @@ namespace t
    }
 
    String*
-   String::multiply (UInt8 nTimes)
+   String::multiply (uint nTimes)
    {
-      UInt64 dwFinalStrLen = this->value.length() * nTimes;
+      uint dwFinalStrLen = this->value.length() * nTimes;
       char* psFinalStr = new char[dwFinalStrLen];
 
       // For each from 0 to pTimes, append itself.
@@ -480,9 +480,9 @@ namespace t
       // | this  | this  |       | this  |
       // +-------+-------+--...--|-------+
       //
-      LOOP_FROM_TO(uint8_t, i, 0, nTimes)
+      LOOP_FROM_TO(uint, i, 0, nTimes)
       {
-         LOOP_FROM_TO(UInt64, dwCharIndex, 0, this->value.length())
+         LOOP_FROM_TO(uint, dwCharIndex, 0, this->value.length())
          {
             psFinalStr[i * this->value.length() + dwCharIndex] = this->value[dwCharIndex];
          }
@@ -494,15 +494,15 @@ namespace t
    }
 
    String*
-   String::pad (UInt64 padded_str_final_len, String* pad_str)
+   String::pad (uint padded_str_final_len, String* pad_str)
    {
       char* padded_str_arr = new char[padded_str_final_len];
-      UInt64 padded_str_current_len = 0;
-      UInt64 this_len = this->value.length();
-      UInt64 pad_str_len = pad_str->value.length();
+      uint padded_str_current_len = 0;
+      uint this_len = this->value.length();
+      uint pad_str_len = pad_str->value.length();
 
       // Copies [this] into the array.
-      for (ULong char_index = 0 ; char_index < this_len ; ++ char_index)
+      for (uint char_index = 0 ; char_index < this_len ; ++ char_index)
       {
          padded_str_arr[char_index] = this->value[char_index];
       }
@@ -511,7 +511,7 @@ namespace t
       while (padded_str_current_len < padded_str_final_len)
       {
          // ... copies another [pad_str] into the array.
-         for (ULong char_index = 0 ; char_index < pad_str_len && padded_str_current_len < padded_str_final_len; ++char_index)
+         for (uint char_index = 0 ; char_index < pad_str_len && padded_str_current_len < padded_str_final_len; ++char_index)
          {
             padded_str_arr[padded_str_current_len] = pad_str->value[char_index];
             ++ padded_str_current_len;
@@ -540,10 +540,10 @@ namespace t
    String*
    String::reverse ()
    {
-      UInt64 this_len = this->value.length();
+      uint this_len = this->value.length();
       char* reversed_str_arr = new char[this_len];
 
-      LOOP_FROM_TO(ULong, char_index, 0,this_len)
+      LOOP_FROM_TO(uint, char_index, 0,this_len)
       {
          reversed_str_arr[this_len - char_index - 1] = this->value[char_index];
       }
@@ -555,7 +555,7 @@ namespace t
    }
 
    String*
-   String::strip (String* characters, UInt64 start_at, UInt64 end_at)
+   String::strip (String* characters, uint start_at, uint end_at)
    {
       return new String();
    }
@@ -563,10 +563,10 @@ namespace t
    String*
    String::swap_case ()
    {
-      UInt64 dwThisLen= this->value.length();
+      uint dwThisLen= this->value.length();
       char* psSwapedCaseStr = new char[dwThisLen];
 
-      LOOP_FROM_TO (UInt64, dwCharIndex, 0, dwThisLen)
+      LOOP_FROM_TO (uint, dwCharIndex, 0, dwThisLen)
       {
          if (this->value[dwCharIndex] >= 'a' && this->value[dwCharIndex] <= 'z')
          {
@@ -590,10 +590,10 @@ namespace t
    String*
    String::upper_case ()
    {
-      UInt64 this_len = this->value.length();
+      uint this_len = this->value.length();
       char* upper_cased_str_arr = new char[this_len];
 
-      LOOP_FROM_TO(UInt64, char_index, 0, this_len)
+      LOOP_FROM_TO(uint, char_index, 0, this_len)
       {
          if (this->value[char_index] >= 'a' && this->value[char_index] <= 'z')
          {

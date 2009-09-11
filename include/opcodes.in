@@ -1,0 +1,106 @@
+NOP
+
+# INT (8)
+I_ADD          | Int  | add
+I_SUB          | Int  | sub
+I_MUL          | Int  | mul
+I_DIV          | Int  | div
+I_MOD          | Int  | mod
+I_XOR          | Int  | xor
+I_LSHIFT       | Int  | lshift
+I_RSHIFT       | Int  | rshift
+I_TO_LONG      | Int  | to_long
+I_TO_FLOAT     | Int  | to_float
+I_TO_DOUBLE    | Int  | to_double
+
+# LONG (8)
+L_ADD          | Long | add
+L_SUB          | Long | sub
+L_MUL          | Long | mul
+L_DIV          | Long | div
+L_MOD          | Long | mod
+L_XOR          | Long | xor
+L_LSHIFT       | Long | lshift
+L_RSHIFT       | Long | rshift
+L_TO_FLOAT     | Long | to_float
+
+# FLOAT (5)
+F_ADD
+F_SUB
+F_MUL
+F_DIV
+F_MOD
+
+# DOUBLE (5)
+D_ADD
+D_SUB
+D_MUL
+D_DIV
+D_MOD
+
+# JUMP (15)
+JUMP
+JUMP_IF
+JUMP_IF_L
+JUMP_IF_EQ
+JUMP_IF_EQ_L
+JUMP_IF_NE
+JUMP_IF_NE_L
+JUMP_IF_GT
+JUMP_IF_GT_L
+JUMP_IF_GE
+JUMP_IF_GE_L
+JUMP_IF_LT
+JUMP_IF_LT_L
+JUMP_IF_LE
+JUMP_IF_LE_L
+
+# RETURN (4)
+RETURN_VOID
+RETURN
+RETURN_WIDE
+RETURN_OBJECT
+
+# REGISTERS (3)
+COPY
+COPY_WIDE
+COPY_OBJECT
+SIZE
+
+# OBJECTS (3)
+NEW
+CALL
+CALL_WIDE
+
+# ARRAY (8)
+ARR_NEW
+ARR_SET
+ARR_SET_WIDE
+ARR_GET
+ARR_GET_WIDE
+ARR_LEN
+ARR_SLICE
+ARR_COPY
+
+# LIST (8)
+LST_NEW
+LST_SET
+LST_SET_WIDE
+LST_GET
+LST_GET_WIDE
+LST_LEN
+LST_SLICE
+LST_COPY
+
+# HASH (5)
+HSH_NEW
+HSH_SET
+HSH_SET_WIDE
+HSH_GET
+HSH_GET_WIDE
+
+# EXCEPTION (1)
+THROW
+
+# DEBUG (1)
+DEBUG

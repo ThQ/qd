@@ -6,9 +6,12 @@
 #include <math.h>
 #include <string>
 
+#include "opcodes/Arguments.h"
 #include "opcodes/Array.h"
 #include "opcodes/Block.h"
+#include "opcodes/Debug.h"
 #include "opcodes/Dummy.h"
+#include "opcodes/Exception.h"
 #include "opcodes/Int.h"
 #include "opcodes/List.h"
 #include "opcodes/Jump.h"
@@ -26,6 +29,7 @@
 
 #include "vm/CallStack.h"
 #include "vm/Class.h"
+#include "vm/Frame.h"
 #include "vm/OpCode.h"
 
 namespace vm
@@ -38,11 +42,13 @@ namespace vm
    class Engine
    {
       public: t::Block**      blocks;           ///< An array of @cls{t::Block}.
+      public: t::Value*       block_arguments;  ///< Arguments of a block. (Cannot be in t::Block, because a block can call himself)
       public: ulong           block_count;      ///< The number of blocks.
       public: CallStack       call_stack;       ///< Call stack.
       public: vm::Class**     classes;          ///< A class table.
       public: ulong           class_count;      ///< How many classes.
       public: t::Block*       current_block;    ///< The block being currently run.
+      public: vm::Frame*      current_frame;    ///< The current frame.
       public: t::Function**   functions;        ///< A function table.
       public: ulong           function_count;   ///< How many functions.
       public: vm::OpCode**    opcodes;          ///< An array of @cls{vm::OpCode}.
@@ -80,7 +86,7 @@ namespace vm
        */
       public: void clear_blocks ();
 
-      public: void copy_arguments (vm::OpCode* pOpcode, t::Value* pArguments);
+      public: void copy_arguments (vm::OpCode* pOpcode, t::Value*& pArguments);
 
       /**
        * @brief Exits the currently running engine.
@@ -171,6 +177,8 @@ namespace vm
        */
       public: void print_opcode (uint nOpcodeIndex, vm::OpCode* pOpcode);
 
+      public: void print_opcode_arguments ();
+
       /**
        * @brief Prints information about the engine to the console.
        */
@@ -195,13 +203,37 @@ namespace vm
        * @param nIndex The index of the block to set.
        * @param pBlock The block to use.
        */
-      public: inline void set_block (ulong nIndex, t::Block* pBlock, uint nFirstOpcodeIndex, uint nOpcodeCount)
+      public: inline void set_block (uint nIndex, t::Block* pBlock, uint nFirstOpcodeIndex, uint nOpcodeCount)
       {
          ASSERT_NOT_NULL(pBlock);
          pBlock->pick();
-         pBlock->opcodes = (vm::OpCode**)(this->opcodes + (sizeof(vm::OpCode*) * nFirstOpcodeIndex));
+         pBlock->opcodes = (vm::OpCode**)(this->opcodes + nFirstOpcodeIndex);
          pBlock->opcode_count = nOpcodeCount;
+         /*DEBUG(
+               "\nopcodes=%d\nsizeof=%d\nfirst_op=%d\nresult=%d\n",
+               (uint)this->opcodes,
+               sizeof(vm::OpCode*),
+               nFirstOpcodeIndex,
+               (uint)pBlock->opcodes
+         );
+         */
          this->blocks[nIndex] = pBlock;
+         INTERNAL(
+               "<Engine:0x%x> SET_BLOCK "
+               "(.index %u, .first_opcode %u, .opcode_count %u, .all_opcodes_start_at 0x%x, .block_opcodes_start_at 0x%x)\n",
+               (uint)this,
+               nIndex,
+               nFirstOpcodeIndex,
+               nOpcodeCount,
+               (uint)this->opcodes,
+               (uint)pBlock->opcodes
+         );
+         #ifdef QD__ASSERT__ALLOW
+         for (uint i = 0 ; i < pBlock->opcode_count ; ++i)
+         {
+            ASSERT_NOT_NULL(pBlock->opcodes[i]);
+         }
+         #endif
       }
 
       /**
@@ -213,6 +245,13 @@ namespace vm
       public: inline void set_opcode (uint nIndex, OpCode* pOpc)
       {
          ASSERT_NOT_NULL(pOpc);
+         INTERNAL(
+               "<Engine:0x%x> SET_OPCODE "
+               "(.index %u, .opcode_at 0x%x)\n",
+               (uint)this,
+               nIndex,
+               (uint)pOpc
+         );
          this->opcodes[nIndex] = pOpc;
       }
 
@@ -251,10 +290,10 @@ namespace vm
        */
       public: inline void throw_exception (t::Object* exception)
       {
-         ASSERT_NOT_NULL(this->current_block);
+         ASSERT_NOT_NULL(this->current_frame);
          ASSERT_NOT_NULL(exception);
 
-         this->current_block->throw_exception(exception);
+         this->current_frame->throw_exception(exception);
       }
    };
 
